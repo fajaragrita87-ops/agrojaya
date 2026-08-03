@@ -84,12 +84,7 @@ export const InvestorLandingPage = () => {
         <div className="container-fluid px-4 px-md-5">
           <div className="row align-items-center">
             <div className="col-12 col-md-8 d-flex align-items-center gap-3">
-              <span className="tmp-badge bg-success text-white px-2.5 py-1 rounded font-weight-bold" style={{ fontSize: 11 }}>
-                PORTAL INVESTASI PERKEBUNAN
-              </span>
-              <span className="news-text text-light font-weight-medium" style={{ fontSize: 12 }}>
-                PT Agro Jaya Indonesia • Portal Akuntabilitas Lahan & Transparansi Modal Investasi ({userName})
-              </span>
+              {/* Removed verbose header text as requested */}
             </div>
             <div className="col-12 col-md-4 text-md-end d-flex align-items-center justify-content-md-end gap-3 mt-2 mt-md-0">
               <span className="text-warning font-weight-bold" style={{ fontSize: 12 }}>
@@ -150,13 +145,9 @@ export const InvestorLandingPage = () => {
           <div className="row g-5 align-items-center">
             <div className="col-lg-12">
               <div className="text-center mx-auto" style={{ maxWidth: '900px' }}>
-                <span className="badge bg-success-subtle text-success border border-success px-3.5 py-2 rounded-pill font-weight-bold uppercase mb-3 d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12, letterSpacing: '0.5px' }}>
-                  <i className="ri-shield-check-fill !text-sm"></i> PORTAL TRANSPARANSI AKUNTABILITAS INVESTASI PERKEBUNAN AGROJAYA
-                </span>
-
                 <h1 className="font-weight-extrabold text-dark mb-4 text-center" style={{ fontSize: 'clamp(30px, 4vw, 48px)', lineHeight: 1.2, letterSpacing: '-1px' }}>
                   Portal Transparansi Investasi & Akuntabilitas Lahan <br />
-                  <span className="text-success" style={{ color: '#059669' }}>Perkebunan AgroJaya Jonggol</span>
+                  <span className="text-success" style={{ color: '#059669' }}>Perkebunan Agro Jaya</span>
                 </h1>
 
                 <div className="d-flex justify-content-center gap-3 pt-2 mb-2">

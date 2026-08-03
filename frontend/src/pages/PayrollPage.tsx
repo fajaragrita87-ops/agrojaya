@@ -50,7 +50,7 @@ export const PayrollPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-calendar-check-line me-1"></i> MODUL PRESENSI & PAYROLL
           </span>
-          <h2 className="font-weight-bold text-dark mb-1 !text-base">Payroll & Presensi PWA SDM Lapangan</h2>
+          <h2 className="page-header-title font-weight-bold text-dark mb-0">Payroll & Presensi PWA SDM Lapangan</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Sistem Check-in Presensi Berbasis GPS Satelit & Kalkulasi Upah Harian Otomatis
           </p>

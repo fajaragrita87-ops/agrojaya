@@ -30,7 +30,7 @@ export const HppCalculatorPage = () => {
             <span className="tmp-badge-card emerald mb-2 d-inline-block">
               <i className="ri-calculator-line me-1"></i> KALKULASI HARGA MODAL & KEUNTUNGAN KEBUN
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
+            <h2 className="page-header-title font-weight-bold text-dark mb-0">
               Kalkulator Harga Modal (HPP) & Keuntungan Panen
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>

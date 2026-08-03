@@ -13,7 +13,7 @@ export const InventoryPage = () => {
             <span className="tmp-badge-card emerald mb-2 d-inline-block">
               <i className="ri-archive-line me-1"></i> LOGISTIK & GUDANG BAHAN BAKU
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
+            <h2 className="page-header-title font-weight-bold text-dark mb-0">
               Buku Register Stok Bahan Baku & Logistik Perkebunan
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>

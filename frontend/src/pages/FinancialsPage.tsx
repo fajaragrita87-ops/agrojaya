@@ -34,7 +34,7 @@ export const FinancialsPage = () => {
             <span className="tmp-badge-card blue mb-2 d-inline-block">
               <i className="ri-wallet-3-line me-1"></i> MODUL KEUANGAN OTOMATIS & APPROVAL PO 3-LAYER
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
+            <h2 className="page-header-title font-weight-bold text-dark mb-0">
               Manajemen Keuangan, Otorisasi PO, & Jurnal Arus Kas Kebun
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>

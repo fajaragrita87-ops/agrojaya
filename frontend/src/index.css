@@ -172,3 +172,59 @@ body {
 .pulse-glow {
   animation: pulseGlow 2s infinite ease-in-out;
 }
+
+/* ==========================================================================
+   AGROJAYA GLOBAL FONT SIZE NORMALIZATION
+   Beats Bootstrap .h1-.h6 utility classes and inline styles
+   ========================================================================== */
+
+/* Override Bootstrap heading UTILITY CLASSES (.h1 - .h6) */
+.h1 { font-size: 22px !important; }
+.h2 { font-size: 18px !important; }
+.h3 { font-size: 16px !important; }
+.h4 { font-size: 14px !important; }
+.h5 { font-size: 13px !important; }
+.h6 { font-size: 12px !important; }
+
+/* Override actual HTML heading tags globally */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.35 !important;
+}
+h1 { font-size: 22px !important; }
+h2 { font-size: 16px !important; }
+h3 { font-size: 15px !important; }
+h4 { font-size: 14px !important; }
+h5 { font-size: 13px !important; }
+h6 { font-size: 12px !important; }
+
+/* KPI metric numbers in cards - angka besar yang memang butuh menonjol */
+strong.h2, strong.h3 { font-size: 20px !important; }
+strong.h4 { font-size: 16px !important; }
+
+/* Tables */
+.table { font-size: 12.5px !important; }
+.table th { font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* Landing page HERO - boleh lebih besar karena memang untuk kesan pertama */
+#hero h1 { font-size: clamp(26px, 4vw, 42px) !important; }
+#hero h2 { font-size: 18px !important; }
+
+/* Section titles di landing page */
+.section-title h2 { font-size: 18px !important; }
+.section-title h3 { font-size: 16px !important; }
+
+/* Page header title - class khusus untuk judul utama setiap halaman */
+.page-header-title {
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+  font-weight: 700 !important;
+}
+
+/* KPI card nilai angka - class khusus agar konsisten */
+.kpi-value {
+  font-size: 20px !important;
+  line-height: 1.2 !important;
+  font-weight: 800 !important;
+}
+
+

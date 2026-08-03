@@ -4,7 +4,7 @@ import { useRole } from '../context/RoleContext';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
 
 export const DirekturDashboard = () => {
-  const { role, userName } = useRole();
+  useRole();
 
   useEffect(() => {
     getDirekturDashboard().catch(console.error);
@@ -41,12 +41,9 @@ export const DirekturDashboard = () => {
           <span className="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill uppercase font-weight-bold mb-2 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-dashboard-3-line me-1"></i> PUSAT KONTROL EKSEKUTIF DIREKTUR UTAMA
           </span>
-          <h2 className="h3 font-weight-extrabold text-dark mb-1">
-            Indikator Kinerja Utama (KPI) Operasional & Strategis Kebun
+          <h2 className="page-header-title font-weight-extrabold text-dark mb-0">
+            Indikator Kinerja Utama (KPI) Operasional Kebun
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            Pusat Kendali Pengawasan Lahan, Realisasi OPEX, Persetujuan PO, & SLA Tim Lapangan ({userName} - {role})
-          </p>
         </div>
         <div className="d-flex align-items-center gap-2">
           <span className="badge bg-success text-white px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 12 }}>
@@ -68,7 +65,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-landscape-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               2,0 Ha (12 Blok Kebun)
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -91,7 +88,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-wallet-3-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               Rp 85 Jt / Rp 125 Jt
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -114,7 +111,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-error-warning-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-warning-emphasis d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-warning-emphasis d-block mb-1">
               3 Dokumen PO / BAP
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -137,7 +134,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-user-follow-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-success d-block mb-1">
               94.2% Efektivitas
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -160,7 +157,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-plant-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               40.500 Kg Hasil Kebun
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -183,7 +180,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-timer-flash-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-success d-block mb-1">
               98.0% Tepat Waktu
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>

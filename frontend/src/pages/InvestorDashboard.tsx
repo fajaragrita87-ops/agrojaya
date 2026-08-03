@@ -65,7 +65,7 @@ export const InvestorDashboard = () => {
           <span className="badge bg-primary-subtle text-primary border border-primary px-3 py-1 rounded-pill uppercase font-weight-bold mb-2 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-funds-box-line me-1"></i> PORTAL TRANSPARANSI PORTOFOLIO INVESTOR
           </span>
-          <h2 className="font-weight-extrabold text-dark mb-1" style={{ fontSize: 20, letterSpacing: '-0.3px' }}>
+          <h2 className="page-header-title font-weight-extrabold text-dark mb-0" style={{ fontSize: 20, letterSpacing: '-0.3px' }}>
             Indikator Kinerja Utama (KPI) & Valuasi Portofolio Investasi
           </h2>
           <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
@@ -90,7 +90,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-bank-card-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               Rp 2.500.000.000
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -113,7 +113,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-line-chart-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-success d-block mb-1">
               Rp 3.100.000.000
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -136,7 +136,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-shield-user-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               88.5% Aman
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -159,7 +159,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-landscape-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-primary d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-primary d-block mb-1">
               65.0% Siap Tanam/Panen
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -182,7 +182,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-fire-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               Rp 85.000.000 / Bln
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -205,7 +205,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-store-2-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
+            <strong className="kpi-value font-weight-extrabold text-dark d-block mb-1">
               180.000 Kg Komoditas
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>

@@ -48,7 +48,7 @@ export const CropsPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-plant-line me-1"></i> MASTER DATA KOMODITAS & SOP
           </span>
-          <h2 className="font-weight-bold text-dark mb-1 !text-base">Master Data Komoditas & SOP Perawatan Kebun</h2>
+          <h2 className="page-header-title font-weight-bold text-dark mb-0">Master Data Komoditas & SOP Perawatan Kebun</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Katalog Standar Operasional Prosedur (SOP) & Proyeksi Siklus Panen Tanaman Kebun
           </p>

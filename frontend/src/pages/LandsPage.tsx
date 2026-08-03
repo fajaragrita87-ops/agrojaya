@@ -96,7 +96,7 @@ export const LandsPage = () => {
         <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
           <i className="ri-map-pin-2-line me-1"></i> PEMETAAN LAHAN GIS SATELIT JONGGOL BOGOR
         </span>
-        <h2 className="font-weight-bold text-dark mb-1 !text-base">Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
+        <h2 className="page-header-title font-weight-bold text-dark mb-0">Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
         <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
           Deteksi Koordinat Satelit GPS Lat/Long Secara Real-Time Per Blok Kebun AgroJaya Jonggol
         </p>

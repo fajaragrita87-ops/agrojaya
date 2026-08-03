@@ -68,7 +68,7 @@ export const ReportsPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-shield-check-line me-1"></i> MODUL LAPORAN AUDITOR ENTERPRISE
           </span>
-          <h2 className="font-weight-bold text-dark mb-1 !text-base">Laporan Terpadu 5-Dimensi Auditor Kebun</h2>
+          <h2 className="page-header-title font-weight-bold text-dark mb-0">Laporan Terpadu 5-Dimensi Auditor Kebun</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Siklus Penuh Operasional Hulu-ke-Hilir Berstandar Audit Transparansi Perkebunan Indonesia
           </p>

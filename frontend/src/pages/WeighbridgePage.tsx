@@ -22,7 +22,7 @@ export const WeighbridgePage = () => {
             <span className="tmp-badge-card emerald mb-2 d-inline-block">
               <i className="ri-scales-3-line me-1"></i> LOGISTIK & TIMBANGAN DIGITAL KEBUN
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
+            <h2 className="page-header-title font-weight-bold text-dark mb-0">
               Pencatatan & Timbangan Digital Hasil Panen Kebun
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
