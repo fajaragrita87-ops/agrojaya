@@ -48,7 +48,7 @@ export const CropsPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-plant-line me-1"></i> MASTER DATA KOMODITAS & SOP
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Master Data Komoditas & SOP Perawatan Kebun</h2>
+          <h2 className="font-weight-bold text-dark mb-1 !text-base">Master Data Komoditas & SOP Perawatan Kebun</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Katalog Standar Operasional Prosedur (SOP) & Proyeksi Siklus Panen Tanaman Kebun
           </p>
@@ -63,7 +63,7 @@ export const CropsPage = () => {
         <div className="card-box p-4 rounded-4 space-y-4">
           <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
             <div>
-              <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 16 }}>
+              <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
                 <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
                   <i className="ri-add-circle-line"></i>
                 </span>
@@ -118,7 +118,7 @@ export const CropsPage = () => {
 
             <div className="col-md-3 d-flex align-items-end">
               <button type="submit" className="btn btn-primary-gradient font-weight-bold p-2.5 w-100 rounded-3 shadow-xs d-flex align-items-center justify-content-center gap-2" style={{ height: 42, fontSize: 13 }}>
-                <i className="ri-save-line" style={{ fontSize: 16 }}></i> Simpan SOP Komoditas
+                <i className="ri-save-line !text-sm"></i> Simpan SOP Komoditas
               </button>
             </div>
           </form>
@@ -136,7 +136,7 @@ export const CropsPage = () => {
             <div key={crop.id} className="col-12 col-md-4">
               <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3 h-100">
                 <div className="d-flex justify-content-between align-items-start">
-                  <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+                  <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
                     <i className="ri-leaf-fill text-success"></i> {crop.name}
                   </h4>
                   <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 font-weight-bold" style={{ fontSize: 11 }}>

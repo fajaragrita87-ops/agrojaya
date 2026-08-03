@@ -37,7 +37,7 @@ export const Sidebar = () => {
     { label: 'Kelola Pekerja', path: '/users', icon: 'ri-user-settings-line', roles: ['MANAGER'] },
     { label: 'Gaji & Upah SDM', path: '/payroll', icon: 'ri-coins-line', roles: ['MANAGER'] },
     { label: 'Keuangan & Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['MANAGER'] },
-    { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['MANAGER'] },
+    { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['MANAGER'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['MANAGER'] },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['MANAGER'] },
 
@@ -51,7 +51,7 @@ export const Sidebar = () => {
     { label: 'Manajemen User', path: '/users', icon: 'ri-user-settings-line', roles: ['DIREKTUR'] },
     { label: 'Absensi & Gaji SDM', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['DIREKTUR'] },
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['DIREKTUR'] },
-    { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['DIREKTUR'] },
+    { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['DIREKTUR'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['DIREKTUR'] },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['DIREKTUR'] },
 
@@ -59,7 +59,7 @@ export const Sidebar = () => {
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['FINANCE'], badge: 'Pencairan' },
     { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['FINANCE'] },
     { label: 'Absensi & Gaji SDM', path: '/payroll', icon: 'ri-coins-line', roles: ['FINANCE'] },
-    { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['FINANCE'] },
+    { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['FINANCE'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['FINANCE'] },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['FINANCE'] },
 
@@ -68,7 +68,7 @@ export const Sidebar = () => {
     { label: 'Peta Lahan GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['INVESTOR'] },
     { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['INVESTOR'] },
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['INVESTOR'] },
-    { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['INVESTOR'] },
+    { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['INVESTOR'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['INVESTOR'] },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['INVESTOR'] },
   ];
@@ -85,7 +85,7 @@ export const Sidebar = () => {
             <i className="ri-leaf-line"></i>
           </div>
           <div>
-            <h1 className="h6 font-weight-bold text-dark m-0 leading-tight" style={{ fontSize: 15 }}>AgroJaya ERP</h1>
+            <h1 className="h6 font-weight-bold text-dark m-0 leading-tight !text-sm">AgroJaya ERP</h1>
             <span className="text-success font-weight-bold d-block" style={{ fontSize: 11, textTransform: 'uppercase' }}>Portal ERP Kebun</span>
           </div>
         </Link>

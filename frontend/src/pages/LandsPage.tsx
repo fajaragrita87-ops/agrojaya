@@ -96,7 +96,7 @@ export const LandsPage = () => {
         <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
           <i className="ri-map-pin-2-line me-1"></i> PEMETAAN LAHAN GIS SATELIT JONGGOL BOGOR
         </span>
-        <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
+        <h2 className="font-weight-bold text-dark mb-1 !text-base">Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
         <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
           Deteksi Koordinat Satelit GPS Lat/Long Secara Real-Time Per Blok Kebun AgroJaya Jonggol
         </p>
@@ -139,7 +139,7 @@ export const LandsPage = () => {
       {canCreateLand && (
         <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
           <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
-            <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+            <h4 className="font-weight-bold text-dark m-0 !text-sm">
               <i className="ri-add-circle-line text-success me-2"></i> Tambah Blok Lahan Kebun Baru (GPS Jonggol)
             </h4>
             <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 11 }}>
@@ -207,7 +207,7 @@ export const LandsPage = () => {
       {/* Table Inventaris Blok Lahan */}
       <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
         <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 !text-sm">
             <i className="ri-table-line text-success me-2"></i> Inventaris Lahan & Koordinat GPS Blok (Jonggol, Bogor)
           </h4>
           <button

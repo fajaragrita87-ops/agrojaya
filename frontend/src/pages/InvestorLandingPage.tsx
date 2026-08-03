@@ -137,7 +137,7 @@ export const InvestorLandingPage = () => {
 
             <div className="col-lg-3 col-md-8 col-6 text-end">
               <Link to="/dashboard/investor" className="btn btn-primary-gradient px-4 py-2.5 text-white font-weight-extrabold rounded-3 shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13 }}>
-                <i className="ri-user-line" style={{ fontSize: 16 }}></i> Portal Investor ({userName})
+                <i className="ri-user-line !text-sm"></i> Portal Investor ({userName})
               </Link>
             </div>
           </div>
@@ -151,7 +151,7 @@ export const InvestorLandingPage = () => {
             <div className="col-lg-12">
               <div className="text-center mx-auto" style={{ maxWidth: '900px' }}>
                 <span className="badge bg-success-subtle text-success border border-success px-3.5 py-2 rounded-pill font-weight-bold uppercase mb-3 d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12, letterSpacing: '0.5px' }}>
-                  <i className="ri-shield-check-fill" style={{ fontSize: 15 }}></i> PORTAL TRANSPARANSI AKUNTABILITAS INVESTASI PERKEBUNAN AGROJAYA
+                  <i className="ri-shield-check-fill !text-sm"></i> PORTAL TRANSPARANSI AKUNTABILITAS INVESTASI PERKEBUNAN AGROJAYA
                 </span>
 
                 <h1 className="font-weight-extrabold text-dark mb-4 text-center" style={{ fontSize: 'clamp(30px, 4vw, 48px)', lineHeight: 1.2, letterSpacing: '-1px' }}>
@@ -161,10 +161,10 @@ export const InvestorLandingPage = () => {
 
                 <div className="d-flex justify-content-center gap-3 pt-2 mb-2">
                   <button onClick={handleExportPDF} className="btn btn-primary-gradient px-4 py-3 text-white rounded-3 font-weight-extrabold shadow-sm d-inline-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-                    <i className="ri-file-download-line" style={{ fontSize: 18 }}></i> Unduh Laporan Auditor 5D
+                    <i className="ri-file-download-line !text-base"></i> Unduh Laporan Auditor 5D
                   </button>
                   <Link to="/dashboard/investor" className="btn btn-outline-success px-4 py-3 text-success font-weight-extrabold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-                    <i className="ri-dashboard-line" style={{ fontSize: 18 }}></i> Masuk Dasbor Investor
+                    <i className="ri-dashboard-line !text-base"></i> Masuk Dasbor Investor
                   </Link>
                 </div>
 
@@ -173,7 +173,7 @@ export const InvestorLandingPage = () => {
                   <div className="col-12 col-sm-6 col-md-3">
                     <div className="card-box card-box-hover p-4 border bg-white h-100">
                       <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Valuasi Proyek Saat Ini</span>
-                      <strong className="text-success h3 font-weight-extrabold mb-0 d-block" style={{ fontSize: 22 }}>Rp 3,1 Miliar</strong>
+                      <strong className="text-success h3 font-weight-extrabold mb-0 d-block !text-lg">Rp 3,1 Miliar</strong>
                       <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 11 }}>
                         <i className="ri-arrow-up-line me-1"></i> +24.0% Pertumbuhan Bersih
                       </span>
@@ -183,7 +183,7 @@ export const InvestorLandingPage = () => {
                   <div className="col-12 col-sm-6 col-md-3">
                     <div className="card-box card-box-hover p-4 border bg-white h-100">
                       <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Modal Disetor</span>
-                      <strong className="text-dark h3 font-weight-extrabold mb-0 d-block" style={{ fontSize: 22 }}>Rp 2,5 Miliar</strong>
+                      <strong className="text-dark h3 font-weight-extrabold mb-0 d-block !text-lg">Rp 2,5 Miliar</strong>
                       <span className="d-block text-muted font-weight-bold mt-1.5" style={{ fontSize: 11 }}>
                         <i className="ri-checkbox-circle-line text-success me-1"></i> 100% Terrealisasi Ke Lahan
                       </span>
@@ -193,7 +193,7 @@ export const InvestorLandingPage = () => {
                   <div className="col-12 col-sm-6 col-md-3">
                     <div className="card-box card-box-hover p-4 border bg-white h-100">
                       <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Area Aktif</span>
-                      <strong className="text-dark h3 font-weight-extrabold mb-0 d-block" style={{ fontSize: 22 }}>2.0 Hektar</strong>
+                      <strong className="text-dark h3 font-weight-extrabold mb-0 d-block !text-lg">2.0 Hektar</strong>
                       <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 11 }}>
                         <i className="ri-map-pin-2-line me-1"></i> Jonggol, Bogor Jawa Barat
                       </span>
@@ -203,7 +203,7 @@ export const InvestorLandingPage = () => {
                   <div className="col-12 col-sm-6 col-md-3">
                     <div className="card-box card-box-hover p-4 border bg-white h-100">
                       <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Kesiapan Fisik Lahan</span>
-                      <strong className="text-primary h3 font-weight-extrabold mb-0 d-block" style={{ fontSize: 22 }}>65% Siap</strong>
+                      <strong className="text-primary h3 font-weight-extrabold mb-0 d-block !text-lg">65% Siap</strong>
                       <span className="d-block text-primary font-weight-bold mt-1.5" style={{ fontSize: 11 }}>
                         <i className="ri-time-line me-1"></i> Tahap 4 & 5 Aktif Panen
                       </span>
@@ -349,7 +349,7 @@ export const InvestorLandingPage = () => {
         <div className="container-fluid px-4 px-md-5">
           <div className="section-title text-center mb-5">
             <span className="tmp-badge-card success mb-2 d-inline-block">LAYANAN OPERASIONAL KEBUN</span>
-            <h2 className="font-weight-extrabold text-dark" style={{ fontSize: 26 }}>
+            <h2 className="font-weight-extrabold text-dark !text-lg">
               Layanan Pengelolaan & Audit Fisik Perkebunan
             </h2>
           </div>
@@ -381,7 +381,7 @@ export const InvestorLandingPage = () => {
         <div className="container-fluid px-4 px-md-5">
           <div className="section-title text-center mb-4">
             <span className="tmp-badge-card emerald mb-2 d-inline-block">SATELIT GEOSPATIAL GIS</span>
-            <h2 className="font-weight-extrabold text-dark" style={{ fontSize: 26 }}>
+            <h2 className="font-weight-extrabold text-dark !text-lg">
               Peta GIS Satelit Lahan Perkebunan Jonggol
             </h2>
             <p className="text-secondary font-weight-medium" style={{ fontSize: 13 }}>
@@ -405,7 +405,7 @@ export const InvestorLandingPage = () => {
         <div className="container-fluid px-4 px-md-5">
           <div className="section-title text-center mb-5">
             <span className="tmp-badge-card blue mb-2 d-inline-block">TRANSPARANSI KEUANGAN</span>
-            <h2 className="font-weight-extrabold text-dark" style={{ fontSize: 26 }}>
+            <h2 className="font-weight-extrabold text-dark !text-lg">
               Kinerja Keuangan & Pertumbuhan Valuasi Proyek
             </h2>
           </div>
@@ -455,7 +455,7 @@ export const InvestorLandingPage = () => {
         <div className="container-fluid px-4 px-md-5">
           <div className="section-title text-center mb-4">
             <span className="tmp-badge-card success mb-2 d-inline-block">LAPORAN 5-DIMENSI AUDITOR</span>
-            <h2 className="font-weight-extrabold text-dark" style={{ fontSize: 26 }}>
+            <h2 className="font-weight-extrabold text-dark !text-lg">
               Buku Jurnal Arus Kas & Verifikasi Berita Acara Pekerjaan (BAP)
             </h2>
           </div>

@@ -81,7 +81,7 @@ export const InvestorPOApprovalSummary: React.FC = () => {
                   <span className="badge bg-white text-dark border font-weight-bold">{po.category}</span>
                   <span className="badge bg-success text-white font-weight-bold" style={{ fontSize: 10 }}>✅ LAYER 1 & 2 DISERTAI AUDIT</span>
                 </div>
-                <h5 className="font-weight-extrabold text-dark m-0 mt-1" style={{ fontSize: 16 }}>{po.itemName}</h5>
+                <h5 className="font-weight-extrabold text-dark m-0 mt-1 !text-sm">{po.itemName}</h5>
                 <p className="text-secondary mb-0" style={{ fontSize: 12 }}>
                   📍 Target Lahan: <b>{po.targetLand}</b> • Penggunaan: <i>"{po.usageDetails}"</i>
                 </p>
@@ -91,7 +91,7 @@ export const InvestorPOApprovalSummary: React.FC = () => {
               </div>
 
               <div className="text-end d-flex flex-column align-items-md-end gap-2">
-                <strong className="h4 text-danger font-weight-extrabold m-0" style={{ fontSize: 20 }}>
+                <strong className="h4 text-danger font-weight-extrabold m-0 !text-lg">
                   Rp {po.totalPrice?.toLocaleString('id-ID')}
                 </strong>
                 <button

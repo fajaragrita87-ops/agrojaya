@@ -224,7 +224,7 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
                       {new Date(item.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </div>
-                  <h6 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+                  <h6 className="font-weight-bold text-dark m-0 !text-sm">
                     {item.note}
                   </h6>
                 </div>

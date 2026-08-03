@@ -287,7 +287,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
                       </span>
                     </div>
 
-                    <h4 className="font-weight-extrabold text-dark mb-1.5" style={{ fontSize: 16 }}>{block.name}</h4>
+                    <h4 className="font-weight-extrabold text-dark mb-1.5 !text-sm">{block.name}</h4>
                     <p className="text-secondary mb-3 font-weight-medium" style={{ fontSize: 12 }}>
                       📍 {block.coords} • <strong className="text-dark">"{block.crop}"</strong>
                     </p>
@@ -326,7 +326,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
                 <span className="badge px-3 py-1 rounded-pill font-weight-bold text-white mb-1" style={{ backgroundColor: activeBlock.color, fontSize: 11 }}>
                   INFORMASI DENAH BLOK TERPILIH
                 </span>
-                <h4 className="font-weight-extrabold text-dark m-0" style={{ fontSize: 17 }}>{activeBlock.name}</h4>
+                <h4 className="font-weight-extrabold text-dark m-0 !text-sm">{activeBlock.name}</h4>
                 <span className="text-secondary font-mono" style={{ fontSize: 12 }}>📍 {activeBlock.coords}</span>
               </div>
 

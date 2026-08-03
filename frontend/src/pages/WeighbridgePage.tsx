@@ -22,7 +22,7 @@ export const WeighbridgePage = () => {
             <span className="tmp-badge-card emerald mb-2 d-inline-block">
               <i className="ri-scales-3-line me-1"></i> LOGISTIK & TIMBANGAN DIGITAL KEBUN
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1" style={{ fontSize: 18 }}>
+            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
               Pencatatan & Timbangan Digital Hasil Panen Kebun
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
@@ -41,7 +41,7 @@ export const WeighbridgePage = () => {
           <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Berat Bersih Panen</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0" style={{ fontSize: 20 }}>17.400 Kg</strong>
+              <strong className="h3 font-weight-extrabold text-dark m-0 !text-lg">17.400 Kg</strong>
               <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
                 <i className="ri-checkbox-circle-fill me-1"></i> Hasil Bersih Terverifikasi
               </span>
@@ -56,7 +56,7 @@ export const WeighbridgePage = () => {
           <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Truk Pengangkut</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0" style={{ fontSize: 20 }}>3 Armada Truk</strong>
+              <strong className="h3 font-weight-extrabold text-dark m-0 !text-lg">3 Armada Truk</strong>
               <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
                 <i className="ri-file-text-line me-1"></i> Surat Jalan Resmi Sah
               </span>
@@ -71,7 +71,7 @@ export const WeighbridgePage = () => {
           <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Kualitas Panen (Grade A)</span>
-              <strong className="h3 font-weight-extrabold text-success m-0" style={{ fontSize: 20 }}>100.0%</strong>
+              <strong className="h3 font-weight-extrabold text-success m-0 !text-lg">100.0%</strong>
               <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
                 <i className="ri-award-line me-1"></i> Sesuai Standar Komersial
               </span>
@@ -86,7 +86,7 @@ export const WeighbridgePage = () => {
           <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Status Alat Timbangan</span>
-              <strong className="h3 font-weight-extrabold text-primary m-0" style={{ fontSize: 18 }}>AKURAT & LULUS UJI</strong>
+              <strong className="h3 font-weight-extrabold text-primary m-0 !text-base">AKURAT & LULUS UJI</strong>
               <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>Toleransi Akurasi &lt; 0.5%</span>
             </div>
             <div className="corpox-icon-box blue">
@@ -99,7 +99,7 @@ export const WeighbridgePage = () => {
       {/* Main Weighbridge Table */}
       <div className="card-box p-4 rounded-4 space-y-4">
         <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
-          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-file-list-3-line text-success"></i> Daftar Resi Tiket Timbangan Hasil Panen Kebun
           </h4>
           <span className="tmp-badge-card success">

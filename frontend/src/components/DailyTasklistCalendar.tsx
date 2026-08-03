@@ -364,7 +364,7 @@ export const DailyTasklistCalendar = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-calendar-event-line me-1"></i> KALENDER JADWAL & TASKLIST OPERASIONAL HARIAN
           </span>
-          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 18 }}>
+          <h4 className="font-weight-bold text-dark m-0 !text-base">
             Jadwal Pengerjaan Kebun Harian & Pengingat SOP Terintegrasi
           </h4>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
@@ -483,7 +483,7 @@ export const DailyTasklistCalendar = () => {
                     </span>
                     <span className="text-muted font-weight-bold" style={{ fontSize: 11 }}>ID: {task.id}</span>
                   </div>
-                  <h5 className="font-weight-extrabold text-dark m-0" style={{ fontSize: 15 }}>
+                  <h5 className="font-weight-extrabold text-dark m-0 !text-sm">
                     {task.title}
                   </h5>
                 </div>

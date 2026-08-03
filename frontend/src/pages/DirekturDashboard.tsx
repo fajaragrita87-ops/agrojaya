@@ -68,7 +68,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-landscape-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               2,0 Ha (12 Blok Kebun)
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -91,7 +91,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-wallet-3-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               Rp 85 Jt / Rp 125 Jt
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -114,7 +114,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-error-warning-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-warning-emphasis d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-warning-emphasis d-block mb-1 !text-lg">
               3 Dokumen PO / BAP
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -137,7 +137,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-user-follow-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
               94.2% Efektivitas
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -160,7 +160,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-plant-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               40.500 Kg Hasil Kebun
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -183,7 +183,7 @@ export const DirekturDashboard = () => {
                 <i className="ri-timer-flash-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
               98.0% Tepat Waktu
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
