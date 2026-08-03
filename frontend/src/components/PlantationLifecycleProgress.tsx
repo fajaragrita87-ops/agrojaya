@@ -303,7 +303,7 @@ export const PlantationLifecycleProgress: React.FC = () => {
       {isEditing && (
         <form onSubmit={handleSaveProgress} className="bg-success-subtle p-4 rounded-4 border border-success space-y-3">
           <div className="d-flex justify-content-between align-items-center pb-2 border-bottom border-success-subtle">
-            <h5 className="font-weight-bold text-success-emphasis m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+            <h5 className="font-weight-bold text-success-emphasis m-0 d-flex align-items-center gap-2 !text-sm">
               <i className="ri-edit-line"></i> Form Update Progress Fisik: Tahap {activeStep.stepNumber} - {activeStep.title}
             </h5>
             <button

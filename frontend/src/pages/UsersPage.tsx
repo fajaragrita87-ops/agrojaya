@@ -58,7 +58,7 @@ export const UsersPage = () => {
         <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
           <i className="ri-user-settings-line me-1"></i> MANAJEMEN PENGGUNA & RBAC
         </span>
-        <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Manajemen SDM & Pengaturan Hak Akses User</h2>
+        <h2 className="font-weight-bold text-dark mb-1 !text-base">Manajemen SDM & Pengaturan Hak Akses User</h2>
         <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
           Pengaturan Hak Akses Pengguna, Manajer, Kepala Kebun & Efisiensi OPEX Tenaga Kerja
         </p>
@@ -67,7 +67,7 @@ export const UsersPage = () => {
       {/* Form User Baru */}
       {canManageUsers && (
         <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-user-add-line text-success"></i> Tambah Pengguna / Tenaga Kerja Baru
           </h4>
           <form onSubmit={handleSubmit} className="row g-3 pt-1">
@@ -129,7 +129,7 @@ export const UsersPage = () => {
       {/* Tabel SDM */}
       <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
         <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 !text-sm">
             <i className="ri-team-line text-success me-2"></i> Daftar Anggota Direksi & SDM Lapangan Kebun
           </h4>
           <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>

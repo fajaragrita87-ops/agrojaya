@@ -38,12 +38,12 @@ export const Topbar = () => {
             className="form-control form-control-sm ps-5 bg-light border-0 rounded-pill"
             style={{ fontSize: 13, height: 38 }}
           />
-          <i className="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary" style={{ fontSize: 15 }}></i>
+          <i className="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary !text-sm"></i>
         </div>
 
         {/* Live BMKG Weather API Widget */}
         <div className="d-none d-lg-flex align-items-center gap-2 bg-light px-3 py-1.5 rounded-pill">
-          <i className="ri-sun-cloudy-line text-warning" style={{ fontSize: 18 }}></i>
+          <i className="ri-sun-cloudy-line text-warning !text-base"></i>
           <div style={{ fontSize: 11, lineHeight: 1.2 }}>
             <strong className="text-dark d-block">
               {bmkgWeather?.location || 'Jonggol, Bogor (Jawa Barat)'} {bmkgWeather?.temperature || 29}°C <span className="badge bg-primary text-white ms-1" style={{ fontSize: 9 }}>BMKG LIVE</span>

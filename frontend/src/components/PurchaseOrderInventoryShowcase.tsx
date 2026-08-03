@@ -191,7 +191,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-git-commit-line me-1"></i> WORKFLOW PO 3-LAYER PERSERTUJUAN & PENCAIRAN
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Pengajuan PO Ops & Workflow Persetujuan 3 Layer</h2>
+          <h2 className="font-weight-bold text-dark mb-1 !text-base">Pengajuan PO Ops & Workflow Persetujuan 3 Layer</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Pengajuan (Manajer Ops) ➔ Layer 1: Finance ➔ Layer 2: Direktur ➔ Layer 3: Investor ➔ Pencairan (Finance)
           </p>
@@ -209,7 +209,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
         <div className="col-12 col-xl-6">
           <div className="bg-white p-4 rounded-4 border shadow-sm h-100 space-y-3">
             <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
-              <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+              <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
                 <i className="ri-archive-line text-success"></i> Kolom Stok Inventaris & Peringatan Reorder
               </h4>
               <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>Real-Time Inventory</span>
@@ -255,7 +255,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
         <div className="col-12 col-xl-6">
           <div className="bg-white p-4 rounded-4 border shadow-sm h-100 space-y-3">
             <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
-              <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+              <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
                 <i className="ri-file-add-line text-success"></i> Form Pengajuan PO Lengkap (Manajer Operasional)
               </h4>
               <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 10 }}>
@@ -349,7 +349,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
 
                 <div className="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
                   <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11 }}>Total Estimasi Anggaran OPEX:</span>
-                  <strong className="h5 font-weight-extrabold text-danger m-0" style={{ fontSize: 16 }}>
+                  <strong className="h5 font-weight-extrabold text-danger m-0 !text-sm">
                     Rp {calculatedTotal.toLocaleString('id-ID')}
                   </strong>
                 </div>
@@ -384,7 +384,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
       {/* Main PO Approval & Disbursal Table Log */}
       <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
         <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-file-list-3-line text-success"></i> Log Pengajuan PO & Status Persetujuan 3 Layer
           </h4>
           <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>

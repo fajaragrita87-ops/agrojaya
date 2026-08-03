@@ -90,7 +90,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-bank-card-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               Rp 2.500.000.000
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -113,7 +113,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-line-chart-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-success d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-success d-block mb-1 !text-lg">
               Rp 3.100.000.000
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -136,7 +136,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-shield-user-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               88.5% Aman
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -159,7 +159,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-landscape-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-primary d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-primary d-block mb-1 !text-lg">
               65.0% Siap Tanam/Panen
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -182,7 +182,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-fire-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               Rp 85.000.000 / Bln
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>
@@ -205,7 +205,7 @@ export const InvestorDashboard = () => {
                 <i className="ri-store-2-line"></i>
               </div>
             </div>
-            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1 !text-lg">
               180.000 Kg Komoditas
             </strong>
             <div className="progress mb-2" style={{ height: 6 }}>

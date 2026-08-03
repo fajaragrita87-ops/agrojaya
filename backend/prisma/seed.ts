@@ -118,12 +118,12 @@ async function main() {
     },
   });
 
-  const sawit = await prisma.crop.create({
+  const porang = await prisma.crop.create({
     data: {
-      name: 'Kelapa Sawit Tenera & Jagung Hibrida',
-      cycleDays: 365,
-      sop: JSON.stringify({ perawatan: 'Pemupukan NPK 14 hari sekali, penyiangan gulma, pemangkasan pelepah.' }),
-      yieldFormula: JSON.stringify({ baseYieldPerHaKg: 24000 }),
+      name: 'Umbi Porang Kualitas Ekspor',
+      cycleDays: 240,
+      sop: JSON.stringify({ perawatan: 'Pembuatan guludan, pemupukan pupuk kandang/kompos, penyiangan gulma rutin, dan menjaga kelembaban tanah.' }),
+      yieldFormula: JSON.stringify({ baseYieldPerHaKg: 20000 }),
     },
   });
 
@@ -155,12 +155,12 @@ async function main() {
   const cycleA2 = await prisma.plantingCycle.create({
     data: {
       landId: landA2.id,
-      cropId: sawit.id,
+      cropId: porang.id,
       startDate: new Date('2026-01-10'),
-      estimatedHarvest: new Date('2026-11-20'),
+      estimatedHarvest: new Date('2026-09-10'), // adjusted for shorter cycle
       status: 'PERAWATAN',
       totalCost: 35000000,
-      totalYieldKg: 45000,
+      totalYieldKg: 40000,
       createdById: manager.id,
     },
   });

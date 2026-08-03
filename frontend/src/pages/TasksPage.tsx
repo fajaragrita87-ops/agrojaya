@@ -12,7 +12,7 @@ export const TasksPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-task-line me-1"></i> MANAJEMEN PEKERJAAN & KALENDER SOP
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Jadwal Tasklist Operasional Harian & Instruksi SOP</h2>
+          <h2 className="font-weight-bold text-dark mb-1 !text-base">Jadwal Tasklist Operasional Harian & Instruksi SOP</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Pemantauan Eksekusi Pekerjaan Kebun Setiap Hari, Check-in SLA Petani, & Pengingat SOP Kebun
           </p>

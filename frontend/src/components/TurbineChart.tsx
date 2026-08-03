@@ -59,7 +59,7 @@ export const TurbineLineChart: React.FC<LineChartProps> = ({
     <div className="card-box card-box-hover overflow-hidden h-100">
       <div className="p-4 bg-white border-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
         <div>
-          <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2 !text-sm">
             <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
               <i className="ri-line-chart-line"></i>
             </span>
@@ -158,7 +158,7 @@ export const TurbineDonutChart: React.FC<DonutChartProps> = ({ title, subtitle, 
   return (
     <div className="card-box card-box-hover overflow-hidden h-100">
       <div className="p-4 bg-white border-bottom">
-        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2 !text-sm">
           <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
             <i className="ri-pie-chart-line"></i>
           </span>
@@ -197,7 +197,7 @@ export const TurbineDonutChart: React.FC<DonutChartProps> = ({ title, subtitle, 
           </svg>
           <div className="position-absolute top-50 start-50 translate-middle text-center">
             <span className="d-block text-uppercase font-weight-bold text-muted" style={{ fontSize: 10 }}>TOTAL OPEX</span>
-            <strong className="h4 font-weight-extrabold text-dark m-0" style={{ fontSize: 18 }}>100%</strong>
+            <strong className="h4 font-weight-extrabold text-dark m-0 !text-base">100%</strong>
           </div>
         </div>
 
@@ -240,7 +240,7 @@ export const TurbineBarChart: React.FC<BarChartProps> = ({ title, subtitle, data
   return (
     <div className="card-box card-box-hover overflow-hidden">
       <div className="p-4 bg-white border-bottom">
-        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2 !text-sm">
           <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
             <i className="ri-bar-chart-2-line"></i>
           </span>

@@ -68,7 +68,7 @@ export const ReportsPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-shield-check-line me-1"></i> MODUL LAPORAN AUDITOR ENTERPRISE
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Laporan Terpadu 5-Dimensi Auditor Kebun</h2>
+          <h2 className="font-weight-bold text-dark mb-1 !text-base">Laporan Terpadu 5-Dimensi Auditor Kebun</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Siklus Penuh Operasional Hulu-ke-Hilir Berstandar Audit Transparansi Perkebunan Indonesia
           </p>
@@ -85,7 +85,7 @@ export const ReportsPage = () => {
       {/* Main 5-Dimension Audit Table */}
       <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
         <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-shield-check-line text-success"></i> Matriks Audit 5-Dimensi Siklus Perkebunan (End-to-End)
           </h4>
           <span className="badge bg-success-subtle text-success border border-success px-3 py-1 font-weight-bold" style={{ fontSize: 11 }}>

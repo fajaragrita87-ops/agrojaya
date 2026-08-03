@@ -140,7 +140,7 @@ export const RawMaterialsInventoryShowcase = () => {
           <div className="card-box card-box-hover p-3.5 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Jenis Bahan</span>
-              <strong className="h4 font-weight-extrabold text-dark m-0 d-block" style={{ fontSize: 18 }}>5 Varian Item</strong>
+              <strong className="h4 font-weight-extrabold text-dark m-0 d-block !text-base">5 Varian Item</strong>
               <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
                 <i className="ri-checkbox-circle-line me-1"></i> Terdata di Gudang Jonggol
               </span>
@@ -155,7 +155,7 @@ export const RawMaterialsInventoryShowcase = () => {
           <div className="card-box card-box-hover p-3.5 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Perlu Penambahan</span>
-              <strong className="h4 font-weight-extrabold text-danger m-0 d-block" style={{ fontSize: 18 }}>2 Bahan Restock</strong>
+              <strong className="h4 font-weight-extrabold text-danger m-0 d-block !text-base">2 Bahan Restock</strong>
               <span className="d-block text-danger font-weight-bold mt-1" style={{ fontSize: 11 }}>
                 <i className="ri-alert-line me-1"></i> Stok Menipis & Kritis
               </span>
@@ -170,7 +170,7 @@ export const RawMaterialsInventoryShowcase = () => {
           <div className="card-box card-box-hover p-3.5 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Nilai Persediaan</span>
-              <strong className="h4 font-weight-extrabold text-dark m-0 d-block" style={{ fontSize: 18 }}>
+              <strong className="h4 font-weight-extrabold text-dark m-0 d-block !text-base">
                 Rp {items.reduce((acc, curr) => acc + (curr.currentStock * curr.unitPriceRp), 0).toLocaleString('id-ID')}
               </strong>
               <span className="d-block text-secondary font-weight-bold mt-1" style={{ fontSize: 11 }}>
@@ -187,7 +187,7 @@ export const RawMaterialsInventoryShowcase = () => {
           <div className="card-box card-box-hover p-3.5 d-flex align-items-center justify-content-between h-100">
             <div>
               <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Kondisi Gudang Simpan</span>
-              <strong className="h4 font-weight-extrabold text-success m-0 d-block" style={{ fontSize: 18 }}>Sangat Baik (100%)</strong>
+              <strong className="h4 font-weight-extrabold text-success m-0 d-block !text-base">Sangat Baik (100%)</strong>
               <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
                 Suhu & Kelembapan Optimal
               </span>
@@ -204,7 +204,7 @@ export const RawMaterialsInventoryShowcase = () => {
         <div className="card-box p-4 rounded-4 space-y-4">
           <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
             <div>
-              <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 16 }}>
+              <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
                 <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
                   <i className="ri-add-circle-line"></i>
                 </span>
@@ -295,7 +295,7 @@ export const RawMaterialsInventoryShowcase = () => {
 
             <div className="col-12 col-md-2">
               <button type="submit" className="btn btn-primary-gradient font-weight-bold p-0 w-100 rounded-3 shadow-xs d-flex align-items-center justify-content-center gap-2" style={{ height: 42, fontSize: 13 }}>
-                <i className="ri-save-line" style={{ fontSize: 16 }}></i> Catat Ke Stok
+                <i className="ri-save-line !text-sm"></i> Catat Ke Stok
               </button>
             </div>
           </form>
@@ -305,7 +305,7 @@ export const RawMaterialsInventoryShowcase = () => {
       {/* Tabel Monitoring Stok Gudang */}
       <div className="card-box p-4 rounded-4 space-y-4">
         <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
-          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-file-list-3-line text-success"></i> Buku Register Stok Bahan Baku Gudang Jonggol
           </h4>
           <span className="tmp-badge-card success">

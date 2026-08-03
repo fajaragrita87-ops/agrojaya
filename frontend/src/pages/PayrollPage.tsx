@@ -50,7 +50,7 @@ export const PayrollPage = () => {
           <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
             <i className="ri-calendar-check-line me-1"></i> MODUL PRESENSI & PAYROLL
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Payroll & Presensi PWA SDM Lapangan</h2>
+          <h2 className="font-weight-bold text-dark mb-1 !text-base">Payroll & Presensi PWA SDM Lapangan</h2>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
             Sistem Check-in Presensi Berbasis GPS Satelit & Kalkulasi Upah Harian Otomatis
           </p>
@@ -63,7 +63,7 @@ export const PayrollPage = () => {
       {/* PWA Check-In Card Widget */}
       {!isReadOnly && (
         <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-map-pin-user-line text-success"></i> Form Check-In PWA (Simulasi Petani Lapangan)
           </h4>
           <div className="row g-3 pt-1">
@@ -103,7 +103,7 @@ export const PayrollPage = () => {
       {/* Audit Log Absensi 5-Dimensi */}
       <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
         <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-bold text-dark m-0 !text-sm">
             <i className="ri-history-line text-success me-2"></i> Log Presensi Harian 5-Dimensi (Auditor Verified)
           </h4>
           <span className="badge bg-light text-dark border px-2.5 py-1 font-weight-bold" style={{ fontSize: 11 }}>
@@ -163,7 +163,7 @@ export const PayrollPage = () => {
 
       {/* Rekapitulasi Payroll Per Role */}
       <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-        <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+        <h4 className="font-weight-bold text-dark m-0 !text-sm">
           <i className="ri-coins-line text-success me-2"></i> Rekapitulasi Upah & Payroll Per Role Pekerja
         </h4>
         <div className="row g-3 pt-1">
@@ -176,7 +176,7 @@ export const PayrollPage = () => {
                     {item.status}
                   </span>
                 </div>
-                <div className="font-weight-bold text-success" style={{ fontSize: 16 }}>Rp {item.totalPayroll.toLocaleString('id-ID')}</div>
+                <div className="font-weight-bold text-success !text-sm">Rp {item.totalPayroll.toLocaleString('id-ID')}</div>
                 <span className="text-secondary d-block" style={{ fontSize: 11 }}>
                   {item.totalWorkers} Pekerja • {item.totalHoursWorked} Jam Kerja
                 </span>

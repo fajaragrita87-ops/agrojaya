@@ -30,7 +30,7 @@ export const HppCalculatorPage = () => {
             <span className="tmp-badge-card emerald mb-2 d-inline-block">
               <i className="ri-calculator-line me-1"></i> KALKULASI HARGA MODAL & KEUNTUNGAN KEBUN
             </span>
-            <h2 className="font-weight-extrabold text-dark mb-1" style={{ fontSize: 18 }}>
+            <h2 className="font-weight-extrabold text-dark mb-1 !text-base">
               Kalkulator Harga Modal (HPP) & Keuntungan Panen
             </h2>
             <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
@@ -47,7 +47,7 @@ export const HppCalculatorPage = () => {
       <div className="card-box p-4 rounded-4 space-y-4">
         <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
           <div>
-            <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 16 }}>
+            <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
               <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
                 <i className="ri-functions-line"></i>
               </span>
@@ -149,7 +149,7 @@ export const HppCalculatorPage = () => {
                 <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
                   Harga Modal Per Kilo (HPP)
                 </span>
-                <strong className="h4 font-weight-extrabold text-primary m-0" style={{ fontSize: 18 }}>
+                <strong className="h4 font-weight-extrabold text-primary m-0 !text-base">
                   Rp {Math.round(hppPerKg).toLocaleString('id-ID')} / Kg
                 </strong>
                 <span className="d-block text-secondary font-weight-medium mt-1" style={{ fontSize: 11 }}>
@@ -168,7 +168,7 @@ export const HppCalculatorPage = () => {
                 <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
                   Modal Kerja Per Hektar
                 </span>
-                <strong className="h4 font-weight-extrabold text-dark m-0" style={{ fontSize: 18 }}>
+                <strong className="h4 font-weight-extrabold text-dark m-0 !text-base">
                   Rp {Math.round(costPerHa).toLocaleString('id-ID')} / Ha
                 </strong>
                 <span className="d-block text-secondary font-weight-medium mt-1" style={{ fontSize: 11 }}>
@@ -187,7 +187,7 @@ export const HppCalculatorPage = () => {
                 <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
                   Keuntungan Bersih Per Kilo
                 </span>
-                <strong className="h4 font-weight-extrabold text-success m-0" style={{ fontSize: 18 }}>
+                <strong className="h4 font-weight-extrabold text-success m-0 !text-base">
                   + Rp {Math.round(marginPerKg).toLocaleString('id-ID')} / Kg
                 </strong>
                 <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
@@ -206,7 +206,7 @@ export const HppCalculatorPage = () => {
                 <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
                   Total Proyeksi Keuntungan
                 </span>
-                <strong className="h4 font-weight-extrabold text-success m-0" style={{ fontSize: 18 }}>
+                <strong className="h4 font-weight-extrabold text-success m-0 !text-base">
                   Rp {Math.round(totalProjectedProfit).toLocaleString('id-ID')}
                 </strong>
                 <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
@@ -224,7 +224,7 @@ export const HppCalculatorPage = () => {
       {/* Breakdown Table for All Land Blocks */}
       <div className="card-box p-4 rounded-4 space-y-4">
         <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
-          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
             <i className="ri-file-list-3-line text-success"></i> Rincian Harga Modal & Keuntungan Per Blok Kebun
           </h4>
           <span className="tmp-badge-card success">
