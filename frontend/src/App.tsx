@@ -13,6 +13,8 @@ import { FinancialsPage } from './pages/FinancialsPage';
 import { TasksPage } from './pages/TasksPage';
 import { WeighbridgePage } from './pages/WeighbridgePage';
 import { HppCalculatorPage } from './pages/HppCalculatorPage';
+import { InventoryPage } from './pages/InventoryPage';
+import { PlantationLifecyclePage } from './pages/PlantationLifecyclePage';
 import { useRole, type RoleType, getDefaultPathForRole } from './context/RoleContext';
 
 interface ProtectedRouteProps {
@@ -44,7 +46,7 @@ function App() {
         <Route
           path="/dashboard/direktur"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI']}>
               <DirekturDashboard />
             </ProtectedRoute>
           }
@@ -62,7 +64,7 @@ function App() {
         <Route
           path="/tasks"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
               <TasksPage />
             </ProtectedRoute>
           }
@@ -71,7 +73,7 @@ function App() {
         <Route
           path="/weighbridge"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
               <WeighbridgePage />
             </ProtectedRoute>
           }
@@ -80,7 +82,7 @@ function App() {
         <Route
           path="/hpp-calculator"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
               <HppCalculatorPage />
             </ProtectedRoute>
           }
@@ -89,7 +91,7 @@ function App() {
         <Route
           path="/reports"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
               <ReportsPage />
             </ProtectedRoute>
           }
@@ -125,8 +127,26 @@ function App() {
         <Route
           path="/payroll"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI']}>
               <PayrollPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/inventory"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'INVESTOR']}>
+              <InventoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/plantation-lifecycle"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+              <PlantationLifecyclePage />
             </ProtectedRoute>
           }
         />
@@ -134,7 +154,7 @@ function App() {
         <Route
           path="/financials"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'INVESTOR']}>
               <FinancialsPage />
             </ProtectedRoute>
           }

@@ -56,21 +56,24 @@ export const TurbineLineChart: React.FC<LineChartProps> = ({
   const areaPath1 = `${path1} L ${lastPt.x},200 L ${firstPt.x},200 Z`;
 
   return (
-    <div className="bg-white rounded-4 border shadow-sm overflow-hidden h-100">
-      <div className="p-4 bg-light border-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+    <div className="card-box card-box-hover overflow-hidden h-100">
+      <div className="p-4 bg-white border-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
         <div>
-          <h5 className="font-weight-bold text-dark mb-1" style={{ fontSize: 15 }}>
-            <i className="ri-line-chart-line text-success me-2"></i> {title}
+          <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+            <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
+              <i className="ri-line-chart-line"></i>
+            </span>
+            {title}
           </h5>
-          <p className="text-secondary mb-0" style={{ fontSize: 13 }}>{subtitle}</p>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 12 }}>{subtitle}</p>
         </div>
         <div className="d-flex gap-3 font-weight-bold" style={{ fontSize: 12 }}>
-          <span className="d-flex align-items-center gap-1.5" style={{ color: color1 }}>
-            <span className="rounded-circle d-inline-block" style={{ width: 10, height: 10, backgroundColor: color1 }}></span> {legend1}
+          <span className="tmp-badge-card success">
+            <span className="rounded-circle d-inline-block" style={{ width: 8, height: 8, backgroundColor: color1 }}></span> {legend1}
           </span>
           {legend2 && (
-            <span className="d-flex align-items-center gap-1.5" style={{ color: color2 }}>
-              <span className="rounded-circle d-inline-block" style={{ width: 10, height: 10, backgroundColor: color2 }}></span> {legend2}
+            <span className="tmp-badge-card primary">
+              <span className="rounded-circle d-inline-block" style={{ width: 8, height: 8, backgroundColor: color2 }}></span> {legend2}
             </span>
           )}
         </div>
@@ -79,10 +82,13 @@ export const TurbineLineChart: React.FC<LineChartProps> = ({
       <div className="p-4">
         <svg viewBox="0 0 580 250" className="w-100" style={{ height: 250 }}>
           <defs>
-            <linearGradient id="curveGradient1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color1} stopOpacity="0.3" />
+            <linearGradient id="chartGrad1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color1} stopOpacity="0.35" />
               <stop offset="100%" stopColor={color1} stopOpacity="0.0" />
             </linearGradient>
+            <filter id="glowLine" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={color1} floodOpacity="0.3" />
+            </filter>
           </defs>
 
           {/* Grid lines & Y-Axis Labels */}
@@ -113,12 +119,13 @@ export const TurbineLineChart: React.FC<LineChartProps> = ({
             />
           )}
 
-          {/* Series 1 (Revenue Smooth Bezier Curve) */}
+          {/* Series 1 (Revenue Smooth Bezier Curve with Glow) */}
           <path
             d={path1}
             fill="none"
             stroke={color1}
             strokeWidth="4"
+            filter="url(#glowLine)"
           />
 
           {/* Data Points Nodes */}
@@ -149,16 +156,19 @@ export const TurbineDonutChart: React.FC<DonutChartProps> = ({ title, subtitle, 
   const total = data.reduce((acc, curr) => acc + curr.value, 0);
 
   return (
-    <div className="bg-white rounded-4 border shadow-sm overflow-hidden h-100">
-      <div className="p-4 bg-light border-bottom">
-        <h5 className="font-weight-bold text-dark mb-1" style={{ fontSize: 15 }}>
-          <i className="ri-pie-chart-line text-success me-2"></i> {title}
+    <div className="card-box card-box-hover overflow-hidden h-100">
+      <div className="p-4 bg-white border-bottom">
+        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
+            <i className="ri-pie-chart-line"></i>
+          </span>
+          {title}
         </h5>
-        <p className="text-secondary mb-0" style={{ fontSize: 13 }}>{subtitle}</p>
+        <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 12 }}>{subtitle}</p>
       </div>
 
       <div className="p-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
-        {/* Donut Graphic SVG */}
+        {/* Donut Graphic SVG with Corpox Styling */}
         <div className="position-relative shrink-0 d-flex align-items-center justify-center" style={{ width: 180, height: 180 }}>
           <svg viewBox="0 0 36 36" className="w-100 h-100" style={{ transform: 'rotate(-90deg)' }}>
             {data.reduce(
@@ -186,26 +196,26 @@ export const TurbineDonutChart: React.FC<DonutChartProps> = ({ title, subtitle, 
             ).elements}
           </svg>
           <div className="position-absolute top-50 start-50 translate-middle text-center">
-            <span className="d-block text-uppercase font-weight-bold text-muted" style={{ fontSize: 10 }}>Total OPEX</span>
+            <span className="d-block text-uppercase font-weight-bold text-muted" style={{ fontSize: 10 }}>TOTAL OPEX</span>
             <strong className="h4 font-weight-extrabold text-dark m-0" style={{ fontSize: 18 }}>100%</strong>
           </div>
         </div>
 
-        {/* Legend Box with Progress Bars */}
+        {/* Legend Box with Corpox Progress Bars */}
         <div className="w-100 space-y-2.5">
           {data.map((item, idx) => {
             const pct = Math.round((item.value / total) * 100);
             return (
-              <div key={idx} className="p-2.5 rounded-3 bg-light border space-y-1">
+              <div key={idx} className="p-3 rounded-3 bg-light border space-y-1.5 shadow-xs">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="d-flex align-items-center gap-2">
-                    <span className="rounded-2 shrink-0 d-inline-block" style={{ width: 12, height: 12, backgroundColor: item.color }}></span>
+                    <span className="rounded-circle shrink-0 d-inline-block" style={{ width: 10, height: 10, backgroundColor: item.color }}></span>
                     <span className="font-weight-bold text-dark" style={{ fontSize: 13 }}>{item.label}</span>
                   </div>
-                  <span className="badge bg-white text-dark border font-weight-bold px-2 py-0.5" style={{ fontSize: 11 }}>{pct}%</span>
+                  <span className="tmp-badge-card success" style={{ fontSize: 10 }}>{pct}%</span>
                 </div>
                 <div className="w-100 bg-white rounded-pill overflow-hidden border p-0.5" style={{ height: 8 }}>
-                  <div className="h-100 rounded-pill" style={{ width: `${pct}%`, backgroundColor: item.color }}></div>
+                  <div className="h-100 rounded-pill transition-all" style={{ width: `${pct}%`, backgroundColor: item.color }}></div>
                 </div>
               </div>
             );
@@ -220,18 +230,23 @@ interface BarChartProps {
   title: string;
   subtitle: string;
   data: { label: string; value: number; color?: string }[];
+  unitPrefix?: string;
+  unitSuffix?: string;
 }
 
-export const TurbineBarChart: React.FC<BarChartProps> = ({ title, subtitle, data }) => {
+export const TurbineBarChart: React.FC<BarChartProps> = ({ title, subtitle, data, unitPrefix = 'Rp ', unitSuffix = '' }) => {
   const maxValue = Math.max(...data.map((d) => d.value)) * 1.2 || 100;
 
   return (
-    <div className="bg-white rounded-4 border shadow-sm overflow-hidden">
-      <div className="p-4 bg-light border-bottom">
-        <h5 className="font-weight-bold text-dark mb-1" style={{ fontSize: 15 }}>
-          <i className="ri-bar-chart-2-line text-success me-2"></i> {title}
+    <div className="card-box card-box-hover overflow-hidden">
+      <div className="p-4 bg-white border-bottom">
+        <h5 className="font-weight-bold text-dark mb-1 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
+          <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
+            <i className="ri-bar-chart-2-line"></i>
+          </span>
+          {title}
         </h5>
-        <p className="text-secondary mb-0" style={{ fontSize: 13 }}>{subtitle}</p>
+        <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 12 }}>{subtitle}</p>
       </div>
 
       <div className="p-4 space-y-3">
@@ -242,13 +257,15 @@ export const TurbineBarChart: React.FC<BarChartProps> = ({ title, subtitle, data
             <div key={idx} className="space-y-1">
               <div className="d-flex justify-content-between align-items-center text-dark">
                 <strong className="font-weight-bold" style={{ fontSize: 13 }}>{item.label}</strong>
-                <span className="font-weight-bold text-success" style={{ fontSize: 14 }}>{item.value.toLocaleString('id-ID')} Kg</span>
+                <span className="font-weight-bold text-success" style={{ fontSize: 14 }}>
+                  {unitPrefix}{item.value.toLocaleString('id-ID')}{unitSuffix ? ` ${unitSuffix}` : ''}
+                </span>
               </div>
               <div className="w-100 bg-light rounded-pill overflow-hidden p-0.5 border" style={{ height: 14 }}>
                 <div
                   className="h-100 rounded-pill transition-all"
                   style={{ width: `${widthPct}%`, backgroundColor: barColor }}
-                ></div>
+                />
               </div>
             </div>
           );

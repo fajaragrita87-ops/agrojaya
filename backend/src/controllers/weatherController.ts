@@ -2,23 +2,22 @@ import { Request, Response } from 'express';
 
 export const getBmkgWeather = async (req: Request, res: Response) => {
   try {
-    const lat = req.query.lat ? String(req.query.lat) : '0.507067';
-    const lng = req.query.lng ? String(req.query.lng) : '101.447771';
-    const location = req.query.location ? String(req.query.location) : 'Pekanbaru, Riau';
+    const lat = req.query.lat ? String(req.query.lat) : '-6.4697';
+    const lng = req.query.lng ? String(req.query.lng) : '107.0544';
+    const location = req.query.location ? String(req.query.location) : 'Jonggol, Bogor, Jawa Barat';
 
-    // Simulated / Live BMKG Data API Feed Integration
-    // In production, queries BMKG Open Data API (api.bmkg.go.id)
+    // Simulated / Live BMKG Data API Feed Integration (Jonggol, Bogor)
     const bmkgData = {
-      source: 'BMKG Indonesia (Badan Meteorologi, Klimatologi, dan Geofisika)',
+      source: 'BMKG Indonesia (Stasiun Meteorologi Climatology Jonggol Bogor)',
       location: location,
       coordinates: { latitude: lat, longitude: lng },
-      temperature: 29,
+      temperature: 28,
       unit: '°C',
-      condition: 'Cerah Berawan',
-      humidity: 76,
-      windSpeed: '11 km/j',
-      uvIndex: 'Sedang (3.5)',
-      fertigationRecommendation: 'Kondisi Ideal untuk Pemupukan NPK & Penyiraman Blok Lahan',
+      condition: 'Cerah Berawan Tropis',
+      humidity: 78,
+      windSpeed: '9 km/j (Tenggara)',
+      uvIndex: 'Sedang (3.8)',
+      fertigationRecommendation: 'Kondisi Sangat Presisi untuk Fertigasi & Pemupukan NPK Susulan',
       bmkgAlert: 'BMKG Alert: Potensi hujan lokal intensitas ringan pada pukul 16:00 - 18:00 WIB',
       lastUpdated: new Date().toISOString(),
     };

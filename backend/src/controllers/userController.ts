@@ -4,11 +4,12 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const mockUsers = [
-  { id: 'usr-1', name: 'Ir. Ahmad Subagyo', email: 'ahmad@agrojaya.com', role: 'DIREKTUR', phone: '081234567890', createdAt: new Date() },
-  { id: 'usr-2', name: 'Budi Santoso', email: 'budi@agrojaya.com', role: 'PETANI', phone: '081298765432', createdAt: new Date() },
-  { id: 'usr-3', name: 'Siti Rahma', email: 'siti@agrojaya.com', role: 'KEPALA_KEBUN', phone: '081345678901', createdAt: new Date() },
-  { id: 'usr-4', name: 'Hendra Wijaya', email: 'hendra@agrojaya.com', role: 'MANAGER', phone: '081567890123', createdAt: new Date() },
-  { id: 'usr-5', name: 'PT Agro Investama', email: 'investor@agrojaya.com', role: 'INVESTOR', phone: '081122334455', createdAt: new Date() },
+  { id: 'usr-1', name: 'Direktur Utama', email: 'direktur@agrojaya.com', role: 'DIREKTUR', phone: '081234567890', createdAt: new Date() },
+  { id: 'usr-2', name: 'Investor Utama', email: 'investor@agrojaya.com', role: 'INVESTOR', phone: '081122334455', createdAt: new Date() },
+  { id: 'usr-3', name: 'Ibu Ratna', email: 'ratna@agrojaya.com', role: 'FINANCE', phone: '081298765432', createdAt: new Date() },
+  { id: 'usr-4', name: 'Budi Santoso, S.P.', email: 'budi@agrojaya.com', role: 'MANAGER', phone: '081567890123', createdAt: new Date() },
+  { id: 'usr-5', name: 'Ahmad Hidayat', email: 'ahmad@agrojaya.com', role: 'KEPALA_KEBUN', phone: '081345678901', createdAt: new Date() },
+  { id: 'usr-6', name: 'Sutrisno', email: 'sutrisno@agrojaya.com', role: 'PETANI', phone: '081789012345', createdAt: new Date() },
 ];
 
 export const getUsers = async (req: Request, res: Response) => {

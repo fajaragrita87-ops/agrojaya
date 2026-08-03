@@ -14,22 +14,30 @@ export const LandsPage = () => {
   const [activeLng, setActiveLng] = useState('107.0544');
   const { role, canEdit } = useRole();
 
+  const JONGGOL_LAT_BASE = -6.4697;
+  const JONGGOL_LNG_BASE = 107.0544;
+
   const fetchLands = async () => {
     try {
       const res = await getLands();
       const loadedLands = res.data;
-      const enriched = loadedLands.map((l: any, i: number) => ({
-        ...l,
-        latitude: l.latitude || (-6.4697 + i * 0.002).toFixed(6),
-        longitude: l.longitude || (107.0544 + i * 0.003).toFixed(6),
-      }));
+      const enriched = loadedLands.map((l: any, i: number) => {
+        const rawLat = parseFloat(l.latitude);
+        const rawLng = parseFloat(l.longitude);
+        const isInvalidRiau = isNaN(rawLat) || rawLat > 0 || isNaN(rawLng) || rawLng < 100;
+        return {
+          ...l,
+          latitude: isInvalidRiau ? (JONGGOL_LAT_BASE - i * 0.0015).toFixed(6) : l.latitude,
+          longitude: isInvalidRiau ? (JONGGOL_LNG_BASE + i * 0.0020).toFixed(6) : l.longitude,
+        };
+      });
       setLands(enriched);
     } catch (e) {
       console.error(e);
       setLands([
-        { id: '1', name: 'Blok A1 - Kebun Anggur Impor & Greenhouse (1000m²)', areaHa: 0.1, soilType: 'Humus Organik Greenhouse', latitude: '-6.4715', longitude: '107.0535', status: 'AKTIF' },
-        { id: '2', name: 'Blok A2 - Tanam Hibrida Utama (2.0 Ha)', areaHa: 2.0, soilType: 'Latosol Subur Jonggol Bogor', latitude: '-6.4697', longitude: '107.0544', status: 'AKTIF' },
-        { id: '3', name: 'Blok B1 - Hortikultura Melon Premium (5000m²)', areaHa: 0.5, soilType: 'Aluvial Organik Jonggol', latitude: '-6.4680', longitude: '107.0560', status: 'PANEN' },
+        { id: '1', name: 'Blok A1 - Kebun Anggur Impor & Greenhouse (1000m²)', areaHa: 0.1, soilType: 'Humus Organik Greenhouse', latitude: '-6.471500', longitude: '107.053500', status: 'AKTIF' },
+        { id: '2', name: 'Blok A2 - Tanam Hibrida Utama (2.0 Ha)', areaHa: 2.0, soilType: 'Latosol Subur Jonggol Bogor', latitude: '-6.469700', longitude: '107.054400', status: 'AKTIF' },
+        { id: '3', name: 'Blok B1 - Hortikultura Melon Premium (5000m²)', areaHa: 0.5, soilType: 'Aluvial Organik Jonggol', latitude: '-6.468000', longitude: '107.056000', status: 'PANEN' },
       ]);
     }
   };
@@ -43,6 +51,20 @@ export const LandsPage = () => {
     setActiveLng(lng);
     setLatitude(lat);
     setLongitude(lng);
+  };
+
+  const handleResetAllToJonggol = () => {
+    const fixedLands = lands.map((l: any, i: number) => ({
+      ...l,
+      latitude: (JONGGOL_LAT_BASE - i * 0.0015).toFixed(6),
+      longitude: (JONGGOL_LNG_BASE + i * 0.0020).toFixed(6),
+    }));
+    setLands(fixedLands);
+    setActiveLat(JONGGOL_LAT_BASE.toFixed(6));
+    setActiveLng(JONGGOL_LNG_BASE.toFixed(6));
+    setLatitude(JONGGOL_LAT_BASE.toFixed(6));
+    setLongitude(JONGGOL_LNG_BASE.toFixed(6));
+    alert('Seluruh Koordinat Blok Lahan Berhasil Diperbarui Ke Jonggol, Bogor (-6.4697, 107.0544)!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,11 +94,11 @@ export const LandsPage = () => {
       {/* Page Header Banner */}
       <div className="bg-white p-4 rounded-4 border shadow-sm">
         <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
-          <i className="ri-map-pin-2-line me-1"></i> PEMETAAN LAHAN GIS SATELIT
+          <i className="ri-map-pin-2-line me-1"></i> PEMETAAN LAHAN GIS SATELIT JONGGOL BOGOR
         </span>
-        <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Peta GIS Interaktif & Pemetaan Blok Kebun</h2>
+        <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
         <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-          Deteksi Koordinat Satelit GPS Lat/Long Secara Real-Time Per Blok Kebun AgroJaya
+          Deteksi Koordinat Satelit GPS Lat/Long Secara Real-Time Per Blok Kebun AgroJaya Jonggol
         </p>
       </div>
 
@@ -87,7 +109,7 @@ export const LandsPage = () => {
             <i className="ri-radar-line animate-pulse"></i>
           </div>
           <div>
-            <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 14 }}>Detektor Koordinat Pusat Peta GPS</h4>
+            <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 14 }}>Detektor Koordinat Satelit GPS Jonggol Bogor</h4>
             <span className="text-secondary font-mono d-block" style={{ fontSize: 12 }}>
               Lat: <strong className="text-success">{activeLat}</strong> • Lng: <strong className="text-success">{activeLng}</strong>
             </span>
@@ -95,58 +117,41 @@ export const LandsPage = () => {
         </div>
 
         <div className="d-flex align-items-center gap-2">
-          <div className="d-flex align-items-center gap-1.5 bg-light p-2 rounded-3 border" style={{ fontSize: 13 }}>
-            <span className="text-muted font-weight-bold">Lat:</span>
-            <input
-              type="text"
-              value={activeLat}
-              onChange={(e) => handleCoordinatesChange(e.target.value, activeLng)}
-              className="border-0 bg-transparent font-mono font-weight-bold text-dark w-24 outline-none"
-            />
-          </div>
-          <div className="d-flex align-items-center gap-1.5 bg-light p-2 rounded-3 border" style={{ fontSize: 13 }}>
-            <span className="text-muted font-weight-bold">Lng:</span>
-            <input
-              type="text"
-              value={activeLng}
-              onChange={(e) => handleCoordinatesChange(activeLat, e.target.value)}
-              className="border-0 bg-transparent font-mono font-weight-bold text-dark w-24 outline-none"
-            />
-          </div>
+          <button
+            onClick={handleResetAllToJonggol}
+            className="btn btn-warning text-dark font-weight-bold rounded-3 px-3 py-2 shadow-xs"
+            style={{ fontSize: 12 }}
+          >
+            <i className="ri-refresh-line me-1"></i> Perbaiki Koordinat Ke Jonggol Bogor
+          </button>
         </div>
       </div>
 
-      {/* Interactive GIS Leaflet Map Container */}
-      <div className="bg-white rounded-4 border shadow-sm p-4 space-y-3">
-        <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
-            <i className="ri-global-line text-success me-2"></i> Peta Satelit Interaktif Perkebunan
-          </h4>
-          <span className="badge bg-success text-white px-3 py-1 font-weight-bold" style={{ fontSize: 11 }}>
-            Google Maps Satelit Aktif
-          </span>
-        </div>
-        
-        <InteractiveGisMap
-          lands={lands}
-          activeLat={activeLat}
-          activeLng={activeLng}
-          onCoordinatesChange={handleCoordinatesChange}
-        />
-      </div>
+      {/* GIS Leaflet Satellite Component */}
+      <InteractiveGisMap
+        lands={lands}
+        activeLat={activeLat}
+        activeLng={activeLng}
+        onCoordinatesChange={handleCoordinatesChange}
+      />
 
-      {/* Form Input Tambah Blok Kebun */}
+      {/* Form Tambah Blok Lahan (Direktur & Manager Exclusive) */}
       {canCreateLand && (
         <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
-            <i className="ri-add-circle-line text-success"></i> Form Tambah Blok Lahan Baru
-          </h4>
-          <form onSubmit={handleSubmit} className="row g-3 pt-1">
-            <div className="col-md-2">
-              <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Nama Blok Kebun</label>
+          <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
+            <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+              <i className="ri-add-circle-line text-success me-2"></i> Tambah Blok Lahan Kebun Baru (GPS Jonggol)
+            </h4>
+            <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 11 }}>
+              Mode Pengeditan Aktif ({role})
+            </span>
+          </div>
+          <form onSubmit={handleSubmit} className="row g-3">
+            <div className="col-md-4">
+              <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Nama Blok Lahan</label>
               <input
                 type="text"
-                placeholder="misal: Blok D1"
+                placeholder="misal: Blok C2 - Anggur Impor Shine Muscat"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="form-control p-2.5 bg-light border-0 rounded-3"
@@ -158,7 +163,8 @@ export const LandsPage = () => {
               <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Luas (Hektar)</label>
               <input
                 type="number"
-                placeholder="Luas Ha"
+                step="0.1"
+                placeholder="1.5"
                 value={areaHa}
                 onChange={(e) => setAreaHa(e.target.value)}
                 className="form-control p-2.5 bg-light border-0 rounded-3"
@@ -166,11 +172,11 @@ export const LandsPage = () => {
                 required
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Karakteristik Tanah</label>
               <input
                 type="text"
-                placeholder="Aluvial Subur"
+                placeholder="misal: Latosol Subur / Humus Greenhouse"
                 value={soilType}
                 onChange={(e) => setSoilType(e.target.value)}
                 className="form-control p-2.5 bg-light border-0 rounded-3"
@@ -202,11 +208,15 @@ export const LandsPage = () => {
       <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
         <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
           <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
-            <i className="ri-table-line text-success me-2"></i> Inventaris Lahan & Koordinat Blok
+            <i className="ri-table-line text-success me-2"></i> Inventaris Lahan & Koordinat GPS Blok (Jonggol, Bogor)
           </h4>
-          <span className="text-muted font-weight-bold" style={{ fontSize: 11 }}>
-            Klik "Fokuskan Peta" untuk mengarahkan kamera GIS
-          </span>
+          <button
+            onClick={handleResetAllToJonggol}
+            className="btn btn-sm btn-outline-warning text-dark font-weight-bold"
+            style={{ fontSize: 11 }}
+          >
+            <i className="ri-refresh-line me-1"></i> Perbaiki Koordinat Ke Jonggol
+          </button>
         </div>
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
@@ -227,10 +237,12 @@ export const LandsPage = () => {
                   <td>{land.areaHa} Ha</td>
                   <td>{land.soilType}</td>
                   <td className="font-mono text-secondary" style={{ fontSize: 12 }}>
-                    {land.latitude}, {land.longitude}
+                    <span className="badge bg-light text-dark border font-mono">
+                      {land.latitude}, {land.longitude}
+                    </span>
                   </td>
                   <td>
-                    <span className={`badge px-2.5 py-1 font-weight-bold ${land.status === 'AKTIF' ? 'bg-success text-white' : 'bg-warning text-dark'}`} style={{ fontSize: 11 }}>
+                    <span className={`badge px-2.5 py-1 font-weight-bold ${land.status === 'AKTIF' || land.status === 'PANEN' ? 'bg-success text-white' : 'bg-warning text-dark'}`} style={{ fontSize: 11 }}>
                       {land.status}
                     </span>
                   </td>

@@ -11,7 +11,7 @@ interface NavItem {
 
 export const Sidebar = () => {
   const location = useLocation();
-  const { role } = useRole();
+  const { role, userName, userTitle } = useRole();
 
   // Concise, clear menu titles in Murni Bahasa Indonesia that fit 100% without truncation
   const navItems: NavItem[] = [
@@ -30,7 +30,9 @@ export const Sidebar = () => {
     // --- MANAGER OPERASIONAL MENU ---
     { label: 'Dasbor Operasional', path: '/dashboard/direktur', icon: 'ri-dashboard-3-line', roles: ['MANAGER'] },
     { label: 'Peta Lahan GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['MANAGER'] },
-    { label: 'Master Komoditas', path: '/crops', icon: 'ri-plant-line', roles: ['MANAGER'] },
+    { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['MANAGER'] },
+    { label: 'Siklus & Progress Lahan', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['MANAGER'] },
+    { label: 'Master Komoditas', path: '/crops', icon: 'ri-seedling-line', roles: ['MANAGER'] },
     { label: 'Tasklist & SOP', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['MANAGER'] },
     { label: 'Kelola Pekerja', path: '/users', icon: 'ri-user-settings-line', roles: ['MANAGER'] },
     { label: 'Gaji & Upah SDM', path: '/payroll', icon: 'ri-coins-line', roles: ['MANAGER'] },
@@ -42,7 +44,9 @@ export const Sidebar = () => {
     // --- DIREKTUR MENU (FULL ACCESS) ---
     { label: 'Dasbor Strategis', path: '/dashboard/direktur', icon: 'ri-dashboard-3-line', roles: ['DIREKTUR'] },
     { label: 'Peta Lahan GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['DIREKTUR'] },
-    { label: 'Master Komoditas', path: '/crops', icon: 'ri-plant-line', roles: ['DIREKTUR'] },
+    { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['DIREKTUR'] },
+    { label: 'Siklus & Progress Lahan', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['DIREKTUR'] },
+    { label: 'Master Komoditas', path: '/crops', icon: 'ri-seedling-line', roles: ['DIREKTUR'] },
     { label: 'Tasklist & SOP', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['DIREKTUR'] },
     { label: 'Manajemen User', path: '/users', icon: 'ri-user-settings-line', roles: ['DIREKTUR'] },
     { label: 'Absensi & Gaji SDM', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['DIREKTUR'] },
@@ -51,9 +55,18 @@ export const Sidebar = () => {
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['DIREKTUR'] },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['DIREKTUR'] },
 
+    // --- FINANCE (MANAJER KEUANGAN) MENU ---
+    { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['FINANCE'], badge: 'Pencairan' },
+    { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['FINANCE'] },
+    { label: 'Absensi & Gaji SDM', path: '/payroll', icon: 'ri-coins-line', roles: ['FINANCE'] },
+    { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['FINANCE'] },
+    { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['FINANCE'] },
+    { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['FINANCE'] },
+
     // --- INVESTOR MENU (READ ONLY) ---
     { label: 'Dasbor Investor', path: '/dashboard/investor', icon: 'ri-funds-box-line', roles: ['INVESTOR'], badge: 'Investor' },
-    { label: 'Tasklist & SOP', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['INVESTOR'] },
+    { label: 'Peta Lahan GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['INVESTOR'] },
+    { label: 'Inventaris & PO 3L', path: '/inventory', icon: 'ri-shopping-cart-2-line', roles: ['INVESTOR'] },
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['INVESTOR'] },
     { label: 'Tiket Timbangan PKS', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['INVESTOR'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['INVESTOR'] },
@@ -62,14 +75,6 @@ export const Sidebar = () => {
 
   // Filter items permitted for active role
   const permittedNavItems = navItems.filter((item) => item.roles.includes(role));
-
-  const roleTitleMap: Record<RoleType, { title: string; subtitle: string }> = {
-    DIREKTUR: { title: 'Direksi Kebun', subtitle: 'Akses Penuh' },
-    INVESTOR: { title: 'Portofolio Investor', subtitle: 'Akses Investor' },
-    MANAGER: { title: 'Manajer Operasional', subtitle: 'Pengelola' },
-    KEPALA_KEBUN: { title: 'Kepala Kebun', subtitle: 'Pengawas' },
-    PETANI: { title: 'Petani Lapangan', subtitle: 'Pekerja PWA' },
-  };
 
   return (
     <aside className="position-fixed start-0 top-0 h-100 bg-white border-end shadow-sm z-50 d-flex flex-column" style={{ width: '17.5rem', zIndex: 1040 }}>
@@ -92,8 +97,8 @@ export const Sidebar = () => {
           <i className="ri-user-3-fill"></i>
         </div>
         <div>
-          <h6 className="font-weight-bold text-dark m-0" style={{ fontSize: 13 }}>{roleTitleMap[role].title}</h6>
-          <span className="text-muted d-block" style={{ fontSize: 11 }}>{roleTitleMap[role].subtitle}</span>
+          <h6 className="font-weight-bold text-dark m-0" style={{ fontSize: 13 }}>{userName}</h6>
+          <span className="text-muted font-weight-medium d-block" style={{ fontSize: 11 }}>{userTitle}</span>
         </div>
       </div>
 

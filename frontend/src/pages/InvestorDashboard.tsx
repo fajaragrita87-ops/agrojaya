@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getInvestorDashboard } from '../services/api';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
 import { PlantationLifecycleProgress } from '../components/PlantationLifecycleProgress';
+import { InvestorPOApprovalSummary } from '../components/InvestorPOApprovalSummary';
 
 export const InvestorDashboard = () => {
-  const [data, setData] = useState<any>(null);
-
   useEffect(() => {
-    getInvestorDashboard().then((res) => setData(res.data)).catch(console.error);
+    getInvestorDashboard().catch(console.error);
   }, []);
 
   const roiChartData = [
@@ -20,9 +19,9 @@ export const InvestorDashboard = () => {
   ];
 
   const portfolioDonutData = [
-    { label: 'Kelapa Sawit (Blok A1-A2)', value: 45, color: '#059669' },
-    { label: 'Jagung Hibrida (Blok B1-B2)', value: 30, color: '#2563eb' },
-    { label: 'Anggur & Melon (Blok C1-D1)', value: 25, color: '#f59e0b' },
+    { label: 'Kelapa Sawit Tenera (Blok A1-A2)', value: 45, color: '#059669' },
+    { label: 'Jagung Hibrida Pangan (Blok B1-B2)', value: 30, color: '#2563eb' },
+    { label: 'Anggur & Melon Impor (Blok C1-D1)', value: 25, color: '#f59e0b' },
   ];
 
   const burnRateBarData = [
@@ -31,85 +30,198 @@ export const InvestorDashboard = () => {
     { label: 'Perawatan Traktor & Irigasi Satelit', value: 15000000, color: '#f59e0b' },
   ];
 
+  const opexAuditDetails = [
+    {
+      category: 'Upah Harian Petani Lapangan',
+      nominal: 42000000,
+      personInCharge: 'Budi Santoso, S.P.',
+      status: 'TERBAYAR (SLA 100%)',
+      bapLink: 'BAP-OPEX-2026-08',
+      date: '03 Aug 2026'
+    },
+    {
+      category: 'Pengadaan Pupuk NPK & Kapur Dolomit',
+      nominal: 28000000,
+      personInCharge: 'Ahmad Hidayat',
+      status: 'VERIFIKASI AUDITOR',
+      bapLink: 'BAP-PUPUK-2026-07',
+      date: '01 Aug 2026'
+    },
+    {
+      category: 'Perawatan Traktor & Irigasi Satelit',
+      nominal: 15000000,
+      personInCharge: 'Rahmat Hidayat',
+      status: 'REVISI SELESAI',
+      bapLink: 'BAP-ALAT-2026-06',
+      date: '28 Jul 2026'
+    }
+  ];
+
   return (
     <div className="w-100 space-y-4">
       {/* Header Banner */}
       <div className="bg-white p-4 rounded-4 border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
-          <span className="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
-            <i className="ri-funds-box-line me-1"></i> DASBOR PORTOFOLIO INVESTOR
+          <span className="badge bg-primary-subtle text-primary border border-primary px-3 py-1 rounded-pill uppercase font-weight-bold mb-2 d-inline-block" style={{ fontSize: 11 }}>
+            <i className="ri-funds-box-line me-1"></i> PORTAL TRANSPARANSI PORTOFOLIO INVESTOR
           </span>
-          <h2 className="font-weight-bold text-dark mb-1" style={{ fontSize: 18 }}>Portal Transparansi Investasi & Valuasi Kebun</h2>
-          <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-            Ringkasan Eksekutif Valuasi, Kesiapan Fisik Lahan, & Proyeksi Return Investasi AgroJaya
+          <h2 className="font-weight-extrabold text-dark mb-1" style={{ fontSize: 20, letterSpacing: '-0.3px' }}>
+            Indikator Kinerja Utama (KPI) & Valuasi Portofolio Investasi
+          </h2>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
+            Laporan Akuntabilitas Finansial, Keamanan Modal, Kesiapan Fisik Lahan, & ROI Perkebunan AgroJaya Jonggol
           </p>
         </div>
-        <span className="badge bg-primary text-white px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 11 }}>
-          <i className="ri-lock-line"></i> Akses Khusus Investor (Read-Only)
+        <span className="badge bg-success text-white px-3.5 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 12 }}>
+          <i className="ri-shield-check-fill text-white"></i> Terverifikasi Auditor 5D
         </span>
       </div>
 
-      {/* Financial Macro Metrics */}
-      <div className="row g-4">
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="bg-white p-4 rounded-4 border shadow-sm d-flex align-items-center justify-content-between h-100">
-            <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Modal Disetor</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0" style={{ fontSize: 20 }}>Rp 2.5 M</strong>
-              <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>Alokasi Modal Kerja Lahan</span>
-            </div>
-            <div style={{ width: 44, height: 44, backgroundColor: '#dbeafe', color: '#2563eb', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-              <i className="ri-bank-card-line"></i>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="bg-white p-4 rounded-4 border shadow-sm d-flex align-items-center justify-content-between h-100">
-            <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Estimasi Valuasi Portofolio</span>
-              <strong className="h3 font-weight-extrabold text-success m-0" style={{ fontSize: 20 }}>Rp 3.1 M</strong>
-              <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
-                <i className="ri-arrow-up-line me-1"></i> +24.0% Net Growth
+      {/* KPI INVESTOR GRID (6 Bento Cards) */}
+      <div className="row g-3">
+        {/* KPI 1 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                1. Modal Investasi Disetor
               </span>
+              <div className="corpox-icon-box blue" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-bank-card-line"></i>
+              </div>
             </div>
-            <div style={{ width: 44, height: 44, backgroundColor: '#dcfce7', color: '#059669', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-              <i className="ri-line-chart-line"></i>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+              Rp 2.500.000.000
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-primary" style={{ width: '100%' }}></div>
             </div>
+            <span className="d-block text-success font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-checkbox-circle-fill me-1"></i> 100% Modal Disetor Terrealisasi Ke Lahan
+            </span>
           </div>
         </div>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="bg-white p-4 rounded-4 border shadow-sm d-flex align-items-center justify-content-between h-100">
-            <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Biaya Operasional (Burn Rate)</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0" style={{ fontSize: 20 }}>Rp 85 M / Bkn</strong>
-              <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>Sesuai Prospektus Investasi</span>
+        {/* KPI 2 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                2. Estimasi Valuasi Portofolio
+              </span>
+              <div className="corpox-icon-box emerald" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-line-chart-line"></i>
+              </div>
             </div>
-            <div style={{ width: 44, height: 44, backgroundColor: '#f1f5f9', color: '#475569', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-              <i className="ri-fire-line"></i>
+            <strong className="h3 font-weight-extrabold text-success d-block mb-1" style={{ fontSize: 22 }}>
+              Rp 3.100.000.000
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-success" style={{ width: '124%' }}></div>
             </div>
+            <span className="d-block text-success font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-arrow-up-circle-fill me-1"></i> +24.0% Pertumbuhan Bersih (Capital Gain)
+            </span>
           </div>
         </div>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="bg-white p-4 rounded-4 border shadow-sm d-flex align-items-center justify-content-between h-100">
-            <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Proyeksi Hasil Panen Q3</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0" style={{ fontSize: 20 }}>180.000 Kg</strong>
-              <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>Target Yield Terpenuhi</span>
+        {/* KPI 3 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                3. Tingkat Keamanan Modal (LTV Ratio)
+              </span>
+              <div className="corpox-icon-box emerald" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-shield-user-line"></i>
+              </div>
             </div>
-            <div style={{ width: 44, height: 44, backgroundColor: '#fef3c7', color: '#d97706', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
-              <i className="ri-store-2-line"></i>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+              88.5% Aman
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-success" style={{ width: '88.5%' }}></div>
             </div>
+            <span className="d-block text-secondary font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-map-pin-2-fill text-success me-1"></i> Dijamin Sertifikat Hak Fisik Lahan 2.0 Ha
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 4 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                4. Kesiapan Fisik Perkebunan
+              </span>
+              <div className="corpox-icon-box amber" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-landscape-line"></i>
+              </div>
+            </div>
+            <strong className="h3 font-weight-extrabold text-primary d-block mb-1" style={{ fontSize: 22 }}>
+              65.0% Siap Tanam/Panen
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-info" style={{ width: '65%' }}></div>
+            </div>
+            <span className="d-block text-primary font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-time-fill me-1"></i> Tahap 4 & 5 Berjalan (Penanaman & Perawatan)
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 5 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                5. Biaya Operasional (Burn Rate)
+              </span>
+              <div className="corpox-icon-box amber" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-fire-line"></i>
+              </div>
+            </div>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+              Rp 85.000.000 / Bln
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-warning" style={{ width: '68%' }}></div>
+            </div>
+            <span className="d-block text-success font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-check-line me-1"></i> Hemat 12% Dari Anggaran Maksimum Prospektus
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 6 */}
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                6. Proyeksi Panen & Yield Q3
+              </span>
+              <div className="corpox-icon-box emerald" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-store-2-line"></i>
+              </div>
+            </div>
+            <strong className="h3 font-weight-extrabold text-dark d-block mb-1" style={{ fontSize: 22 }}>
+              180.000 Kg Komoditas
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-success" style={{ width: '92%' }}></div>
+            </div>
+            <span className="d-block text-success font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-check-double-fill me-1"></i> Target Yield Sawit & Jagung Terpenuhi
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Investor Dedicated Physical Readiness & Plantation Lifecycle Progress Stepper */}
+      {/* Tahapan Kesiapan Lahan Stepper */}
       <PlantationLifecycleProgress />
 
-      {/* Turbine UI Charts Section (Investor Mode) */}
+      {/* Turbine UI Charts Section */}
       <div className="row g-4">
         <div className="col-12 col-lg-6">
           <TurbineLineChart
@@ -118,61 +230,69 @@ export const InvestorDashboard = () => {
             data={roiChartData}
             color1="#059669"
             color2="#2563eb"
-            legend1="Valuasi Riil"
-            legend2="Modal Disetor"
           />
         </div>
-
         <div className="col-12 col-lg-6">
           <TurbineDonutChart
-            title="Alokasi Kapital Investasi Per Komoditas (%)"
-            subtitle="Distribusi persentase modal yang disebar pada blok tanam"
+            title="Alokasi Portofolio Per Komoditas"
+            subtitle="Distribusi alokasi dana investasi per komoditas perkebunan"
             data={portfolioDonutData}
           />
         </div>
       </div>
 
-      <TurbineBarChart
-        title="Breakdown Pengeluaran Bulanan (Monthly Burn Rate - Rp)"
-        subtitle="Analisis efisiensi biaya operasional bulanan kebun"
-        data={burnRateBarData}
-      />
+      {/* Perfectly Balanced Row (Zero Whitespace) */}
+      <div className="row g-4">
+        <div className="col-12 col-lg-6">
+          <div className="space-y-4">
+            <TurbineBarChart
+              title="Rincian Pengeluaran OPEX Kebun Utama"
+              subtitle="Biaya operasional bulanan realisasi lapangan"
+              data={burnRateBarData}
+            />
 
-      {/* Portfolio Summary Table (Macro Land Allocation) */}
-      <div className="bg-white rounded-4 border shadow-sm p-4 overflow-hidden">
-        <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
-            <i className="ri-pie-chart-2-line text-primary"></i> Alokasi & Performa Portofolio Lahan Investasi
-          </h4>
-          <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>Read-Only Verified</span>
+            {/* Audit Details Table under Bar Chart to balance height with PO approval card */}
+            <div className="bg-white p-4 rounded-4 border shadow-sm">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h6 className="font-weight-bold text-dark m-0" style={{ fontSize: 14 }}>
+                  <i className="ri-file-list-3-line text-success me-1"></i> Audit Rincian OPEX Per Kategori (Auditor 5D)
+                </h6>
+                <span className="tmp-badge-card success" style={{ fontSize: 10 }}>EFISIENSI 12%</span>
+              </div>
+              <div className="table-responsive">
+                <table className="table table-hover table-sm border align-middle m-0" style={{ fontSize: 12 }}>
+                  <thead className="table-light">
+                    <tr>
+                      <th>Kategori OPEX</th>
+                      <th className="text-end">Nominal</th>
+                      <th>PJ Lapangan</th>
+                      <th>Status Audit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {opexAuditDetails.map((det, i) => (
+                      <tr key={i}>
+                        <td className="font-weight-bold text-dark">{det.category}</td>
+                        <td className="text-end font-weight-bold text-success">
+                          Rp {det.nominal.toLocaleString('id-ID')}
+                        </td>
+                        <td>{det.personInCharge}</td>
+                        <td>
+                          <span className="badge bg-success-subtle text-success border border-success px-2 py-0.5" style={{ fontSize: 10 }}>
+                            {det.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
-            <thead className="table-light">
-              <tr>
-                <th>Proyek Lahan</th>
-                <th>Luas (Ha)</th>
-                <th>Kapital Disetor</th>
-                <th>Proyeksi Pendapatan Panen</th>
-                <th>Status Operasional</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.portfolioSummary?.map((item: any, idx: number) => (
-                <tr key={idx}>
-                  <td className="font-weight-bold text-dark">{item.landName}</td>
-                  <td className="text-secondary">{item.areaHa} Ha</td>
-                  <td className="text-dark font-weight-bold">Rp {item.investedCapital.toLocaleString('id-ID')}</td>
-                  <td className="text-success font-weight-bold">Rp {item.projectedRevenue.toLocaleString('id-ID')}</td>
-                  <td>
-                    <span className="badge bg-success text-white font-weight-bold" style={{ fontSize: 11 }}>
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        <div className="col-12 col-lg-6">
+          <InvestorPOApprovalSummary />
         </div>
       </div>
     </div>

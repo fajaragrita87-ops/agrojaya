@@ -46,7 +46,7 @@ export const Topbar = () => {
           <i className="ri-sun-cloudy-line text-warning" style={{ fontSize: 18 }}></i>
           <div style={{ fontSize: 11, lineHeight: 1.2 }}>
             <strong className="text-dark d-block">
-              {bmkgWeather?.location || 'Pekanbaru, Riau'} {bmkgWeather?.temperature || 29}°C <span className="badge bg-primary text-white ms-1" style={{ fontSize: 9 }}>BMKG LIVE</span>
+              {bmkgWeather?.location || 'Jonggol, Bogor (Jawa Barat)'} {bmkgWeather?.temperature || 29}°C <span className="badge bg-primary text-white ms-1" style={{ fontSize: 9 }}>BMKG LIVE</span>
             </strong>
             <span className="text-secondary" style={{ fontSize: 10 }}>
               {bmkgWeather?.condition || 'Cerah Berawan'} • Kelembapan Kebun Ideal
@@ -65,8 +65,9 @@ export const Topbar = () => {
           style={{ fontSize: 13, width: 'auto' }}
         >
           <option value="DIREKTUR">👑 DIREKTUR (Akses Penuh)</option>
-          <option value="INVESTOR">💼 INVESTOR (Khusus Investor)</option>
-          <option value="MANAGER">👔 MANAJER OPERASIONAL</option>
+          <option value="INVESTOR">💼 INVESTOR (Persetujuan Layer 3)</option>
+          <option value="FINANCE">💵 FINANCE (Layer 1 & Pencairan)</option>
+          <option value="MANAGER">👔 MANAJER OPERASIONAL (Pengaju PO)</option>
           <option value="KEPALA_KEBUN">🤠 KEPALA KEBUN (Pengawas)</option>
           <option value="PETANI">🚜 PETANI LAPANGAN (PWA)</option>
         </select>

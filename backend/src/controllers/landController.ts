@@ -20,8 +20,8 @@ export const createLand = async (req: Request, res: Response) => {
         name,
         areaHa: Number(areaHa),
         soilType,
-        latitude: latitude ? Number(latitude) : 0.507067,
-        longitude: longitude ? Number(longitude) : 101.447771,
+        latitude: latitude ? Number(latitude) : -6.4697,
+        longitude: longitude ? Number(longitude) : 107.0544,
         status: status || 'KOSONG',
       },
     });

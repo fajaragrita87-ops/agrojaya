@@ -376,7 +376,7 @@ export const DailyTasklistCalendar = () => {
         </span>
       </div>
 
-      {/* 7-Day Interactive Calendar Header Bar */}
+      {/* 7-Day Interactive Corpox Calendar Header Bar */}
       <div className="row g-2 pt-1">
         {daysHeader.map((day) => {
           const isSelected = selectedDay === day.dayIndex;
@@ -385,21 +385,70 @@ export const DailyTasklistCalendar = () => {
               <button
                 type="button"
                 onClick={() => setSelectedDay(day.dayIndex)}
-                className={`w-100 p-3 rounded-3 border transition text-center d-flex flex-column align-items-center justify-content-center cursor-pointer ${
-                  isSelected
-                    ? 'bg-success text-white border-success shadow-sm font-weight-bold'
-                    : 'bg-light text-dark border-light hover:bg-slate-100'
-                }`}
-                style={{ minHeight: 70 }}
+                className="w-100 p-3 rounded-4 transition text-center d-flex flex-column align-items-center justify-content-center cursor-pointer border-0"
+                style={{
+                  minHeight: 90,
+                  background: isSelected
+                    ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
+                    : '#f8fafc',
+                  color: isSelected ? '#ffffff' : '#1e293b',
+                  border: isSelected ? '1px solid #047857' : '1px solid #e2e8f0',
+                  boxShadow: isSelected ? '0 8px 16px -4px rgba(5, 150, 105, 0.4)' : 'none',
+                  transition: 'all 0.2s ease-in-out'
+                }}
               >
-                <div className="d-flex align-items-center gap-1 mb-1">
-                  <span className="text-uppercase" style={{ fontSize: 11, letterSpacing: '0.5px' }}>{day.dayName}</span>
+                <div className="d-flex align-items-center justify-content-center gap-1.5 mb-1">
+                  <span
+                    className="text-uppercase font-weight-bold"
+                    style={{
+                      fontSize: 11,
+                      letterSpacing: '0.6px',
+                      color: isSelected ? '#ffffff' : '#64748b'
+                    }}
+                  >
+                    {day.dayName}
+                  </span>
                   {day.isToday && (
-                    <span className={`badge ${isSelected ? 'bg-white text-success' : 'bg-success text-white'}`} style={{ fontSize: 9 }}>HARI INI</span>
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 800,
+                        padding: '2px 7px',
+                        borderRadius: 10,
+                        backgroundColor: isSelected ? '#ffffff' : '#059669',
+                        color: isSelected ? '#047857' : '#ffffff',
+                        lineHeight: 1.3
+                      }}
+                    >
+                      HARI INI
+                    </span>
                   )}
                 </div>
-                <strong className="h6 font-weight-extrabold m-0" style={{ fontSize: 15 }}>{day.dateNum}</strong>
-                <span className={`badge mt-1 ${isSelected ? 'bg-white text-success' : 'bg-secondary-subtle text-secondary'}`} style={{ fontSize: 10 }}>
+
+                <div
+                  className="font-weight-extrabold my-0.5"
+                  style={{
+                    fontSize: 17,
+                    color: isSelected ? '#ffffff' : '#0f172a'
+                  }}
+                >
+                  {day.dateNum}
+                </div>
+
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 600,
+                    padding: '3px 9px',
+                    borderRadius: 12,
+                    backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.22)' : '#e2e8f0',
+                    color: isSelected ? '#ffffff' : '#475569',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <i className="ri-task-line" style={{ fontSize: 11 }}></i>
                   {day.taskCount} Pekerjaan SOP
                 </span>
               </button>
@@ -420,59 +469,66 @@ export const DailyTasklistCalendar = () => {
         </div>
 
         {filteredTasks.map((task) => (
-          <div key={task.id} className="bg-white p-4 rounded-3 border shadow-xs hover:shadow-md transition space-y-3">
+          <div key={task.id} className="card-box p-4 rounded-4 space-y-3">
             {/* Header Task */}
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 border-bottom pb-2">
-              <div>
-                <div className="d-flex align-items-center gap-2 mb-1">
-                  <span className="badge bg-primary-subtle text-primary border border-primary font-weight-bold" style={{ fontSize: 11 }}>
-                    {task.category}
-                  </span>
-                  <span className="text-muted font-weight-bold" style={{ fontSize: 11 }}>ID: {task.id}</span>
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 border-bottom pb-3">
+              <div className="d-flex align-items-start gap-3">
+                <div className="corpox-icon-box emerald mt-1" style={{ width: 40, height: 40, fontSize: 18 }}>
+                  <i className="ri-task-fill"></i>
                 </div>
-                <h5 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
-                  {task.title}
-                </h5>
+                <div>
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 11 }}>
+                      {task.category}
+                    </span>
+                    <span className="text-muted font-weight-bold" style={{ fontSize: 11 }}>ID: {task.id}</span>
+                  </div>
+                  <h5 className="font-weight-extrabold text-dark m-0" style={{ fontSize: 15 }}>
+                    {task.title}
+                  </h5>
+                </div>
               </div>
               <div>{getStatusBadge(task.status)}</div>
             </div>
 
             {/* 5D Metadata Info Grid */}
-            <div className="row g-3 bg-light p-3 rounded-3 text-secondary" style={{ fontSize: 13 }}>
+            <div className="row g-3 bg-light p-3 rounded-3 text-secondary border" style={{ fontSize: 13 }}>
               <div className="col-12 col-md-6 col-lg-3">
                 <span className="d-block text-uppercase text-muted font-weight-bold mb-1" style={{ fontSize: 11 }}>
                   📍 Dimensi Lokasi:
                 </span>
-                <strong className="text-dark d-block">{task.location}</strong>
+                <strong className="text-dark d-block font-weight-bold">{task.location}</strong>
               </div>
               <div className="col-12 col-md-6 col-lg-3">
                 <span className="d-block text-uppercase text-muted font-weight-bold mb-1" style={{ fontSize: 11 }}>
                   👤 Penanggung Jawab (PIC):
                 </span>
-                <strong className="text-dark d-block">{task.pic}</strong>
+                <strong className="text-dark d-block font-weight-bold">{task.pic}</strong>
               </div>
               <div className="col-12 col-md-6 col-lg-3">
                 <span className="d-block text-uppercase text-muted font-weight-bold mb-1" style={{ fontSize: 11 }}>
                   ⏱️ Waktu & Durasi SLA:
                 </span>
-                <strong className="text-dark d-block">{task.timeSla}</strong>
+                <strong className="text-dark d-block font-weight-bold">{task.timeSla}</strong>
               </div>
               <div className="col-12 col-md-6 col-lg-3">
                 <span className="d-block text-uppercase text-muted font-weight-bold mb-1" style={{ fontSize: 11 }}>
                   💰 Estimasi OPEX Lahan:
                 </span>
-                <strong className="text-success font-weight-bold d-block">{task.opexEstimate}</strong>
+                <strong className="text-success font-weight-extrabold d-block">{task.opexEstimate}</strong>
               </div>
             </div>
 
             {/* 🔔 PENGINGAT SOP STANDAR WAJIB (MANDATORY SOP REMINDER) */}
-            <div className="bg-warning-subtle border border-warning p-3 rounded-3 d-flex align-items-start gap-2.5">
-              <i className="ri-shield-check-fill text-warning h5 m-0 mt-0.5"></i>
+            <div className="p-3 rounded-3 d-flex align-items-start gap-3" style={{ backgroundColor: '#fffbe6', border: '1px solid #ffe58f' }}>
+              <div className="corpox-icon-box amber flex-shrink-0" style={{ width: 36, height: 36, fontSize: 16 }}>
+                <i className="ri-shield-check-fill"></i>
+              </div>
               <div style={{ fontSize: 13 }}>
-                <strong className="text-dark d-block mb-1 font-weight-bold">
+                <strong className="text-dark d-block mb-1 font-weight-extrabold" style={{ color: '#b45309' }}>
                   🔔 PENGINGAT SOP KEBUN WAJIB & MUTLAK:
                 </strong>
-                <p className="text-dark leading-relaxed mb-0 font-weight-medium">
+                <p className="text-dark leading-relaxed mb-0 font-weight-medium" style={{ color: '#78350f' }}>
                   {task.sopReminder}
                 </p>
               </div>
