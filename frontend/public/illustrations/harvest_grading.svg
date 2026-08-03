@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad6" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#fef9c3" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="250" fill="url(#skyGrad6)" />
+  <rect y="240" width="800" height="260" fill="#15803d" />
+
+  <!-- Baskets of Fresh Harvest Yield (Kelapa Sawit / Porang / Jagung) -->
+  <g transform="translate(150, 220)">
+    <!-- Golden Harvest Fruit Bunch / Produce Pile -->
+    <ellipse cx="100" cy="80" rx="90" ry="40" fill="#ea580c" />
+    <circle cx="60" cy="65" r="18" fill="#c2410c" />
+    <circle cx="90" cy="55" r="20" fill="#f97316" />
+    <circle cx="130" cy="65" r="18" fill="#c2410c" />
+    <circle cx="110" cy="80" r="16" fill="#ea580c" />
+
+    <!-- Basket / Crate Base -->
+    <path d="M 0 80 L 20 170 L 180 170 L 200 80 Z" fill="#b45309" stroke="#78350f" stroke-width="4" />
+    <line x1="40" y1="80" x2="50" y2="170" stroke="#78350f" stroke-width="3" />
+    <line x1="80" y1="80" x2="85" y2="170" stroke="#78350f" stroke-width="3" />
+    <line x1="120" y1="80" x2="120" y2="170" stroke="#78350f" stroke-width="3" />
+    <line x1="160" y1="80" x2="150" y2="170" stroke="#78350f" stroke-width="3" />
+  </g>
+
+  <!-- Quality Seal Badge Grade A -->
+  <g transform="translate(500, 200)">
+    <circle cx="80" cy="80" r="65" fill="#059669" stroke="#ffffff" stroke-width="4" />
+    <text x="50" y="95" font-family="sans-serif" font-weight="extrabold" font-size="45" fill="#ffffff">GRADE A</text>
+  </g>
+
+  <!-- Stage Label Badge -->
+  <rect x="30" y="30" width="410" height="60" rx="12" fill="#ffffff" opacity="0.95" stroke="#059669" stroke-width="2" />
+  <text x="50" y="55" font-family="sans-serif" font-weight="bold" font-size="16" fill="#0f172a">TAHAP 6: PANEN RAYA & GRADING KUALITAS</text>
+  <text x="50" y="75" font-family="sans-serif" font-size="12" fill="#059669">Panen Komoditas & Seleksi Kualitas Buah Grade A/B/C</text>
+</svg>

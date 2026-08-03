@@ -1,0 +1,214 @@
+// Prisma Schema for AgroJaya ERP (SQLite Local File DB)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  passwordHash     String   @map("password_hash")
+  role             String   // PETANI, KEPALA_KEBUN, MANAGER, DIREKTUR, INVESTOR
+  phone            String?
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  cycles           PlantingCycle[] @relation("CycleCreator")
+  activities       Activity[]      @relation("ActivityCreator")
+  approvedActivities Activity[]    @relation("ActivityApprover")
+  purchases        Purchase[]      @relation("PurchaseCreator")
+  harvests         Harvest[]       @relation("HarvestCreator")
+  auditLogs        AuditLog[]
+  attendances      Attendance[]
+
+  @@map("users")
+}
+
+model Land {
+  id          String   @id @default(uuid())
+  name        String
+  areaHa      Float    @map("area_ha")
+  soilType    String   @map("soil_type")
+  latitude    Float?   @map("latitude")
+  longitude   Float?   @map("longitude")
+  status      String   @default("KOSONG") // AKTIF, PANEN, KOSONG
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  plantingCycles PlantingCycle[]
+  weighbridges   Weighbridge[]
+
+  @@map("lands")
+}
+
+model Weighbridge {
+  id        String   @id @default(uuid())
+  ticketNo  String   @map("ticket_no")
+  truckNo   String   @map("truck_no")
+  brutoKg   Float    @map("bruto_kg")
+  tarraKg   Float    @map("tarra_kg")
+  nettoKg   Float    @map("netto_kg")
+  grade     String   @default("A") // A, B, C
+  status    String   @default("VERIFIED")
+  landId    String   @map("land_id")
+  land      Land     @relation(fields: [landId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("weighbridges")
+}
+
+model Crop {
+  id           String   @id @default(uuid())
+  name         String
+  cycleDays    Int      @map("cycle_days")
+  sop          String   // Storing SOP as JSON String
+  yieldFormula String   @map("yield_formula")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  plantingCycles PlantingCycle[]
+
+  @@map("crops")
+}
+
+model PlantingCycle {
+  id               String   @id @default(uuid())
+  landId           String   @map("land_id")
+  cropId           String   @map("crop_id")
+  startDate        DateTime @map("start_date")
+  estimatedHarvest DateTime? @map("estimated_harvest")
+  actualHarvest    DateTime? @map("actual_harvest")
+  status           String   @default("PERSIAPAN") // PERSIAPAN, TANAM, PERAWATAN, PANEN, SELESAI
+  totalCost        Float?    @map("total_cost")
+  totalYieldKg     Float?    @map("total_yield_kg")
+  createdById      String   @map("created_by")
+
+  land             Land     @relation(fields: [landId], references: [id])
+  crop             Crop     @relation(fields: [cropId], references: [id])
+  createdBy        User     @relation("CycleCreator", fields: [createdById], references: [id])
+  
+  activities       Activity[]
+  harvests         Harvest[]
+  financials       Financial[]
+
+  @@map("planting_cycles")
+}
+
+model Activity {
+  id              String   @id @default(uuid())
+  plantingCycleId String   @map("planting_cycle_id")
+  type            String   // PENGGARAPAN, PENANAMAN, PEMUPUKAN, PENYIRAMAN, PESTISIDA, PANEN
+  description     String?
+  date            DateTime
+  cost            Float?
+  photoUrl        String?  @map("photo_url")
+  createdById     String   @map("created_by")
+  approvedById    String?  @map("approved_by")
+  approvedAt      DateTime? @map("approved_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  plantingCycle   PlantingCycle @relation(fields: [plantingCycleId], references: [id])
+  createdBy       User     @relation("ActivityCreator", fields: [createdById], references: [id])
+  approvedBy      User?    @relation("ActivityApprover", fields: [approvedById], references: [id])
+
+  @@map("activities")
+}
+
+model Inventory {
+  id            String   @id @default(uuid())
+  name          String
+  category      String   // BIBIT, PUPUK, PESTISIDA, ALAT
+  stock         Float
+  unit          String
+  supplier      String?
+  pricePerUnit  Float    @map("price_per_unit")
+  minStock      Float    @map("min_stock")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  purchases     Purchase[]
+
+  @@map("inventory")
+}
+
+model Purchase {
+  id            String   @id @default(uuid())
+  inventoryId   String   @map("inventory_id")
+  quantity      Float
+  totalPrice    Float    @map("total_price")
+  receiptPhoto  String?  @map("receipt_photo")
+  supplier      String?
+  poNumber      String?  @map("po_number")
+  createdById   String   @map("created_by")
+  status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  inventory     Inventory @relation(fields: [inventoryId], references: [id])
+  createdBy     User      @relation("PurchaseCreator", fields: [createdById], references: [id])
+
+  @@map("purchases")
+}
+
+model Harvest {
+  id              String   @id @default(uuid())
+  plantingCycleId String   @map("planting_cycle_id")
+  date            DateTime
+  weightKg        Float    @map("weight_kg")
+  qualityGrade    String   // A, B, C
+  priceSold       Float?   @map("price_sold")
+  buyer           String?
+  createdById     String   @map("created_by")
+
+  plantingCycle   PlantingCycle @relation(fields: [plantingCycleId], references: [id])
+  createdBy       User          @relation("HarvestCreator", fields: [createdById], references: [id])
+
+  @@map("harvests")
+}
+
+model Financial {
+  id              String   @id @default(uuid())
+  plantingCycleId String   @map("planting_cycle_id")
+  category        String   // BIBIT, PUPUK, TENAGA_KERJA, ALAT, LAIN
+  amount          Float
+  type            String   // EXPENSE, REVENUE
+  date            DateTime
+  note            String?
+
+  plantingCycle   PlantingCycle @relation(fields: [plantingCycleId], references: [id])
+
+  @@map("financials")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  action      String   // CREATE, UPDATE, DELETE
+  tableName   String   @map("table_name")
+  recordId    String   @map("record_id")
+  oldData     String?  @map("old_data")
+  newData     String?  @map("new_data")
+  ipAddress   String?  @map("ip_address")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Attendance {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  checkIn          DateTime  @map("check_in")
+  checkOut         DateTime? @map("check_out")
+  location         String?
+  dailyWage        Float     @map("daily_wage")
+  status           String    @default("PRESENT")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user             User      @relation(fields: [userId], references: [id])
+
+  @@map("attendances")
+}
