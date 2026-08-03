@@ -28,3 +28,10 @@ yarn-debug.log*
 .env*
 
 lucky/
+
+# Database files (SQLite - jangan pernah masuk git!)
+*.db
+*.db-bak
+*.db-journal
+*.db-wal
+*.db-shm
