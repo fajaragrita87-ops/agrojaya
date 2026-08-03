@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
+import { getPurchases, createPurchase, updatePurchaseStatus } from '../services/api';
 
 export type POStatus = 
-  | 'PENDING_FINANCE'                // Step 1 -> Layer 1: Waiting for Finance Verification
-  | 'PENDING_DIREKTUR'               // Step 2 -> Layer 2: Waiting for Direktur Authorization
-  | 'PENDING_INVESTOR'               // Step 3 -> Layer 3: Waiting for Investor Approval
-  | 'APPROVED_WAITING_DISBURSEMENT'  // Step 4 -> Approved by 3 Layers, waiting for Finance Cash Disbursal
-  | 'DISBURSED'                      // Step 5 -> Funds Disbursed by Finance (Completed)
-  | 'REJECTED';                      // Rejected
+  | 'PENDING_FINANCE'                
+  | 'PENDING_DIREKTUR'               
+  | 'PENDING_INVESTOR'               
+  | 'APPROVED_WAITING_DISBURSEMENT'  
+  | 'DISBURSED'                      
+  | 'REJECTED';                      
 
 export interface PurchaseItem {
   id: string;
@@ -17,10 +18,10 @@ export interface PurchaseItem {
   targetLand: string;
   quantity: string;
   unitPriceRp: number;
-  totalAmountRp: number;
+  totalPrice: number;
   usageTargetDate: string;
-  requestedBy: string;
-  requestDate: string;
+  createdById?: string;
+  createdAt?: string;
   usageDetails: string;
   status: POStatus;
   financeVerifiedAt?: string;
@@ -28,6 +29,8 @@ export interface PurchaseItem {
   investorApprovedAt?: string;
   disbursedAt?: string;
   rejectionNote?: string;
+  voucherNo?: string;
+  createdBy?: { name: string };
 }
 
 export interface InventoryItem {
@@ -39,93 +42,8 @@ export interface InventoryItem {
   status: 'CUKUP' | 'REORDER_NOW' | 'HAMPIR_HABIS';
 }
 
-export const INITIAL_MOCK_PO_LIST: PurchaseItem[] = [
-  {
-    id: 'po-101',
-    poNumber: 'PO-2026-0804-01',
-    itemName: '10 Ton Pupuk NPK Granul Presisi & Kapur Dolomit',
-    category: 'PUPUK & KAPUR',
-    targetLand: 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)',
-    quantity: '10 Ton',
-    unitPriceRp: 2800000,
-    totalAmountRp: 28000000,
-    usageTargetDate: '10 Aug 2026',
-    requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-    requestDate: '03 Aug 2026',
-    usageDetails: 'Pemupukan NPK susulan fase pertumbuhan vegetatif tanaman hibrida 2.0 Ha Jonggol. Dosis 250gram/titik sesuai SOP-PUPUK-02.',
-    status: 'PENDING_FINANCE',
-  },
-  {
-    id: 'po-102',
-    poNumber: 'PO-2026-0804-02',
-    itemName: '500 Meter Selang Drip Irigasi Tetes & Nozzle Satelit',
-    category: 'PERALATAN & SPAREPART',
-    targetLand: 'Blok A1 - Kebun Anggur Impor (1.000m² Jonggol)',
-    quantity: '500 Meter',
-    unitPriceRp: 29000,
-    totalAmountRp: 14500000,
-    usageTargetDate: '12 Aug 2026',
-    requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-    requestDate: '03 Aug 2026',
-    usageDetails: 'Perluasan modul fertigasi tetes otomatis terhubung sensor kelembaban BMKG.',
-    status: 'PENDING_DIREKTUR',
-    financeVerifiedAt: '03 Aug 2026 14:20',
-  },
-  {
-    id: 'po-103',
-    poNumber: 'PO-2026-0804-03',
-    itemName: '500 Batang Bibit Anggur Impor Shine Muscat (Rootstock SO4)',
-    category: 'BIBIT UNGGUL',
-    targetLand: 'Blok A1 - Kebun Anggur Impor (1.000m² Jonggol)',
-    quantity: '500 Batang',
-    unitPriceRp: 70000,
-    totalAmountRp: 35000000,
-    usageTargetDate: '15 Aug 2026',
-    requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-    requestDate: '02 Aug 2026',
-    usageDetails: 'Penyulaman bibit unggul varietas Shine Muscat tersertifikasi Balai Benih Indonesia.',
-    status: 'PENDING_INVESTOR',
-    financeVerifiedAt: '02 Aug 2026 14:00',
-    direkturApprovedAt: '03 Aug 2026 09:15',
-  },
-  {
-    id: 'po-104',
-    poNumber: 'PO-2026-0803-04',
-    itemName: '1.200 Liter BBM Solar Industri B35 Traktor Kubota',
-    category: 'LOGISTIK & BBM SOLAR',
-    targetLand: 'Fasilitas Workshop & Machine Yard Jonggol',
-    quantity: '1.200 Liter',
-    unitPriceRp: 15000,
-    totalAmountRp: 18000000,
-    usageTargetDate: '08 Aug 2026',
-    requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-    requestDate: '02 Aug 2026',
-    usageDetails: 'BBM Solar Industri B35 operasional 3 traktor pembajak & cultivator lahan Jonggol.',
-    status: 'APPROVED_WAITING_DISBURSEMENT',
-    financeVerifiedAt: '02 Aug 2026 15:10',
-    direkturApprovedAt: '02 Aug 2026 17:30',
-    investorApprovedAt: '03 Aug 2026 10:45',
-  },
-  {
-    id: 'po-105',
-    poNumber: 'PO-2026-0801-05',
-    itemName: 'Suku Cadang Traktor & Valve Drip Irigasi Satelit',
-    category: 'PERALATAN & SPAREPART',
-    targetLand: 'Fasilitas Workshop & Machine Yard Jonggol',
-    quantity: '1 Paket',
-    unitPriceRp: 12500000,
-    totalAmountRp: 12500000,
-    usageTargetDate: '05 Aug 2026',
-    requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-    requestDate: '01 Aug 2026',
-    usageDetails: 'Perawatan rutin filter membran irigasi & penggantian oli traktor Kubota.',
-    status: 'DISBURSED',
-    financeVerifiedAt: '01 Aug 2026 10:00',
-    direkturApprovedAt: '01 Aug 2026 11:30',
-    investorApprovedAt: '01 Aug 2026 14:20',
-    disbursedAt: '01 Aug 2026 15:45 (Ref: VCH-2026-8801)',
-  },
-];
+// Kept for backward compatibility if needed by other components momentarily, but better to remove later
+export const INITIAL_MOCK_PO_LIST: PurchaseItem[] = [];
 
 export const PurchaseOrderInventoryShowcase: React.FC = () => {
   const { role, canCreatePO } = useRole();
@@ -138,41 +56,26 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
     { id: '5', name: 'Traktor & Cultivator Kubota', category: 'PERALATAN', stockQty: '3 Unit', minStock: '2 Unit', status: 'CUKUP' },
   ]);
 
-  const [poList, setPoList] = useState<PurchaseItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('agrojaya_po_list');
-      return saved ? JSON.parse(saved) : INITIAL_MOCK_PO_LIST;
-    } catch {
-      return INITIAL_MOCK_PO_LIST;
-    }
-  });
+  const [poList, setPoList] = useState<PurchaseItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Sync state when PO is updated in localStorage
-  const updateAndSavePoList = (newList: PurchaseItem[]) => {
-    setPoList(newList);
+  const fetchPOs = async () => {
     try {
-      localStorage.setItem('agrojaya_po_list', JSON.stringify(newList));
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (e) {
-      console.error(e);
+      setLoading(true);
+      const res = await getPurchases();
+      setPoList(res.data);
+    } catch (error) {
+      console.error('Failed to load POs', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const handleSync = () => {
-      try {
-        const saved = localStorage.getItem('agrojaya_po_list');
-        if (saved) setPoList(JSON.parse(saved));
-      } catch (e) {
-        console.error(e);
-      }
-    };
+    fetchPOs();
+    const handleSync = () => fetchPOs();
     window.addEventListener('agrojaya-po-updated', handleSync);
-    window.addEventListener('storage', handleSync);
-    return () => {
-      window.removeEventListener('agrojaya-po-updated', handleSync);
-      window.removeEventListener('storage', handleSync);
-    };
+    return () => window.removeEventListener('agrojaya-po-updated', handleSync);
   }, []);
 
   // Form State for Manager Operasional
@@ -186,83 +89,98 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
 
   const calculatedTotal = Number(unitPrice || 0) * (parseFloat(quantity) || 1);
 
-  const handleCreatePO = (e: React.FormEvent) => {
+  const handleCreatePO = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canCreatePO) return;
 
-    const newPO: PurchaseItem = {
-      id: `po-${Date.now()}`,
-      poNumber: `PO-2026-0804-0${poList.length + 1}`,
-      itemName,
-      category,
-      targetLand,
-      quantity,
-      unitPriceRp: Number(unitPrice),
-      totalAmountRp: calculatedTotal,
-      usageTargetDate: usageTargetDate || '15 Aug 2026',
-      requestedBy: 'Budi Santoso, S.P. (Manajer Operasional)',
-      requestDate: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
-      usageDetails,
-      status: 'PENDING_FINANCE',
-    };
-
-    updateAndSavePoList([newPO, ...poList]);
-    setItemName('');
-    setQuantity('');
-    setUnitPrice('');
-    setUsageTargetDate('');
-    setUsageDetails('');
-    alert(`Pengajuan PO ${newPO.poNumber} Berhasil Dikirimkan ke Finance (Layer 1 Verifikasi)!`);
+    const poNumber = `PO-${new Date().getFullYear()}-${new Date().getMonth()+1}${new Date().getDate()}-${Math.floor(Math.random() * 100)}`;
+    
+    try {
+      await createPurchase({
+        itemName,
+        category,
+        targetLand,
+        quantity: parseFloat(quantity),
+        unitPriceRp: Number(unitPrice),
+        totalPrice: calculatedTotal,
+        usageTargetDate: usageTargetDate || '15 Aug 2026',
+        usageDetails,
+        poNumber,
+        createdById: 'manager-ops-123' // placeholder ID
+      });
+      
+      setItemName('');
+      setQuantity('');
+      setUnitPrice('');
+      setUsageTargetDate('');
+      setUsageDetails('');
+      alert(`Pengajuan PO ${poNumber} Berhasil Dikirimkan ke Finance (Layer 1 Verifikasi)!`);
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal membuat PO');
+      console.error(error);
+    }
   };
 
   // Workflow Handlers
-  const handleFinanceVerify = (id: string) => {
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'PENDING_DIREKTUR' as const,
-      financeVerifiedAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-    } : po);
-    updateAndSavePoList(updated);
+  const handleFinanceVerify = async (id: string) => {
+    try {
+      await updatePurchaseStatus(id, { status: 'PENDING_DIREKTUR' });
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal verifikasi layer 1');
+    }
   };
 
-  const handleDirekturApprove = (id: string) => {
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'PENDING_INVESTOR' as const,
-      direkturApprovedAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-    } : po);
-    updateAndSavePoList(updated);
+  const handleDirekturApprove = async (id: string) => {
+    try {
+      await updatePurchaseStatus(id, { status: 'PENDING_INVESTOR' });
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal otorisasi layer 2');
+    }
   };
 
-  const handleInvestorApprove = (id: string) => {
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'APPROVED_WAITING_DISBURSEMENT' as const,
-      investorApprovedAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-    } : po);
-    updateAndSavePoList(updated);
+  const handleInvestorApprove = async (id: string) => {
+    try {
+      await updatePurchaseStatus(id, { status: 'APPROVED_WAITING_DISBURSEMENT' });
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal persetujuan layer 3');
+    }
   };
 
-  const handleFinanceDisburse = (id: string) => {
+  const handleFinanceDisburse = async (id: string) => {
     const voucherNo = `VCH-${Math.floor(1000 + Math.random() * 9000)}`;
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'DISBURSED' as const,
-      disbursedAt: `${new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })} (Ref: ${voucherNo})`,
-    } : po);
-    updateAndSavePoList(updated);
-    alert(`Dana PO Berhasil Dicairkan oleh Finance! Voucher Kas Terbit: ${voucherNo}`);
+    try {
+      await updatePurchaseStatus(id, { status: 'DISBURSED', voucherNo });
+      alert(`Dana PO Berhasil Dicairkan oleh Finance! Voucher Kas Terbit: ${voucherNo}`);
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal pencairan');
+    }
   };
 
-  const handleRejectPO = (id: string, layerName: string) => {
+  const handleRejectPO = async (id: string, layerName: string) => {
     const reason = prompt(`Masukkan alasan penolakan PO (${layerName}):`);
     if (!reason) return;
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'REJECTED' as const,
-      rejectionNote: `Ditolak pada ${layerName}: ${reason}`,
-    } : po);
-    updateAndSavePoList(updated);
+    try {
+      await updatePurchaseStatus(id, { status: 'REJECTED', rejectionNote: `Ditolak pada ${layerName}: ${reason}` });
+      fetchPOs();
+      window.dispatchEvent(new Event('agrojaya-po-updated'));
+    } catch (error) {
+      alert('Gagal menolak PO');
+    }
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
   };
 
   return (
@@ -283,50 +201,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
         </span>
       </div>
 
-      {/* Visual Workflow Layer Progress Diagram */}
-      <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-        <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2" style={{ fontSize: 15 }}>
-          <i className="ri-flow-chart text-success"></i> Skema Alur Eksekusi PO Perkebunan (End-to-End Audit)
-        </h4>
 
-        <div className="row g-3 text-center">
-          <div className="col-12 col-md-2.4">
-            <div className="p-3 bg-light rounded-3 border">
-              <span className="badge bg-secondary text-white rounded-circle mb-1" style={{ width: 24, height: 24, lineHeight: '18px' }}>1</span>
-              <strong className="d-block text-dark" style={{ fontSize: 13 }}>1. Pengajuan PO</strong>
-              <small className="text-muted d-block" style={{ fontSize: 11 }}>Manajer Operasional</small>
-            </div>
-          </div>
-          <div className="col-12 col-md-2.4">
-            <div className="p-3 bg-primary-subtle text-primary rounded-3 border border-primary">
-              <span className="badge bg-primary text-white rounded-circle mb-1" style={{ width: 24, height: 24, lineHeight: '18px' }}>2</span>
-              <strong className="d-block text-primary" style={{ fontSize: 13 }}>Layer 1: Finance</strong>
-              <small className="text-primary-subtle d-block text-dark" style={{ fontSize: 11 }}>Cek Kelayakan Anggaran</small>
-            </div>
-          </div>
-          <div className="col-12 col-md-2.4">
-            <div className="p-3 bg-warning-subtle text-warning rounded-3 border border-warning">
-              <span className="badge bg-warning text-dark rounded-circle mb-1" style={{ width: 24, height: 24, lineHeight: '18px' }}>3</span>
-              <strong className="d-block text-dark" style={{ fontSize: 13 }}>Layer 2: Direktur</strong>
-              <small className="text-muted d-block" style={{ fontSize: 11 }}>Otorisasi Direksi Kebun</small>
-            </div>
-          </div>
-          <div className="col-12 col-md-2.4">
-            <div className="p-3 bg-info-subtle text-info rounded-3 border border-info">
-              <span className="badge bg-info text-white rounded-circle mb-1" style={{ width: 24, height: 24, lineHeight: '18px' }}>4</span>
-              <strong className="d-block text-dark" style={{ fontSize: 13 }}>Layer 3: Investor</strong>
-              <small className="text-muted d-block" style={{ fontSize: 11 }}>Transparansi Modal</small>
-            </div>
-          </div>
-          <div className="col-12 col-md-2.4">
-            <div className="p-3 bg-success-subtle text-success rounded-3 border border-success">
-              <span className="badge bg-success text-white rounded-circle mb-1" style={{ width: 24, height: 24, lineHeight: '18px' }}>5</span>
-              <strong className="d-block text-success font-weight-extrabold" style={{ fontSize: 13 }}>Pencairan: Finance</strong>
-              <small className="text-success d-block" style={{ fontSize: 11 }}>Cair Ke Rekening Vendor</small>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Grid 2 Column: Inventory Stock & Complete PO Form */}
       <div className="row g-4">
@@ -525,13 +400,17 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                 <th>Detail Material & Lokasi Lahan</th>
                 <th>Estimasi Penggunaan Detail</th>
                 <th>Total OPEX</th>
-                <th>Pemohon (Manajer Ops)</th>
+                <th>Pemohon</th>
                 <th>Status Lifecycle 3 Layer</th>
                 <th className="text-center">Tindakan Layer (Sesuai Peran)</th>
               </tr>
             </thead>
             <tbody>
-              {poList.map((po) => (
+              {loading && poList.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-4 text-muted">Memuat data PO dari server...</td>
+                </tr>
+              ) : poList.map((po) => (
                 <tr key={po.id}>
                   <td><strong className="badge bg-light text-dark border font-mono px-2 py-1">{po.poNumber}</strong></td>
                   <td>
@@ -540,14 +419,14 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                     <span className="d-block text-secondary mt-1" style={{ fontSize: 11 }}>📍 {po.targetLand}</span>
                   </td>
                   <td>
-                    <span className="d-block text-dark font-weight-medium" style={{ fontSize: 12 }}>Qty: <b>{po.quantity}</b> (@ Rp {po.unitPriceRp.toLocaleString('id-ID')})</span>
+                    <span className="d-block text-dark font-weight-medium" style={{ fontSize: 12 }}>Qty: <b>{po.quantity}</b> (@ Rp {po.unitPriceRp?.toLocaleString('id-ID') || 0})</span>
                     <p className="text-muted mb-0 mt-1" style={{ fontSize: 11 }}>{po.usageDetails}</p>
                     <span className="text-primary font-weight-bold d-block mt-1" style={{ fontSize: 11 }}>📅 Target Pakai: {po.usageTargetDate}</span>
                   </td>
-                  <td><strong className="text-danger h6 font-weight-extrabold m-0">Rp {po.totalAmountRp.toLocaleString('id-ID')}</strong></td>
+                  <td><strong className="text-danger h6 font-weight-extrabold m-0">Rp {po.totalPrice?.toLocaleString('id-ID')}</strong></td>
                   <td>
-                    <strong className="d-block text-dark" style={{ fontSize: 12 }}>{po.requestedBy}</strong>
-                    <span className="text-muted" style={{ fontSize: 11 }}>Tanggal: {po.requestDate}</span>
+                    <strong className="d-block text-dark" style={{ fontSize: 12 }}>{po.createdBy?.name || 'Manajer Ops'}</strong>
+                    <span className="text-muted" style={{ fontSize: 11 }}>Tgl: {formatDate(po.createdAt)}</span>
                   </td>
                   <td>
                     {po.status === 'PENDING_FINANCE' && (
@@ -575,7 +454,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                         <span className="badge bg-success text-white font-weight-bold px-2.5 py-1.5 rounded-pill d-inline-block mb-1" style={{ fontSize: 10 }}>
                           💵 DANA CAIR KE VENDOR
                         </span>
-                        <span className="d-block text-muted" style={{ fontSize: 10 }}>{po.disbursedAt}</span>
+                        <span className="d-block text-muted" style={{ fontSize: 10 }}>{formatDate(po.disbursedAt)} (Ref: {po.voucherNo})</span>
                       </div>
                     )}
                     {po.status === 'REJECTED' && (
@@ -591,7 +470,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                   {/* Actions according to Layer & Role */}
                   <td className="text-center">
                     {po.status === 'PENDING_FINANCE' && (
-                      role === 'FINANCE' || role === 'DIREKTUR' ? (
+                      role === 'FINANCE' ? (
                         <div className="d-flex align-items-center justify-content-center gap-1">
                           <button
                             onClick={() => handleFinanceVerify(po.id)}
@@ -637,7 +516,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                     )}
 
                     {po.status === 'PENDING_INVESTOR' && (
-                      role === 'INVESTOR' || role === 'DIREKTUR' ? (
+                      role === 'INVESTOR' ? (
                         <div className="d-flex align-items-center justify-content-center gap-1">
                           <button
                             onClick={() => handleInvestorApprove(po.id)}
@@ -660,7 +539,7 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
                     )}
 
                     {po.status === 'APPROVED_WAITING_DISBURSEMENT' && (
-                      role === 'FINANCE' || role === 'DIREKTUR' ? (
+                      role === 'FINANCE' ? (
                         <button
                           onClick={() => handleFinanceDisburse(po.id)}
                           className="btn btn-sm btn-success text-white font-weight-bold rounded-3 px-3 py-1.5 shadow-sm"

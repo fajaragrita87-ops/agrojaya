@@ -197,13 +197,52 @@ async function main() {
   // 7. Purchase Orders (PO)
   await prisma.purchase.create({
     data: {
-      inventoryId: invPupuk.id,
-      quantity: 5,
+      poNumber: 'PO-2026-0804-01',
+      itemName: '10 Ton Pupuk NPK Granul Presisi & Kapur Dolomit',
+      category: 'PUPUK & KAPUR',
+      targetLand: 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)',
+      quantity: 10,
+      unitPriceRp: 2800000,
       totalPrice: 28000000,
-      supplier: 'PT Pupuk Nusantara Jonggol',
-      poNumber: 'PO-2026-0801',
-      createdById: kepalaKebun.id,
-      status: 'APPROVED',
+      usageTargetDate: '10 Aug 2026',
+      usageDetails: 'Pemupukan NPK susulan fase pertumbuhan vegetatif tanaman hibrida 2.0 Ha Jonggol. Dosis 250gram/titik sesuai SOP-PUPUK-02.',
+      status: 'PENDING_FINANCE',
+      createdById: manager.id,
+    },
+  });
+
+  await prisma.purchase.create({
+    data: {
+      poNumber: 'PO-2026-0804-02',
+      itemName: '500 Meter Selang Drip Irigasi Tetes & Nozzle Satelit',
+      category: 'PERALATAN & SPAREPART',
+      targetLand: 'Blok A1 - Kebun Anggur Impor (1.000m² Jonggol)',
+      quantity: 500,
+      unitPriceRp: 29000,
+      totalPrice: 14500000,
+      usageTargetDate: '12 Aug 2026',
+      usageDetails: 'Perluasan modul fertigasi tetes otomatis.',
+      status: 'PENDING_DIREKTUR',
+      financeVerifiedAt: new Date('2026-08-03T14:20:00Z'),
+      createdById: manager.id,
+    },
+  });
+
+  await prisma.purchase.create({
+    data: {
+      poNumber: 'PO-2026-0804-03',
+      itemName: '500 Batang Bibit Anggur Impor Shine Muscat',
+      category: 'BIBIT UNGGUL',
+      targetLand: 'Blok A1 - Kebun Anggur Impor (1.000m² Jonggol)',
+      quantity: 500,
+      unitPriceRp: 70000,
+      totalPrice: 35000000,
+      usageTargetDate: '15 Aug 2026',
+      usageDetails: 'Penyulaman bibit unggul varietas Shine Muscat.',
+      status: 'PENDING_INVESTOR',
+      financeVerifiedAt: new Date('2026-08-02T14:00:00Z'),
+      direkturApprovedAt: new Date('2026-08-03T09:15:00Z'),
+      createdById: manager.id,
     },
   });
 

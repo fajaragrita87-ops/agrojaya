@@ -26,6 +26,7 @@ export const createInventoryItem = (data: any) => api.post('/inventory', data);
 
 export const getPurchases = () => api.get('/purchases');
 export const createPurchase = (data: any) => api.post('/purchases', data);
+export const updatePurchaseStatus = (id: string, data: any) => api.patch(`/purchases/${id}/status`, data);
 
 export const getHarvests = () => api.get('/harvests');
 export const createHarvest = (data: any) => api.post('/harvests', data);

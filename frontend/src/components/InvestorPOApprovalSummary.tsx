@@ -1,54 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { type PurchaseItem, INITIAL_MOCK_PO_LIST } from './PurchaseOrderInventoryShowcase';
+import { getPurchases, updatePurchaseStatus } from '../services/api';
+import type { PurchaseItem } from './PurchaseOrderInventoryShowcase';
 
 export const InvestorPOApprovalSummary: React.FC = () => {
-  const [poList, setPoList] = useState<PurchaseItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('agrojaya_po_list');
-      return saved ? JSON.parse(saved) : INITIAL_MOCK_PO_LIST;
-    } catch {
-      return INITIAL_MOCK_PO_LIST;
-    }
-  });
+  const [poList, setPoList] = useState<PurchaseItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const syncPoList = () => {
+  const fetchPOs = async () => {
     try {
-      const saved = localStorage.getItem('agrojaya_po_list');
-      if (saved) setPoList(JSON.parse(saved));
-    } catch (e) {
-      console.error(e);
+      setLoading(true);
+      const res = await getPurchases();
+      setPoList(res.data);
+    } catch (error) {
+      console.error('Failed to load POs', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    syncPoList();
-    window.addEventListener('agrojaya-po-updated', syncPoList);
-    window.addEventListener('storage', syncPoList);
-    return () => {
-      window.removeEventListener('agrojaya-po-updated', syncPoList);
-      window.removeEventListener('storage', syncPoList);
-    };
+    fetchPOs();
+    const handleSync = () => fetchPOs();
+    window.addEventListener('agrojaya-po-updated', handleSync);
+    return () => window.removeEventListener('agrojaya-po-updated', handleSync);
   }, []);
 
   // Filter POs waiting for Layer 3 Investor Approval
   const pendingInvestorPOs = poList.filter((po) => po.status === 'PENDING_INVESTOR');
   const approvedPOs = poList.filter((po) => po.status === 'APPROVED_WAITING_DISBURSEMENT' || po.status === 'DISBURSED');
 
-  const handleApprovePO = (id: string, poNumber: string) => {
-    const updated = poList.map((po) => po.id === id ? {
-      ...po,
-      status: 'APPROVED_WAITING_DISBURSEMENT' as const,
-      investorApprovedAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-    } : po);
-
-    setPoList(updated);
+  const handleApprovePO = async (id: string, poNumber: string) => {
     try {
-      localStorage.setItem('agrojaya_po_list', JSON.stringify(updated));
+      await updatePurchaseStatus(id, { status: 'APPROVED_WAITING_DISBURSEMENT' });
+      alert(`Persetujuan Layer 3 Investor untuk Tiket ${poNumber} Berhasil Dikirimkan Ke Finance!`);
+      fetchPOs();
       window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      alert('Gagal menyetujui PO');
     }
-    alert(`Persetujuan Layer 3 Investor untuk Tiket ${poNumber} Berhasil Dikirimkan Ke Finance!`);
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
   };
 
   return (
@@ -75,7 +69,9 @@ export const InvestorPOApprovalSummary: React.FC = () => {
       </div>
 
       {/* Pending Investor PO Cards (Clean, Simple 1-Click Approval) */}
-      {pendingInvestorPOs.length > 0 ? (
+      {loading && pendingInvestorPOs.length === 0 ? (
+        <div className="p-4 text-center text-muted">Memuat data dari server...</div>
+      ) : pendingInvestorPOs.length > 0 ? (
         <div className="space-y-3">
           {pendingInvestorPOs.map((po) => (
             <div key={po.id} className="p-4 rounded-4 border border-info bg-info-subtle d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 shadow-xs">
@@ -90,13 +86,13 @@ export const InvestorPOApprovalSummary: React.FC = () => {
                   📍 Target Lahan: <b>{po.targetLand}</b> • Penggunaan: <i>"{po.usageDetails}"</i>
                 </p>
                 <small className="text-muted d-block" style={{ fontSize: 11 }}>
-                  Pemohon: <b>{po.requestedBy}</b> | Tgl Pakai: <b>{po.usageTargetDate}</b>
+                  Pemohon: <b>{po.createdBy?.name || 'Manajer Ops'}</b> | Tgl Pakai: <b>{po.usageTargetDate}</b>
                 </small>
               </div>
 
               <div className="text-end d-flex flex-column align-items-md-end gap-2">
                 <strong className="h4 text-danger font-weight-extrabold m-0" style={{ fontSize: 20 }}>
-                  Rp {po.totalAmountRp.toLocaleString('id-ID')}
+                  Rp {po.totalPrice?.toLocaleString('id-ID')}
                 </strong>
                 <button
                   onClick={() => handleApprovePO(po.id, po.poNumber)}
@@ -147,8 +143,8 @@ export const InvestorPOApprovalSummary: React.FC = () => {
                   <td><strong className="badge bg-light text-dark border font-mono">{po.poNumber}</strong></td>
                   <td className="font-weight-bold text-dark">{po.itemName}</td>
                   <td className="text-secondary">{po.targetLand}</td>
-                  <td><strong className="text-success">Rp {po.totalAmountRp.toLocaleString('id-ID')}</strong></td>
-                  <td className="text-muted">{po.investorApprovedAt || '03 Aug 2026'}</td>
+                  <td><strong className="text-success">Rp {po.totalPrice?.toLocaleString('id-ID')}</strong></td>
+                  <td className="text-muted">{formatDate(po.investorApprovedAt)}</td>
                   <td>
                     <span className="badge bg-success-subtle text-success border border-success font-weight-bold">
                       {po.status === 'DISBURSED' ? '💵 DANA CAIR' : '✅ APPROVED'}
