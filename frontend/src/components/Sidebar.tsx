@@ -25,6 +25,7 @@ export const Sidebar = () => {
     { label: 'Peta Lahan GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['KEPALA_KEBUN'] },
     { label: 'Presensi Petani', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['KEPALA_KEBUN'] },
     { label: 'Master Komoditas', path: '/crops', icon: 'ri-plant-line', roles: ['KEPALA_KEBUN'] },
+    { label: 'AI Smart Farming', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['KEPALA_KEBUN'], badge: 'AI' },
     { label: 'Laporan Kebun', path: '/reports', icon: 'ri-file-list-3-line', roles: ['KEPALA_KEBUN'] },
 
     // --- MANAGER OPERASIONAL MENU ---
@@ -39,6 +40,7 @@ export const Sidebar = () => {
     { label: 'Keuangan & Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['MANAGER'] },
     { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['MANAGER'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['MANAGER'] },
+    { label: 'AI Smart Farming', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['MANAGER'], badge: 'AI' },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['MANAGER'] },
 
     // --- DIREKTUR MENU (FULL ACCESS) ---
@@ -53,6 +55,7 @@ export const Sidebar = () => {
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['DIREKTUR'] },
     { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['DIREKTUR'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['DIREKTUR'] },
+    { label: 'AI Smart Farming', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['DIREKTUR'], badge: 'AI' },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['DIREKTUR'] },
 
     // --- FINANCE (MANAJER KEUANGAN) MENU ---
@@ -70,6 +73,7 @@ export const Sidebar = () => {
     { label: 'Keuangan & Arus Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['INVESTOR'] },
     { label: 'Tiket Timbangan', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['INVESTOR'] },
     { label: 'Kalkulasi HPP Lahan', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['INVESTOR'] },
+    { label: 'AI Smart Farming', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['INVESTOR'], badge: 'AI' },
     { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['INVESTOR'] },
   ];
 

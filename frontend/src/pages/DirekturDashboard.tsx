@@ -219,6 +219,8 @@ export const DirekturDashboard = () => {
             title="Taksasi & Realisasi Panen Per Blok Kebun (Kg)"
             subtitle="Hasil produksi fisik per blok komoditas AgroJaya Jonggol"
             data={harvestYieldBarData}
+            unitPrefix=""
+            unitSuffix="Kg"
           />
         </div>
       </div>

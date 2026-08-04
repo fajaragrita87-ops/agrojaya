@@ -212,7 +212,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
           <span className="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill uppercase font-weight-bold mb-2 d-inline-block" style={{ fontSize: 12 }}>
             <i className="ri-layout-grid-line me-1"></i> DENAH INTERAKTIF & PETA GIS LAHAN JONGGOL
           </span>
-          <h3 className="h4 font-weight-bold text-dark mb-1">
+          <h3 className="h4 font-weight-bold text-dark mb-1 !text-sm">
             Denah Layout Site Plan Kebun & Satelit GPS (2.0 Ha Jonggol, Bogor)
           </h3>
           <p className="text-secondary mb-0" style={{ fontSize: 13 }}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { DraggableAIBubble } from './DraggableAIBubble';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -21,6 +22,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </div>
       </main>
+
+      {/* Global AI Assistant */}
+      <DraggableAIBubble />
     </div>
   );
 };

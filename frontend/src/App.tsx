@@ -15,6 +15,7 @@ import { WeighbridgePage } from './pages/WeighbridgePage';
 import { HppCalculatorPage } from './pages/HppCalculatorPage';
 import { InventoryPage } from './pages/InventoryPage';
 import { PlantationLifecyclePage } from './pages/PlantationLifecyclePage';
+import { AiSmartFarmingPage } from './pages/AiSmartFarmingPage';
 import { useRole, type RoleType, getDefaultPathForRole } from './context/RoleContext';
 
 interface ProtectedRouteProps {
@@ -156,6 +157,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'INVESTOR']}>
               <FinancialsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ai-smart-farming"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'INVESTOR']}>
+              <AiSmartFarmingPage />
             </ProtectedRoute>
           }
         />
