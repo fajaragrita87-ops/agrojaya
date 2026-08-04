@@ -71,7 +71,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     stepNumber: 4,
     title: 'Penanaman Bibit Unggul Sertifikasi',
     subtitle: 'Transplantasi Bibit Sertifikasi Balai Benih',
-    description: 'Penanaman bibit varietas unggul tersertifikasi Balai Benih Indonesia (Anggur Shine Muscat / Porang / Sawit Tenera / Melon Intanon).',
+    description: 'Penanaman bibit varietas unggul tersertifikasi Balai Benih Indonesia (Anggur Shine Muscat / Porang / Melon Intanon).',
     kearifanLokalNotes: 'Bibit bersertifikasi resmi dengan tingkat kelangsungan hidup di atas 98%.',
     progressPercent: 85,
     status: 'SEDANG BERJALAN',

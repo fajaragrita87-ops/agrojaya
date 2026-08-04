@@ -62,7 +62,7 @@ export const InvestorLandingPage = () => {
   ];
 
   const capitalAllocationDonutData = [
-    { label: 'Kelapa Sawit Tenera (Blok A1-A2)', value: 45, color: '#059669' },
+    { label: 'Porang (Komoditas Utama Ekspor)', value: 45, color: '#059669' },
     { label: 'Jagung Hibrida Kawasan Pangan (Blok B1)', value: 30, color: '#2563eb' },
     { label: 'Anggur Impor & Melon (Blok C1-D1)', value: 25, color: '#f59e0b' },
   ];

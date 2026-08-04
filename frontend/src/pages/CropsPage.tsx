@@ -83,7 +83,7 @@ export const CropsPage = () => {
               </label>
               <input
                 type="text"
-                placeholder="Contoh: Kelapa Sawit Tenera, Melon Intanon"
+                placeholder="Contoh: Porang, Melon Intanon"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="form-control p-2.5 bg-light border rounded-3 text-dark font-weight-medium"

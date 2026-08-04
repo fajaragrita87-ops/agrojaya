@@ -17,7 +17,7 @@ export const HppCalculatorPage = () => {
 
   const hppData = [
     { cropName: 'Blok A1 - Anggur Impor Shine Muscat (1000m²)', areaHa: 0.1, totalCostRp: 15000000, totalYieldKg: 3500, costPerHaRp: 150000000, hppPerKgRp: 4285, marketPriceRp: 12000, marginRp: 7715 },
-    { cropName: 'Blok A2 - Kelapa Sawit Tenera (2.0 Ha Jonggol)', areaHa: 2.0, totalCostRp: 35000000, totalYieldKg: 45000, costPerHaRp: 17500000, hppPerKgRp: 777, marketPriceRp: 2800, marginRp: 2023 },
+    { cropName: 'Blok A2 - Porang (2.0 Ha Jonggol)', areaHa: 2.0, totalCostRp: 35000000, totalYieldKg: 45000, costPerHaRp: 17500000, hppPerKgRp: 777, marketPriceRp: 2800, marginRp: 2023 },
     { cropName: 'Blok B1 - Melon Intanon Golden Sweet (5000m²)', areaHa: 0.5, totalCostRp: 18000000, totalYieldKg: 15000, costPerHaRp: 36000000, hppPerKgRp: 1200, marketPriceRp: 4500, marginRp: 3300 },
   ];
 

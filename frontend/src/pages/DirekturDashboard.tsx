@@ -27,8 +27,8 @@ export const DirekturDashboard = () => {
   ];
 
   const harvestYieldBarData = [
-    { label: 'Blok A1 - Sawit Tenera (Panen)', value: 15000, color: '#059669' },
-    { label: 'Blok A2 - Sawit Tenera (Perawatan)', value: 12000, color: '#10b981' },
+    { label: 'Blok A1 - Porang (Panen)', value: 15000, color: '#059669' },
+    { label: 'Blok A2 - Porang (Perawatan)', value: 12000, color: '#10b981' },
     { label: 'Blok B1 - Jagung Hibrida (Tanam)', value: 8500, color: '#2563eb' },
     { label: 'Blok C1 - Anggur & Melon (Persiapan)', value: 5000, color: '#f59e0b' },
   ];

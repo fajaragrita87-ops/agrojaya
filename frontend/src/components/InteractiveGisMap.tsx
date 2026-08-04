@@ -154,9 +154,9 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
     },
     {
       id: 'blok-a2',
-      name: 'Blok A2 - Lahan Tanam Hibrida Utama (Kelapa Sawit / Jagung)',
+      name: 'Blok A2 - Lahan Tanam Hibrida Utama (Porang / Jagung)',
       area: '2.0 Hektar (20.000 m²)',
-      crop: 'Sawit Tenera & Jagung Hibrida Pioneer',
+      crop: 'Porang & Jagung Hibrida Pioneer',
       soil: 'Latosol Subur Jonggol Bogor',
       status: 'SEDANG BERJALAN (85% SIAP PANEN)',
       pH: '6.2 (Subur)',
@@ -166,7 +166,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
       bgColor: '#e0f2fe',
       borderColor: '#0284c7',
       coords: 'GPS Lat -6.4697, Long 107.0544',
-      highlights: '272 Pohon Kelapa Sawit • 40 Saluran Drainase • Traktor Kubota Path',
+      highlights: '272 Tanaman Porang • 40 Saluran Drainase • Traktor Kubota Path',
     },
     {
       id: 'blok-b1',

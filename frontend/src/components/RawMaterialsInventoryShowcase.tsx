@@ -35,7 +35,7 @@ export const RawMaterialsInventoryShowcase = () => {
     {
       id: 'STK-002',
       code: 'BBT-SWT-02',
-      name: 'Bibit Kelapa Sawit Tenera Sertifikasi BSM',
+      name: 'Bibit Porang Sertifikasi BSM',
       category: 'BIBIT',
       warehouse: 'Greenhouse & Pembibitan A1',
       currentStock: 450,

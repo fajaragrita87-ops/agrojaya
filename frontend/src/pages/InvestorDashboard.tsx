@@ -19,7 +19,7 @@ export const InvestorDashboard = () => {
   ];
 
   const portfolioDonutData = [
-    { label: 'Kelapa Sawit Tenera (Blok A1-A2)', value: 45, color: '#059669' },
+    { label: 'Porang (Komoditas Utama Ekspor)', value: 45, color: '#059669' },
     { label: 'Jagung Hibrida Pangan (Blok B1-B2)', value: 30, color: '#2563eb' },
     { label: 'Anggur & Melon Impor (Blok C1-D1)', value: 25, color: '#f59e0b' },
   ];
@@ -80,7 +80,7 @@ export const InvestorDashboard = () => {
       {/* KPI INVESTOR GRID (6 Bento Cards) */}
       <div className="row g-3">
         {/* KPI 1 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -103,7 +103,7 @@ export const InvestorDashboard = () => {
         </div>
 
         {/* KPI 2 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -126,7 +126,7 @@ export const InvestorDashboard = () => {
         </div>
 
         {/* KPI 3 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -149,7 +149,7 @@ export const InvestorDashboard = () => {
         </div>
 
         {/* KPI 4 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -172,7 +172,7 @@ export const InvestorDashboard = () => {
         </div>
 
         {/* KPI 5 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -195,7 +195,7 @@ export const InvestorDashboard = () => {
         </div>
 
         {/* KPI 6 */}
-        <div className="col-12 col-sm-6 col-xl-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
             <div className="d-flex justify-content-between align-items-start mb-2">
               <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
@@ -212,7 +212,53 @@ export const InvestorDashboard = () => {
               <div className="progress-bar bg-success" style={{ width: '92%' }}></div>
             </div>
             <span className="d-block text-success font-weight-bold" style={{ fontSize: 11 }}>
-              <i className="ri-check-double-fill me-1"></i> Target Yield Sawit & Jagung Terpenuhi
+              <i className="ri-check-double-fill me-1"></i> Target Yield Porang & Jagung Terpenuhi
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 7 */}
+        <div className="col-12 col-sm-6 col-xl-3">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                7. Sisa Kas Aktif (Runway)
+              </span>
+              <div className="corpox-icon-box amber" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-wallet-3-line"></i>
+              </div>
+            </div>
+            <strong className="kpi-value font-weight-extrabold text-warning d-block mb-1">
+              Rp 120.000.000
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-warning" style={{ width: '100%' }}></div>
+            </div>
+            <span className="d-block text-warning font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-shield-check-fill me-1"></i> Aman Hingga Panen Berikutnya
+            </span>
+          </div>
+        </div>
+
+        {/* KPI 8 */}
+        <div className="col-12 col-sm-6 col-xl-3">
+          <div className="card-box card-box-hover p-4 border bg-white h-100 rounded-4">
+            <div className="d-flex justify-content-between align-items-start mb-2">
+              <span className="text-uppercase text-muted font-weight-bold" style={{ fontSize: 11, letterSpacing: '0.5px' }}>
+                8. Waktu Balik Modal (ROI)
+              </span>
+              <div className="corpox-icon-box red" style={{ width: 38, height: 38, fontSize: 18 }}>
+                <i className="ri-line-chart-line"></i>
+              </div>
+            </div>
+            <strong className="kpi-value font-weight-extrabold text-danger d-block mb-1">
+              18 Bulan
+            </strong>
+            <div className="progress mb-2" style={{ height: 6 }}>
+              <div className="progress-bar bg-danger" style={{ width: '45%' }}></div>
+            </div>
+            <span className="d-block text-danger font-weight-bold" style={{ fontSize: 11 }}>
+              <i className="ri-calendar-check-line me-1"></i> Proyeksi Siklus Panen Ke-3
             </span>
           </div>
         </div>
