@@ -8,6 +8,7 @@ RUN npm run build
 
 # Stage 2: Build Backend & Prisma
 FROM node:22-slim AS backend-builder
+RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app/backend
 COPY backend/package*.json ./
 COPY backend/prisma ./prisma/
@@ -18,6 +19,7 @@ RUN npm run build
 
 # Stage 3: Production Runner (Monolithic Frontend + Backend)
 FROM node:22-slim AS runner
+RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app
 
 ENV NODE_ENV=production
