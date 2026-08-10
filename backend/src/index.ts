@@ -11,8 +11,10 @@ const prisma = new PrismaClient();
 
 import apiRouter from './routes/api';
 
+import path from 'path';
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || '*',
 }));
 app.use(express.json());
 
@@ -22,6 +24,15 @@ app.use('/api', apiRouter);
 // Basic health check
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'OK', timestamp: new Date() });
+});
+
+// Serve Frontend Static Files (For Monolithic Docker Deployment)
+const frontendPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendPath));
+
+// SPA Fallback: Any other route should load index.html
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.listen(port, () => {

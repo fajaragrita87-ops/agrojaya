@@ -1,0 +1,23 @@
+name: agrojaya
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-agrojaya
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+    networks:
+      - default
+      - proxy_proxy-internal
+    # Nginx Proxy Manager mengakses lewat network internal ke port 80
+    expose:
+      - "80"
+
+networks:
+  default:
+  proxy_proxy-internal:
+    external: true
