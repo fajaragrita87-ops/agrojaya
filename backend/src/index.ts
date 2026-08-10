@@ -35,6 +35,6 @@ app.get(/(.*)/, (req: Request, res: Response) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(Number(port), '0.0.0.0', () => {
+  console.log(`Server is running on port ${port} (IPv4 bound)`);
 });
