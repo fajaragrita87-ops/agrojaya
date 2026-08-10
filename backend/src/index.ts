@@ -31,7 +31,7 @@ const frontendPath = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendPath));
 
 // SPA Fallback: Any other route should load index.html
-app.get('*', (req: Request, res: Response) => {
+app.get(/(.*)/, (req: Request, res: Response) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
