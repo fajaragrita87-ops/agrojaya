@@ -4,7 +4,7 @@ import { initTFJS } from '../utils/tfjsSetup';
 import * as mobilenet from '@tensorflow-models/mobilenet';
 
 export const AiSmartFarmingPage = () => {
-  const { role, userName } = useRole();
+  const { userName } = useRole();
 
   // State for Soil AI
   const [phLevel, setPhLevel] = useState('5.5');
@@ -75,7 +75,6 @@ export const AiSmartFarmingPage = () => {
     else if (height < 100) healthLevel = 'sedang';
 
     const healthLabels = { baik: 'SEHAT — Pertumbuhan Normal', sedang: 'WASPADA — Perlu Pemantauan', buruk: 'KRITIS — Butuh Intervensi' };
-    const healthColors = { baik: '#059669', sedang: '#d97706', buruk: '#dc2626' };
 
     return {
       status: healthLabels[healthLevel],

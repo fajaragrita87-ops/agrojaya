@@ -407,7 +407,6 @@ export const DraggableAIBubble = () => {
                 onClick={() => {
                   setInput(q);
                   setTimeout(() => {
-                    const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
                     const userMsg: ChatMessage = { sender: 'user', text: q, timestamp: new Date() };
                     setMessages(prev => [...prev, userMsg]);
                     setInput('');
