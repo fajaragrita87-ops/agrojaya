@@ -20,12 +20,15 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: 🟢 Setup Node.js 20
+      - name: 🟢 Setup Node.js 22 (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: 📱 Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: 📦 Install Frontend Dependencies & Build Web Assets
         run: |
@@ -33,7 +36,7 @@ jobs:
           npm ci || npm install
           npm run build
 
-      - name: 📱 Sync Capacitor Android Native Project
+      - name: 🔄 Sync Capacitor Android Native Project
         run: |
           cd frontend
           npx cap sync android
