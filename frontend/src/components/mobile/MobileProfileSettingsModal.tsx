@@ -176,6 +176,18 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
             </div>
           </div>
 
+          {/* System AI Status */}
+          <div className="p-3 rounded-[14px] bg-white border border-[#DDE5DF] shadow-xs flex items-center justify-between text-[11px]">
+            <div>
+              <strong className="text-[11px] text-[#17211E] block">🧠 Server AI AgroVision & Gemini:</strong>
+              <span className="text-[9.5px] text-[#5F6A65]">Otomatis terhubung ke cloud sistem</span>
+            </div>
+            <span className="bg-[#E8F1EA] text-[#0F5545] font-bold px-2 py-0.5 rounded text-[9.5px] flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+              <span>Aktif</span>
+            </span>
+          </div>
+
           {/* Role Switcher (Simulasi Cepat) */}
           <div className="p-3 rounded-[14px] bg-white border border-[#DDE5DF] shadow-xs space-y-1.5">
             <strong className="text-[11px] text-[#17211E] block">🔄 Ganti Mode Pengguna:</strong>

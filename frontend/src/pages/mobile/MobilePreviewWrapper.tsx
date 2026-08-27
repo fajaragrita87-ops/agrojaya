@@ -73,7 +73,10 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
   // 1. IF ON REAL MOBILE / CAPACITOR / SCREEN <= 768px: RENDER FULL NATIVE SCREEN DIRECTLY
   if (isMobileScreen) {
     return (
-      <div className="w-full min-h-screen bg-[#FAFBF8] text-[#17211E] overflow-x-hidden" style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+      <div
+        className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] bg-[#F4F7F5] text-[#17211E] overflow-hidden flex flex-col select-none"
+        style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+      >
         {renderActiveScreen()}
       </div>
     );
@@ -142,7 +145,7 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
       {deviceFrame ? (
         <div
           style={{ width: '400px', height: '740px', maxHeight: '88vh' }}
-          className="relative rounded-[48px] bg-[#0A1A16] border-[7px] border-[#2C4A41] shadow-[0_30px_70px_rgba(0,0,0,0.9)] flex flex-col justify-between overflow-hidden"
+          className="relative rounded-[48px] bg-[#0A1A16] border-[7px] border-[#2C4A41] shadow-[0_30px_70px_rgba(0,0,0,0.9)] flex flex-col overflow-hidden"
         >
           {/* Smartphone Status Bar */}
           <div

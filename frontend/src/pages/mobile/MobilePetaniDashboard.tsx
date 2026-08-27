@@ -92,7 +92,7 @@ export const MobilePetaniDashboard: React.FC = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#F4F7F5] text-[#17211E] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}

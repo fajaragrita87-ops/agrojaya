@@ -19,6 +19,7 @@ import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpah
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
+import { callLiveAI } from '../../services/aiService';
 
 export const MobileDirekturDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -61,22 +62,40 @@ export const MobileDirekturDashboard: React.FC = () => {
     },
   ]);
 
-  const handleSendMessage = () => {
-    if (!aiInput.trim()) return;
-    const newMsg = { sender: 'user' as const, text: aiInput, time: '09:42' };
+  const handleSendMessage = async (textToSend?: string) => {
+    const query = textToSend || aiInput;
+    if (!query.trim()) return;
+
+    const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const newMsg = { sender: 'user' as const, text: query, time: timeStr };
     setAiMessages((prev) => [...prev, newMsg]);
-    const query = aiInput.toLowerCase();
     setAiInput('');
 
-    setTimeout(() => {
-      let reply = 'Data Terverifikasi: Status kebun Jonggol stabil, ROI proyek diproyeksikan 28% – 32%.';
-      if (query.includes('po') || query.includes('belanja') || query.includes('uang')) {
-        reply = 'Otorisasi Belanja: PO-026 (Rp 28,5 Jt) butuh pengesahan Direktur sebelum diajukan ke pencairan Investor.';
-      } else if (query.includes('lahan') || query.includes('tanam') || query.includes('panen')) {
-        reply = 'Panen Raya: Melon Golden Blok A2 diproyeksikan panen 18 hari lagi dengan estimasi 14,8 Ton.';
-      }
-      setAiMessages((prev) => [...prev, { sender: 'ai', text: reply, time: '09:42' }]);
-    }, 600);
+    const historyForAI = aiMessages.map((m) => ({
+      role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: m.text,
+    }));
+
+    try {
+      const res = await callLiveAI(query, historyForAI, 'DIREKTUR', 'Bapak Budi Santoso (Direktur Utama)');
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: res.text,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: 'Maaf, terjadi gangguan jaringan. Silakan periksa koneksi atau API Key Anda.',
+          time: timeStr,
+        },
+      ]);
+    }
   };
 
   const handleApprovePO = (poId: string) => {
@@ -94,7 +113,7 @@ export const MobileDirekturDashboard: React.FC = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#F4F7F5] text-[#17211E] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}

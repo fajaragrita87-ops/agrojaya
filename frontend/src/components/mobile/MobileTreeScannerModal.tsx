@@ -49,6 +49,7 @@ interface MobileTreeScannerModalProps {
 export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ isOpen, onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedTree, setScannedTree] = useState<ScannedTree | null>(null);
@@ -320,16 +321,49 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
                     <span className="text-[9.5px] text-[#A3D9C9] max-w-[210px] mt-0.5">
                       Pindai QR pohon sampel untuk input riwayat siram, pupuk, atau pruning.
                     </span>
+                    <div className="flex gap-2 mt-2.5">
+                      <button
+                        type="button"
+                        onClick={startCamera}
+                        className="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-full text-[10px] font-bold text-white border border-white/20 cursor-pointer"
+                      >
+                        📷 Buka Kamera Live
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3 py-1.5 bg-[#C8E86B] hover:bg-[#b8d85c] rounded-full text-[10px] font-black text-[#061E18] cursor-pointer shadow-xs"
+                      >
+                        📸 Ambil Foto QR
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Floating Bottom Capture Trigger when Live */}
+                {isCameraActive && (
+                  <div className="absolute bottom-2.5 inset-x-4 z-20 flex justify-center">
                     <button
                       type="button"
-                      onClick={startCamera}
-                      className="mt-2.5 px-3 py-1 bg-white/15 hover:bg-white/25 rounded-full text-[10px] font-bold text-white border border-white/20 cursor-pointer"
+                      onClick={() => handleTriggerScan('SAMPLE-JGL-A2-0842')}
+                      className="px-4 py-1.5 rounded-full bg-[#C8E86B] text-[#061E18] text-[11px] font-black shadow-lg cursor-pointer flex items-center gap-1.5 active:scale-95 transition-transform"
                     >
-                      📷 Buka Kamera Device
+                      <i className="ri-qr-scan-line text-sm"></i>
+                      <span>Scan Barcode QR</span>
                     </button>
                   </div>
                 )}
               </div>
+
+              {/* Hidden File Input for Native Camera Intent */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={() => handleTriggerScan('SAMPLE-JGL-A2-0842')}
+              />
 
               {/* Simulation Quick Scan Buttons with Real Dynamic QR Codes */}
               <div className="space-y-1.5">

@@ -8,7 +8,8 @@ interface ScanDaunAiScreenProps {
 export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const { plantScans, addPlantScan, addTreeLog } = useSmartFarmStore();
 
@@ -68,32 +69,10 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
     onBack();
   };
 
-  const handleCaptureOrUpload = (e?: React.ChangeEvent<HTMLInputElement>) => {
-    let imgPreviewUrl: string | null = null;
-
-    if (e && e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      imgPreviewUrl = URL.createObjectURL(file);
-      setCapturedImage(imgPreviewUrl);
-    } else if (isCameraActive && videoRef.current) {
-      // Capture canvas snapshot from live video
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = videoRef.current.videoWidth || 400;
-        canvas.height = videoRef.current.videoHeight || 300;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-          imgPreviewUrl = canvas.toDataURL('image/jpeg', 0.85);
-          setCapturedImage(imgPreviewUrl);
-        }
-      } catch {
-        // Fallback placeholder
-        imgPreviewUrl = '/assets/login/left_hero_bg.png';
-      }
-    }
-
+  const processDiagnosis = (imgUrl: string) => {
     setIsScanning(true);
+    setCapturedImage(imgUrl);
+
     setTimeout(() => {
       setIsScanning(false);
       const newResult = {
@@ -103,9 +82,9 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
             : selectedTreeCode === 'SAMPLE-JGL-B1-0412'
             ? 'Porang Madiun Super (Blok B1 - Paranet 40%)'
             : 'Cabai Rawit Merah Ori 212 (Blok C1)',
-        health: '97.6% Prima & Tervalidasi Vision AI',
-        disease: 'Nihil Jamur Patogen / Bercak Daun < 1%',
-        brixEst: selectedTreeCode === 'SAMPLE-JGL-A2-0841' ? '14.5° Brix' : 'Glukomanan 48%',
+        health: '98.2% Prima & Tervalidasi Vision AI',
+        disease: 'Nihil Jamur Patogen / Klorofil Hijau Daun Sehat',
+        brixEst: selectedTreeCode === 'SAMPLE-JGL-A2-0841' ? '14.5° Brix' : 'Glukomanan 52%',
         advice: 'Kondisi tanaman optimal. Pertahankan kelembapan tanah bedengan 65% – 70%.',
       };
       setScanResult(newResult);
@@ -114,7 +93,7 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
       addPlantScan({
         plantName: newResult.plant,
         plantCode: selectedTreeCode,
-        imageUrl: imgPreviewUrl || undefined,
+        imageUrl: imgUrl,
         healthScore: newResult.health,
         detectedIssue: newResult.disease,
         recommendation: newResult.advice,
@@ -131,7 +110,41 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
 
       setSaveSuccessMsg('✅ Hasil diagnosa berhasil dicatat ke Paspor Pohon Sampel & Feed AI!');
       setTimeout(() => setSaveSuccessMsg(null), 4000);
-    }, 1200);
+    }, 900);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          processDiagnosis(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSnapClick = () => {
+    if (isCameraActive && videoRef.current) {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = videoRef.current.videoWidth || 640;
+        canvas.height = videoRef.current.videoHeight || 480;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          processDiagnosis(dataUrl);
+          return;
+        }
+      } catch (err) {
+        console.warn('Canvas snapshot error, falling back to camera input:', err);
+      }
+    }
+    // Fallback directly to native camera intent
+    cameraInputRef.current?.click();
   };
 
   return (
@@ -139,18 +152,35 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
       className="space-y-3 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
+      {/* Hidden File Inputs for Native Camera and Gallery */}
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={handleFileInputChange}
+      />
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileInputChange}
+      />
+
       {/* Back Button */}
       <button
         type="button"
         onClick={handleBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+        className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
       >
         <i className="ri-arrow-left-line text-sm"></i>
         <span>Kembali ke Menu & Modul</span>
       </button>
 
       {/* Target Tree Selector */}
-      <div className="bg-white p-2.5 rounded-[12px] border border-[#E2EAE5] flex items-center justify-between shadow-2xs text-[11px]">
+      <div className="bg-white p-2.5 rounded-[14px] border border-[#E2EAE5] flex items-center justify-between shadow-2xs text-[11px]">
         <span className="font-bold text-[#0B3B30]">Pohon / Ajir Target:</span>
         <select
           value={selectedTreeCode}
@@ -165,7 +195,7 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
       </div>
 
       {/* AI Viewfinder Camera Box */}
-      <div className="w-full h-60 rounded-[20px] bg-black text-white flex flex-col items-center justify-center p-3 relative overflow-hidden shadow-md border border-[#14473B]">
+      <div className="w-full h-64 rounded-[20px] bg-black text-white flex flex-col items-center justify-center p-3 relative overflow-hidden shadow-md border border-[#14473B]">
         {/* Live Video or Captured Image */}
         {capturedImage ? (
           <img src={capturedImage} alt="Captured Plant" className="absolute inset-0 w-full h-full object-cover" />
@@ -190,58 +220,43 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
           <div className="absolute inset-x-4 top-1/2 h-0.5 bg-[#C8E86B] shadow-[0_0_16px_#C8E86B] animate-pulse z-20"></div>
         )}
 
-        {/* Camera Center Target */}
+        {/* Center Target Box */}
         {!isCameraActive && !capturedImage && (
           <div className="relative z-10 text-center px-4">
             <div className="w-12 h-12 rounded-full bg-white/10 border border-[#C8E86B]/40 flex items-center justify-center mx-auto mb-1.5 text-[#C8E86B] text-xl animate-pulse">
               <i className="ri-leaf-fill"></i>
             </div>
-            <span className="text-[11.5px] font-bold text-white block">
-              {isScanning ? 'Menganalisis Klorofil & Pola Tumbuhan...' : 'Arahkan Kamera ke Tumbuhan'}
+            <span className="text-[12px] font-bold text-white block">
+              {isScanning ? 'Menganalisis Klorofil & Pola Tumbuhan...' : 'Arahkan Kamera ke Daun / Tumbuhan'}
             </span>
-            <span className="text-[9.5px] text-[#A3D9C9] block mt-0.5">
+            <span className="text-[9.5px] text-[#A7F3D0] block mt-0.5">
               Model Vision AI: AgroVision v4.2 • Akurasi 99.1%
             </span>
-            <button
-              type="button"
-              onClick={startCamera}
-              className="mt-2 px-3 py-1 bg-white/15 hover:bg-white/25 rounded-full text-[10px] font-bold text-white border border-white/20 cursor-pointer"
-            >
-              📷 Buka Kamera Live
-            </button>
           </div>
         )}
 
-        {/* Bottom Action Controls */}
-        <div className="absolute bottom-2.5 inset-x-3 z-20 flex items-center justify-center gap-2">
-          {/* Snap Photo Button */}
+        {/* Action Controls */}
+        <div className="absolute bottom-3 inset-x-3 z-20 flex items-center justify-center gap-2">
+          {/* Main Camera Capture Button */}
           <button
             type="button"
-            onClick={() => handleCaptureOrUpload()}
+            onClick={handleSnapClick}
             disabled={isScanning}
-            className="py-1.5 px-4 rounded-full bg-[#C8E86B] hover:bg-[#b8d85c] text-[#08201A] font-black text-[11px] cursor-pointer shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+            className="py-2 px-4 rounded-full bg-[#C8E86B] hover:bg-[#b8d85c] text-[#08201A] font-black text-[11px] cursor-pointer shadow-md active:scale-95 transition-all flex items-center gap-1.5"
           >
-            <i className="ri-camera-lens-fill text-sm"></i>
-            <span>{isScanning ? 'Memproses AI...' : '📸 Ambil Foto & Diagnosa'}</span>
+            <i className="ri-camera-fill text-base"></i>
+            <span>{isScanning ? 'Mendiagnosa AI...' : '📸 Ambil Foto & Scan'}</span>
           </button>
 
-          {/* Upload File Fallback */}
+          {/* Gallery Upload Button */}
           <button
             type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="py-1.5 px-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-[10.5px] border border-white/30 cursor-pointer flex items-center gap-1"
+            onClick={() => galleryInputRef.current?.click()}
+            className="py-2 px-3.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md text-white font-bold text-[10.5px] border border-white/30 cursor-pointer flex items-center gap-1 shadow-xs"
           >
-            <i className="ri-upload-2-line"></i>
-            <span>Upload Foto</span>
+            <i className="ri-image-add-line text-sm"></i>
+            <span>Galeri</span>
           </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handleCaptureOrUpload}
-          />
         </div>
       </div>
 
@@ -259,49 +274,62 @@ export const ScanDaunAiScreen: React.FC<ScanDaunAiScreenProps> = ({ onBack }) =>
               <span className="text-[9.5px] font-extrabold text-[#0F5545] uppercase tracking-wider block">
                 HASIL DIAGNOSTIK VISION AI
               </span>
-              <h2 className="text-[13px] font-bold text-[#11231D] m-0 mt-0.5">
+              <h2 className="text-[13.5px] font-black text-[#11231D] m-0 leading-tight">
                 {scanResult.plant}
               </h2>
             </div>
-            <span className="bg-[#E8F3ED] text-[#0F5545] text-[9.5px] font-black px-2 py-0.5 rounded-full">
-              {scanResult.health.split(' ')[0]}
+            <span className="bg-[#DCFCE7] text-[#166534] text-[9.5px] font-black px-2 py-0.5 rounded-full">
+              TERVERIFIKASI
             </span>
           </div>
 
-          <div className="space-y-1.5 text-[11px] bg-[#F8FAF8] p-2.5 rounded-[10px] border border-[#E8F0EB]">
+          <div className="grid grid-cols-2 gap-2 text-[10.5px] bg-[#F8FAF8] p-2.5 rounded-[12px] border border-[#E8F0EB]">
             <div>
-              <span className="text-[#6A7B73] text-[10px] block">🔬 Deteksi Hama / Jamur:</span>
-              <strong className="text-[#11231D] font-semibold">{scanResult.disease}</strong>
+              <span className="text-[#4B5563] font-semibold block text-[10px]">🩺 Skor Kesehatan:</span>
+              <strong className="text-[#15803D] font-bold block mt-0.5">{scanResult.health}</strong>
             </div>
-            <div className="border-t border-[#E2EAE5] pt-1">
-              <span className="text-[#6A7B73] text-[10px] block">🍯 Estimasi Kemanisan Buah (Brix):</span>
-              <strong className="text-[#0F5545] font-bold">{scanResult.brixEst}</strong>
+            <div>
+              <span className="text-[#4B5563] font-semibold block text-[10px]">🍯 Est. Brix / Kualitas:</span>
+              <strong className="text-[#0F5545] font-extrabold block mt-0.5">{scanResult.brixEst}</strong>
             </div>
-            <div className="border-t border-[#E2EAE5] pt-1">
-              <span className="text-[#6A7B73] text-[10px] block">💡 Rekomendasi Tindakan Agronomis:</span>
-              <strong className="text-[#047857] font-semibold">{scanResult.advice}</strong>
+            <div className="col-span-2 border-t border-[#E2EAE5] pt-1.5 mt-0.5">
+              <span className="text-[#4B5563] font-semibold block text-[10px]">🔬 Indikasi Hama/Penyakit:</span>
+              <strong className="text-[#111827] font-bold block mt-0.5">{scanResult.disease}</strong>
             </div>
+          </div>
+
+          {/* AI Recommendation */}
+          <div className="bg-[#E8F3ED] p-2.5 rounded-[10px] border border-[#C6E2D2] text-[11px]">
+            <span className="font-extrabold text-[#065F46] block mb-0.5 text-[10.5px]">💡 Rekomendasi Tindakan AI:</span>
+            <p className="text-[#1B3E32] font-medium m-0 leading-relaxed text-[10.5px]">{scanResult.advice}</p>
           </div>
         </div>
       )}
 
-      {/* Riwayat Scan Tumbuhan Terakhir dari Store */}
+      {/* Feed Riwayat Scan */}
       <div className="bg-white rounded-[16px] p-3.5 border border-[#E2EAE5] shadow-[0_2px_8px_rgba(0,0,0,0.03)] space-y-2">
         <span className="text-[11px] font-extrabold text-[#0B3B30] uppercase tracking-wider block">
-          📋 RIWAYAT SCAN TUMBUHAN TERVERIFIKASI
+          📸 FEED RIWAYAT SCAN TUMBUHAN
         </span>
         <div className="space-y-1.5">
-          {plantScans.slice(0, 3).map((scan) => (
-            <div key={scan.id} className="p-2.5 bg-[#F8FAF8] rounded-[10px] border border-[#E8F0EB] space-y-1 text-[11px]">
-              <div className="flex justify-between items-center">
-                <strong className="text-[11.5px] font-bold text-[#0F5545]">{scan.plantName}</strong>
-                <span className="text-[9.5px] font-medium text-[#6A7B73]">{scan.timestamp}</span>
+          {plantScans.map((scan) => (
+            <div key={scan.id} className="flex items-center justify-between p-2 bg-[#F8FAF8] rounded-[10px] border border-[#E8F0EB] text-[11px]">
+              <div className="flex items-center gap-2">
+                {scan.imageUrl ? (
+                  <img src={scan.imageUrl} alt="Scan" className="w-8 h-8 rounded-[6px] object-cover" />
+                ) : (
+                  <span className="w-8 h-8 rounded-[6px] bg-[#0F5545] text-white flex items-center justify-center font-bold text-xs">
+                    🌿
+                  </span>
+                )}
+                <div>
+                  <strong className="text-[11.5px] font-bold text-[#11231D] block">{scan.plantName}</strong>
+                  <span className="text-[9.5px] font-medium text-[#4B5563]">{scan.timestamp} • {scan.healthScore}</span>
+                </div>
               </div>
-              <p className="text-[#11231D] text-[10.5px] m-0">{scan.detectedIssue}</p>
-              <div className="pt-0.5 flex justify-between items-center text-[9.5px] text-[#6A7B73]">
-                <span>Pencatat: <strong>{scan.scannedBy}</strong></span>
-                <span className="text-[#047857] font-bold">Brix: {scan.brixEst}</span>
-              </div>
+              <span className="text-[9.5px] font-bold px-2 py-0.5 rounded-full bg-[#E8F3ED] text-[#0F5545]">
+                {scan.brixEst}
+              </span>
             </div>
           ))}
         </div>

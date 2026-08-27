@@ -13,6 +13,7 @@ import { StokGudangScreen } from '../../components/mobile/screens/StokGudangScre
 import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganPanenScreen';
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
+import { callLiveAI } from '../../services/aiService';
 
 export const MobileKepalaKebunDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -37,9 +38,55 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
 
+  // AI Chat State
+  const [aiInput, setAiInput] = useState('');
+  const [aiMessages, setAiMessages] = useState<{ sender: 'user' | 'ai'; text: string; time: string }[]>([
+    {
+      sender: 'ai',
+      text: 'Selamat pagi, Pak Mandor / Kepala Kebun. Sistem Agronomi & IoT siap memandu dosis fertigasi dan pencegahan hama.',
+      time: '07:30',
+    },
+  ]);
+
+  const handleSendMessage = async (textToSend?: string) => {
+    const query = textToSend || aiInput;
+    if (!query.trim()) return;
+
+    const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const newMsg = { sender: 'user' as const, text: query, time: timeStr };
+    setAiMessages((prev) => [...prev, newMsg]);
+    setAiInput('');
+
+    const historyForAI = aiMessages.map((m) => ({
+      role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: m.text,
+    }));
+
+    try {
+      const res = await callLiveAI(query, historyForAI, 'KEPALA_KEBUN', 'Supardi Hartono (Kepala Kebun Jonggol)');
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: res.text,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: 'Maaf, terjadi gangguan koneksi ke server AI. Silakan coba lagi.',
+          time: timeStr,
+        },
+      ]);
+    }
+  };
+
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#F4F7F5] text-[#17211E] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}
@@ -147,9 +194,48 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
         {/* ==================== 5. AI KEBUN ==================== */}
         {activeTab === 'ai' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
+            <button
+              type="button"
+              onClick={() => setActiveTab('menu_hub')}
+              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+            >
+              <i className="ri-arrow-left-line"></i>
+              <span>Kembali ke Menu</span>
+            </button>
             <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Konsultasi Agronomi AI</h2>
-            <div className="p-3 bg-white rounded-[14px] border border-[#DDE5DF] shadow-xs text-[11px]">
-              Tanyakan rekomendasi dosis pupuk, cuaca, atau penanganan hama ke AI Jaya.
+
+            <div className="h-48 overflow-y-auto space-y-1.5 p-2 bg-[#FAFBF8] rounded-[10px] border border-[#DDE5DF]">
+              {aiMessages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={`p-2 rounded-[8px] text-[10.5px] leading-relaxed ${
+                    m.sender === 'user' ? 'bg-[#0F5545] text-white ml-6' : 'bg-white text-[#17211E] mr-6 border border-[#DDE5DF]'
+                  }`}
+                >
+                  <p className="m-0">{m.text}</p>
+                  <span className={`text-[8.5px] block mt-1 ${m.sender === 'user' ? 'text-[#C8E86B]' : 'text-[#718279]'}`}>
+                    {m.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-1">
+              <input
+                type="text"
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                placeholder="Tanyakan dosis AB Mix, pH tanah, atau penanganan hama..."
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                className="flex-1 px-2.5 py-1.5 rounded-[8px] border border-[#DDE5DF] text-[11px] bg-white text-[#17211E] outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => handleSendMessage()}
+                className="px-3 bg-[#0F5545] text-white font-bold text-[11px] rounded-[8px] cursor-pointer"
+              >
+                Kirim
+              </button>
             </div>
           </div>
         )}

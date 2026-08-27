@@ -8,8 +8,14 @@ import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganP
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KtpSampelScreen } from '../../components/mobile/screens/KtpSampelScreen';
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
+import { ScanDaunAiScreen } from '../../components/mobile/screens/ScanDaunAiScreen';
+import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapScreen';
+import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
+import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKomoditasScreen';
+import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
+import { callLiveAI } from '../../services/aiService';
 
 type FinanceTab =
   | 'menu_hub'
@@ -23,7 +29,12 @@ type FinanceTab =
   | 'gudang'
   | 'timbangan'
   | 'ktp_sampel'
-  | 'jadwal_tugas';
+  | 'jadwal_tugas'
+  | 'scan_daun'
+  | 'siklus_lahan'
+  | 'peta_gis'
+  | 'master_komoditas'
+  | 'kelola_user';
 
 export const MobileFinanceDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FinanceTab>('menu_hub');
@@ -41,27 +52,40 @@ export const MobileFinanceDashboard: React.FC = () => {
     },
   ]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || aiInput;
     if (!query.trim()) return;
 
-    const newMsg = { sender: 'user' as const, text: query, time: '09:42' };
+    const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const newMsg = { sender: 'user' as const, text: query, time: timeStr };
     setAiMessages((prev) => [...prev, newMsg]);
     setAiInput('');
 
-    setTimeout(() => {
-      let reply = 'Audit Keuangan: Data mutasi dan faktur pajak terverifikasi valid.';
-      const q = query.toLowerCase();
-      if (q.includes('po') || q.includes('tagihan') || q.includes('verifikasi')) {
-        reply = 'Verifikasi PO-026: Pupuk Hayati Rp 28,5 Jt sesuai pagu bulanan dan faktur pajak lengkap.';
-      } else if (q.includes('hpp') || q.includes('margin') || q.includes('harga')) {
-        reply = 'Kalkulasi HPP: Rata-rata HPP Melon Golden Jonggol Rp 9.200/Kg (margin off-taker 58,2%).';
-      } else if (q.includes('payroll') || q.includes('gaji') || q.includes('mandor')) {
-        reply = 'Payroll: Upah borongan 14 pekerja kebun minggu ini Rp 14.200.000 (Presensi GPS 100%).';
-      }
+    const historyForAI = aiMessages.map((m) => ({
+      role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: m.text,
+    }));
 
-      setAiMessages((prev) => [...prev, { sender: 'ai', text: reply, time: '09:42' }]);
-    }, 500);
+    try {
+      const res = await callLiveAI(query, historyForAI, 'FINANCE', 'Ibu Siti Rahmawati (Manajer Keuangan)');
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: res.text,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: 'Maaf, terjadi gangguan jaringan saat memproses konsultasi keuangan. Silakan coba lagi.',
+          time: timeStr,
+        },
+      ]);
+    }
   };
 
   const handleVerifyPO = (poId: string) => {
@@ -71,7 +95,7 @@ export const MobileFinanceDashboard: React.FC = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#071915] text-[#FAFBF8]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#071915] text-[#FAFBF8] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}
@@ -326,6 +350,21 @@ export const MobileFinanceDashboard: React.FC = () => {
         {activeTab === 'ktp_sampel' && (
           <KtpSampelScreen onBack={() => setActiveTab('menu_hub')} />
         )}
+        {activeTab === 'scan_daun' && (
+          <ScanDaunAiScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'siklus_lahan' && (
+          <Bukti8TahapScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'peta_gis' && (
+          <PetaGisMobileScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'master_komoditas' && (
+          <MasterKomoditasScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'kelola_user' && (
+          <KelolaUserScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
         {activeTab === 'jadwal_tugas' && (
           <JadwalTasklistScreen onBack={() => setActiveTab('menu_hub')} />
         )}
@@ -344,6 +383,11 @@ export const MobileFinanceDashboard: React.FC = () => {
               else if (viewId === 'gudang') setActiveTab('gudang');
               else if (viewId === 'timbangan') setActiveTab('timbangan');
               else if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
+              else if (viewId === 'scan_daun') setActiveTab('scan_daun');
+              else if (viewId === 'siklus_lahan') setActiveTab('siklus_lahan');
+              else if (viewId === 'peta_gis') setActiveTab('peta_gis');
+              else if (viewId === 'master_komoditas') setActiveTab('master_komoditas');
+              else if (viewId === 'kelola_user') setActiveTab('kelola_user');
               else if (viewId === 'jadwal_tugas') setActiveTab('jadwal_tugas');
             }}
           />

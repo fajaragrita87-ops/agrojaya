@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole, type RoleType, getDefaultPathForRole } from '../context/RoleContext';
+import { useRole } from '../context/RoleContext';
 import { getBmkgWeather } from '../services/api';
 
 export const Topbar = () => {
-  const { role, setRole } = useRole();
+  const { role } = useRole();
   const navigate = useNavigate();
   const [bmkgWeather, setBmkgWeather] = useState<any>(null);
   const [globalSearch, setGlobalSearch] = useState('');
@@ -41,12 +41,6 @@ export const Topbar = () => {
       })
       .catch(console.error);
   }, []);
-
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newRole = e.target.value as RoleType;
-    setRole(newRole);
-    navigate(getDefaultPathForRole(newRole));
-  };
 
   const handleSelectSearch = (path: string) => {
     navigate(path);
@@ -124,41 +118,65 @@ export const Topbar = () => {
         </div>
       </div>
 
-      {/* Right Controls: DEV MODE RBAC ROLE SWITCHER + Quick Links */}
+      {/* Right Controls: Active Authenticated User Badge + Logout */}
       <div className="d-flex align-items-center gap-2">
-        <span className="text-uppercase font-weight-bold text-muted me-1 d-none d-lg-inline" style={{ fontSize: 11 }}>Peran:</span>
-        <select
-          value={role}
-          onChange={handleRoleChange}
-          className="form-select form-select-sm border font-weight-bold text-dark bg-white rounded-3 cursor-pointer py-1.5 px-2.5 shadow-sm"
-          style={{ fontSize: 12.5, width: 'auto' }}
-        >
-          <option value="DIREKTUR">👑 DIREKTUR (Akses Penuh)</option>
-          <option value="INVESTOR">💼 INVESTOR (Persetujuan Layer 3)</option>
-          <option value="FINANCE">💵 FINANCE (Layer 1 & Pencairan)</option>
-          <option value="MANAGER">👔 MANAJER (Pengaju PO)</option>
-          <option value="KEPALA_KEBUN">🤠 KEPALA KEBUN (Pengawas)</option>
-          <option value="PETANI">🚜 PETANI (PWA Lapangan)</option>
-        </select>
+        <div className="d-flex align-items-center gap-2 bg-light border px-2.5 py-1 rounded-3">
+          <div
+            className="rounded-circle bg-success text-white d-flex align-items-center justify-center font-weight-bold"
+            style={{ width: 26, height: 26, fontSize: 12 }}
+          >
+            {role === 'DIREKTUR'
+              ? 'AW'
+              : role === 'INVESTOR'
+              ? 'HK'
+              : role === 'FINANCE'
+              ? 'RD'
+              : role === 'MANAGER'
+              ? 'BS'
+              : role === 'KEPALA_KEBUN'
+              ? 'RH'
+              : 'JS'}
+          </div>
+          <div style={{ lineHeight: 1.1 }}>
+            <strong className="text-dark d-block" style={{ fontSize: 11.5 }}>
+              {role === 'DIREKTUR'
+                ? 'Ir. H. Ahmad Wijaya'
+                : role === 'INVESTOR'
+                ? 'Hendra Kusuma, B.Sc.'
+                : role === 'FINANCE'
+                ? 'Ratna Dewi, S.E.'
+                : role === 'MANAGER'
+                ? 'Budi Santoso, S.P.'
+                : role === 'KEPALA_KEBUN'
+                ? 'Rahmat Hidayat'
+                : 'Joko Susilo'}
+            </strong>
+            <span className="badge bg-success-subtle text-success border border-success-subtle" style={{ fontSize: 9 }}>
+              {role}
+            </span>
+          </div>
+        </div>
 
         <button
           onClick={() => navigate('/mobile')}
-          title="Buka Simulator Aplikasi Mobile"
+          title="Buka Aplikasi Mobile AgroJaya"
           className="btn btn-sm btn-outline-success font-weight-bold rounded-3 px-2.5 py-1.5 d-flex align-items-center gap-1.5 shadow-xs"
           style={{ fontSize: 12 }}
         >
           <i className="ri-smartphone-line"></i>
-          <span className="d-none d-md-inline">Tinjau Mobile</span>
+          <span className="d-none d-md-inline">Mode Mobile</span>
         </button>
 
         <button
-          onClick={() => navigate('/login')}
-          title="Halaman Login"
-          className="btn btn-sm btn-light border text-secondary font-weight-bold rounded-3 px-2.5 py-1.5 d-flex align-items-center gap-1"
+          onClick={() => {
+            navigate('/login');
+          }}
+          title="Keluar dari Sistem"
+          className="btn btn-sm btn-outline-danger font-weight-bold rounded-3 px-2.5 py-1.5 d-flex align-items-center gap-1"
           style={{ fontSize: 12 }}
         >
           <i className="ri-logout-box-r-line"></i>
-          <span className="d-none d-xl-inline">Ganti Akun</span>
+          <span className="d-none d-xl-inline">Keluar</span>
         </button>
       </div>
     </header>

@@ -1,9 +1,12 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const isProduction = import.meta.env.PROD || (typeof window !== 'undefined' && window.location.hostname !== 'localhost');
+const DEFAULT_API_URL = isProduction ? 'https://farm.codevator.id/api' : 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -17,6 +17,7 @@ import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKom
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { callLiveAI } from '../../services/aiService';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 
@@ -59,29 +60,40 @@ export const MobileInvestorDashboard: React.FC = () => {
     },
   ]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || aiInput;
     if (!query.trim()) return;
 
-    const newMsg = { sender: 'user' as const, text: query, time: '09:42' };
+    const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const newMsg = { sender: 'user' as const, text: query, time: timeStr };
     setAiMessages((prev) => [...prev, newMsg]);
     setAiInput('');
 
-    setTimeout(() => {
-      let reply = 'Transparansi Modal: Seluruh dana modal dialokasikan ke aset produktif dan dilindungi BAP fisik.';
-      const q = query.toLowerCase();
-      if (q.includes('roi') || q.includes('untung') || q.includes('hasil') || q.includes('dividen') || q.includes('panen')) {
-        reply = 'Proyeksi Kinerja: Estimasi ROI proyek 28% – 32% p.a. Panen raya Melon Golden Blok A diproyeksikan 18 hari lagi (estimasi 14,8 Ton / Rp 325 Juta).';
-      } else if (q.includes('po') || q.includes('modal') || q.includes('pupuk') || q.includes('bibit')) {
-        reply = 'Otorisasi Modal: 2 PO (Rp 69,7 Jt) menunggu persetujuan Anda untuk pengadaan pupuk organik dan greenhouse B3.';
-      } else if (q.includes('lahan') || q.includes('tahap') || q.includes('gis') || q.includes('tanah')) {
-        reply = 'Kondisi Lahan: 8 tahap pengolahan tanah telah 100% tervalidasi sensor & BAP surveyor di Jonggol.';
-      }
+    const historyForAI = aiMessages.map((m) => ({
+      role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: m.text,
+    }));
+
+    try {
+      const res = await callLiveAI(query, historyForAI, 'INVESTOR', 'Bapak Hendrawan Kusuma (Investor)');
       setAiMessages((prev) => [
         ...prev,
-        { sender: 'ai', text: reply, time: '09:42' },
+        {
+          sender: 'ai',
+          text: res.text,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        },
       ]);
-    }, 600);
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: 'Maaf, terjadi kendala saat memproses konsultasi AI. Silakan coba sesaat lagi.',
+          time: timeStr,
+        },
+      ]);
+    }
   };
 
   const handleApprovePO = (poId: string) => {
@@ -91,7 +103,7 @@ export const MobileInvestorDashboard: React.FC = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#F4F7F5] text-[#17211E] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}

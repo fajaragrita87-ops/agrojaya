@@ -15,6 +15,7 @@ import { AlokasiModalScreen } from '../../components/mobile/screens/AlokasiModal
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 import { MobileTreeScannerModal } from '../../components/mobile/MobileTreeScannerModal';
 import { useSmartFarmStore } from '../../store/smartFarmStore';
+import { callLiveAI } from '../../services/aiService';
 
 type ManagerTab =
   | 'menu_hub'
@@ -59,27 +60,40 @@ export const MobileManagerDashboard: React.FC = () => {
     },
   ]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || aiInput;
     if (!query.trim()) return;
 
-    const newMsg = { sender: 'user' as const, text: query, time: '08:05' };
+    const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const newMsg = { sender: 'user' as const, text: query, time: timeStr };
     setAiMessages((prev) => [...prev, newMsg]);
     setAiInput('');
 
-    setTimeout(() => {
-      let reply = 'Operasional Kebun: Target pengerjaan harian tercatat 92% on-schedule.';
-      const q = query.toLowerCase();
-      if (q.includes('sla') || q.includes('tugas') || q.includes('mandor')) {
-        reply = 'SLA Mandor: Regu A (Kang Asep) menyelesaikan 100% penyiraman drip pagi. Regu B sedang pruning melon Blok A2.';
-      } else if (q.includes('po') || q.includes('pupuk') || q.includes('beli')) {
-        reply = 'Status PO: PO-026 (Pupuk Hayati Rp 28,5 Jt) telah lolos verifikasi Finance dan menunggu persetujuan Direktur & Investor.';
-      } else if (q.includes('panen') || q.includes('timbang') || q.includes('melon')) {
-        reply = 'Jadwal Panen: Panen raya Melon Golden Blok A (14,8 Ton) diprediksi 18 hari lagi. Timbangan digital siap di PKS.';
-      }
+    const historyForAI = aiMessages.map((m) => ({
+      role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: m.text,
+    }));
 
-      setAiMessages((prev) => [...prev, { sender: 'ai', text: reply, time: '08:05' }]);
-    }, 500);
+    try {
+      const res = await callLiveAI(query, historyForAI, 'MANAGER', 'Irfan Maulana (Manajer Ops)');
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: res.text,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        },
+      ]);
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          sender: 'ai',
+          text: 'Maaf, terjadi gangguan jaringan. Silakan periksa koneksi atau API Key Anda.',
+          time: timeStr,
+        },
+      ]);
+    }
   };
 
   const handleCreatePOSubmit = (e: React.FormEvent) => {
@@ -98,7 +112,7 @@ export const MobileManagerDashboard: React.FC = () => {
 
   return (
     <div
-      className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#071915] text-[#FAFBF8]"
+      className="w-full h-full flex flex-col overflow-hidden bg-[#071915] text-[#FAFBF8] relative"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}

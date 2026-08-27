@@ -14,6 +14,7 @@ export const callLiveAI = async (
   role: string,
   userName: string
 ): Promise<{ text: string; source: 'gemini' | 'groq' | 'local' }> => {
+  // 1. Try Backend AI Endpoint First
   try {
     const res = await sendAIChat({
       prompt,
@@ -25,17 +26,54 @@ export const callLiveAI = async (
       userName,
     });
 
-    if (res.data && res.data.success) {
+    if (res.data && res.data.success && res.data.answer) {
       return {
         text: res.data.answer,
         source: res.data.source || 'gemini',
       };
     }
   } catch (err) {
-    console.warn('Backend AI endpoint call failed, using client-side fallback:', err);
+    console.warn('Backend AI endpoint unreachable, attempting direct client AI:', err);
   }
 
-  // Graceful Local Fallback with trustworthy executive agronomy reasoning
+  // 2. Try Direct Client Gemini API if key exists in env or localStorage
+  try {
+    const geminiKey =
+      import.meta.env.VITE_GEMINI_API_KEY ||
+      (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : null);
+
+    if (geminiKey && geminiKey.length > 10) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  text: `Kamu adalah Jaya, asisten AI Agronomi & Keuangan Cerdas untuk Smart Farm AgroJaya Jonggol 2.0 Ha. Berikan jawaban yang terstruktur, berbasis riset ilmiah, akurat, dan ramah untuk pengguna peran ${role} (Nama: ${userName}).\n\nPertanyaan/Permintaan: ${prompt}`,
+                },
+              ],
+            },
+          ],
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (candidateText && candidateText.trim().length > 0) {
+          return { text: candidateText, source: 'gemini' };
+        }
+      }
+    }
+  } catch (geminiErr) {
+    console.warn('Direct Gemini API call error:', geminiErr);
+  }
+
+  // 3. Graceful High-Quality Agronomy & Financial Reasoning Fallback
   return {
     text: generateTrustworthyAgronomyAnswer(prompt, role, userName),
     source: 'local',
