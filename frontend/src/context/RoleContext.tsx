@@ -11,7 +11,9 @@ export const getDefaultPathForRole = (r: RoleType): string => {
     case 'PETANI':
       return '/payroll';
     case 'KEPALA_KEBUN':
+      return '/dashboard/kepala-kebun';
     case 'MANAGER':
+      return '/dashboard/manager';
     case 'DIREKTUR':
     default:
       return '/dashboard/direktur';
@@ -57,9 +59,9 @@ export const getUserNameForRole = (r: RoleType): string => {
 export const getUserTitleForRole = (r: RoleType): string => {
   switch (r) {
     case 'INVESTOR':
-      return 'Investor Utama Proyek AgroJaya';
+      return 'Investor Utama Proyek Smart Farming';
     case 'DIREKTUR':
-      return 'Direktur Utama AgroJaya';
+      return 'Direktur Utama Smart Farming';
     case 'FINANCE':
       return 'Ibu Ratna (Finance & Accounting Lead)';
     case 'MANAGER':
@@ -75,7 +77,7 @@ const RoleContext = createContext<RoleContextType>({
   role: 'DIREKTUR',
   setRole: () => {},
   userName: 'Bapak Lucky',
-  userTitle: 'Bapak Lucky (Direktur Utama AgroJaya)',
+  userTitle: 'Bapak Lucky (Direktur Utama Smart Farming)',
   isReadOnly: false,
   canApprove: true,
   canCreatePO: true,

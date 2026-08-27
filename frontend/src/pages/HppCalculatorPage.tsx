@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { useRole } from '../context/RoleContext';
 
 export const HppCalculatorPage = () => {
-  const { role } = useRole();
 
   // State for interactive HPP calculator
   const [totalCost, setTotalCost] = useState<number>(35000000);
@@ -24,40 +22,34 @@ export const HppCalculatorPage = () => {
   return (
     <div className="w-100 space-y-4">
       {/* Header Banner */}
-      <div className="card-box p-4 rounded-4 space-y-3">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-          <div>
-            <span className="tmp-badge-card emerald mb-2 d-inline-block">
-              <i className="ri-calculator-line me-1"></i> KALKULASI HARGA MODAL & KEUNTUNGAN KEBUN
-            </span>
-            <h2 className="page-header-title font-weight-bold text-dark mb-0">
-              Kalkulator Harga Modal (HPP) & Keuntungan Panen
-            </h2>
-            <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-              Simulasi perhitungan modal tanam per kilo, modal per hektar, dan estimasi keuntungan bersih hasil panen kebun
-            </p>
-          </div>
-          <span className="badge bg-primary text-white px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 11 }}>
-            <i className="ri-shield-user-line"></i> Hak Akses: {role}
-          </span>
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+            Kalkulator Harga Pokok Produksi (HPP) & Margin Panen
+          </h2>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
+            Simulasi perhitungan modal tanam per kilogram, biaya per hektar, dan estimasi laba bersih hasil panen Jonggol
+          </p>
         </div>
+        <span className="badge bg-success text-white px-3 py-1.5 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 11.5 }}>
+          <i className="ri-calculator-line"></i> Model HPP Presisi
+        </span>
       </div>
 
-      {/* Interactive HPP Simulation Card */}
-      <div className="card-box p-4 rounded-4 space-y-4">
-        <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
+      {/* Simulator Section */}
+      <div className="card-box p-4 rounded-4 space-y-4 bg-white border shadow-sm">
+        <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
           <div>
-            <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
-              <span className="corpox-icon-box emerald" style={{ width: 32, height: 32, fontSize: 16 }}>
-                <i className="ri-functions-line"></i>
-              </span>
-              Simulator Perhitungan Modal & Estimasi Keuntungan Panen
+            <h4 className="font-weight-bold text-dark m-0 !text-sm">
+              Parameter Biaya & Taksasi Panen
             </h4>
-            <p className="text-secondary mb-0 font-weight-medium mt-0.5" style={{ fontSize: 12 }}>
-              Ubah angka di bawah untuk mensimulasikan HPP dan estimasi keuntungan hasil panen
+            <p className="text-muted mb-0" style={{ fontSize: 12 }}>
+              Sesuaikan nilai di bawah untuk mensimulasikan HPP dan estimasi laba
             </p>
           </div>
-          <span className="tmp-badge-card success">Simulasi Interaktif</span>
+          <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 11 }}>
+            Live Calculation
+          </span>
         </div>
 
         {/* Input Form Fields */}
@@ -76,9 +68,6 @@ export const HppCalculatorPage = () => {
                 style={{ fontSize: 14 }}
               />
             </div>
-            <span className="text-muted font-weight-medium d-block mt-1" style={{ fontSize: 11 }}>
-              Total modal pupuk, upah, & bibit
-            </span>
           </div>
 
           <div className="col-12 col-md-3">
@@ -95,14 +84,11 @@ export const HppCalculatorPage = () => {
               />
               <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>Kg</span>
             </div>
-            <span className="text-muted font-weight-medium d-block mt-1" style={{ fontSize: 11 }}>
-              Proyeksi total tonase panen
-            </span>
           </div>
 
           <div className="col-12 col-md-3">
             <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>
-              📏 Total Luas Lahan Tanam
+              📐 Luas Lahan Terkelola
             </label>
             <div className="input-group">
               <input
@@ -113,16 +99,13 @@ export const HppCalculatorPage = () => {
                 className="form-control p-2.5 bg-light border text-dark font-weight-bold"
                 style={{ fontSize: 14 }}
               />
-              <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>Hektar (Ha)</span>
+              <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>Ha</span>
             </div>
-            <span className="text-muted font-weight-medium d-block mt-1" style={{ fontSize: 11 }}>
-              Luas area lahan aktif
-            </span>
           </div>
 
           <div className="col-12 col-md-3">
             <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>
-              🏷️ Harga Jual Pasar Kebun
+              🏷️ Harga Jual Pasar / Offtaker
             </label>
             <div className="input-group">
               <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>Rp</span>
@@ -133,131 +116,92 @@ export const HppCalculatorPage = () => {
                 className="form-control p-2.5 bg-light border text-dark font-weight-bold"
                 style={{ fontSize: 14 }}
               />
-              <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>/ Kg</span>
+              <span className="input-group-text bg-light text-muted font-weight-bold" style={{ fontSize: 12 }}>/Kg</span>
             </div>
-            <span className="text-muted font-weight-medium d-block mt-1" style={{ fontSize: 11 }}>
-              Harga kontrak jual ke pembeli
-            </span>
           </div>
         </div>
 
-        {/* Corpox Bento Result Cards */}
+        {/* Calculated Output Bento Cards */}
         <div className="row g-3 pt-2">
-          <div className="col-12 col-sm-6 col-xl-3">
-            <div className="p-3.5 rounded-3 border bg-light d-flex align-items-center justify-content-between h-100">
-              <div>
-                <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
-                  Harga Modal Per Kilo (HPP)
-                </span>
-                <strong className="h4 font-weight-extrabold text-primary m-0 !text-base">
-                  Rp {Math.round(hppPerKg).toLocaleString('id-ID')} / Kg
-                </strong>
-                <span className="d-block text-secondary font-weight-medium mt-1" style={{ fontSize: 11 }}>
-                  Modal tanam per 1 Kg panen
-                </span>
-              </div>
-              <div className="corpox-icon-box blue" style={{ width: 40, height: 40, fontSize: 18 }}>
-                <i className="ri-price-tag-3-line"></i>
-              </div>
+          <div className="col-12 col-md-3">
+            <div className="p-3.5 bg-light rounded-4 border">
+              <span className="text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Biaya Tanam Per Hektar</span>
+              <strong className="text-dark font-weight-extrabold d-block my-1" style={{ fontSize: 18 }}>
+                Rp {Math.round(costPerHa).toLocaleString('id-ID')} / Ha
+              </strong>
+              <span className="text-secondary" style={{ fontSize: 11 }}>Total OPEX dibagi luas lahan</span>
             </div>
           </div>
 
-          <div className="col-12 col-sm-6 col-xl-3">
-            <div className="p-3.5 rounded-3 border bg-light d-flex align-items-center justify-content-between h-100">
-              <div>
-                <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
-                  Modal Kerja Per Hektar
-                </span>
-                <strong className="h4 font-weight-extrabold text-dark m-0 !text-base">
-                  Rp {Math.round(costPerHa).toLocaleString('id-ID')} / Ha
-                </strong>
-                <span className="d-block text-secondary font-weight-medium mt-1" style={{ fontSize: 11 }}>
-                  Biaya pengolahan per Hektar
-                </span>
-              </div>
-              <div className="corpox-icon-box amber" style={{ width: 40, height: 40, fontSize: 18 }}>
-                <i className="ri-map-pin-2-line"></i>
-              </div>
+          <div className="col-12 col-md-3">
+            <div className="p-3.5 bg-success-subtle rounded-4 border border-success">
+              <span className="text-success font-weight-bold d-block" style={{ fontSize: 11 }}>Harga Pokok (HPP) Per Kg</span>
+              <strong className="text-success font-weight-extrabold d-block my-1" style={{ fontSize: 18 }}>
+                Rp {Math.round(hppPerKg).toLocaleString('id-ID')} / Kg
+              </strong>
+              <span className="text-success font-weight-medium" style={{ fontSize: 11 }}>Batas modal minimum produksi</span>
             </div>
           </div>
 
-          <div className="col-12 col-sm-6 col-xl-3">
-            <div className="p-3.5 rounded-3 border bg-light d-flex align-items-center justify-content-between h-100">
-              <div>
-                <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
-                  Keuntungan Bersih Per Kilo
-                </span>
-                <strong className="h4 font-weight-extrabold text-success m-0 !text-base">
-                  + Rp {Math.round(marginPerKg).toLocaleString('id-ID')} / Kg
-                </strong>
-                <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
-                  Margin bersih penjualan
-                </span>
-              </div>
-              <div className="corpox-icon-box emerald" style={{ width: 40, height: 40, fontSize: 18 }}>
-                <i className="ri-line-chart-line"></i>
-              </div>
+          <div className="col-12 col-md-3">
+            <div className="p-3.5 bg-primary-subtle rounded-4 border border-primary">
+              <span className="text-primary font-weight-bold d-block" style={{ fontSize: 11 }}>Margin Keuntungan Bersih</span>
+              <strong className="text-primary font-weight-extrabold d-block my-1" style={{ fontSize: 18 }}>
+                Rp {Math.round(marginPerKg).toLocaleString('id-ID')} / Kg
+              </strong>
+              <span className="text-primary font-weight-medium" style={{ fontSize: 11 }}>
+                {hppPerKg > 0 ? `+${Math.round((marginPerKg / hppPerKg) * 100)}% Markup` : '0%'}
+              </span>
             </div>
           </div>
 
-          <div className="col-12 col-sm-6 col-xl-3">
-            <div className="p-3.5 rounded-3 border bg-light d-flex align-items-center justify-content-between h-100">
-              <div>
-                <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>
-                  Total Proyeksi Keuntungan
-                </span>
-                <strong className="h4 font-weight-extrabold text-success m-0 !text-base">
-                  Rp {Math.round(totalProjectedProfit).toLocaleString('id-ID')}
-                </strong>
-                <span className="d-block text-success font-weight-bold mt-1" style={{ fontSize: 11 }}>
-                  Estimasi Laba Bersih Panen
-                </span>
-              </div>
-              <div className="corpox-icon-box emerald" style={{ width: 40, height: 40, fontSize: 18 }}>
-                <i className="ri-money-dollar-circle-line"></i>
-              </div>
+          <div className="col-12 col-md-3">
+            <div className="p-3.5 bg-warning-subtle rounded-4 border border-warning">
+              <span className="text-warning-emphasis font-weight-bold d-block" style={{ fontSize: 11 }}>Total Estimasi Laba Bersih</span>
+              <strong className="text-warning-emphasis font-weight-extrabold d-block my-1" style={{ fontSize: 18 }}>
+                Rp {Math.round(totalProjectedProfit).toLocaleString('id-ID')}
+              </strong>
+              <span className="text-secondary font-weight-medium" style={{ fontSize: 11 }}>Potensi pendapatan bersih panen</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Breakdown Table for All Land Blocks */}
-      <div className="card-box p-4 rounded-4 space-y-4">
-        <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
-          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
-            <i className="ri-file-list-3-line text-success"></i> Rincian Harga Modal & Keuntungan Per Blok Kebun
+      {/* Benchmark Matrix Section */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h4 className="font-weight-bold text-dark m-0 !text-sm">
+            <i className="ri-table-line text-success me-2"></i> Matriks Komparasi HPP & Profitabilitas Antar Blok Kebun
           </h4>
-          <span className="tmp-badge-card success">
-            Analisis Rinci 3 Blok
+          <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>
+            Tahun 2026
           </span>
         </div>
 
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
             <thead className="table-light">
-              <tr>
-                <th className="font-weight-bold text-dark">Lokasi Blok & Jenis Tanaman</th>
-                <th className="font-weight-bold text-dark">Luas Lahan</th>
-                <th className="font-weight-bold text-dark">Total Modal Biaya</th>
-                <th className="font-weight-bold text-dark">Total Hasil Panen</th>
-                <th className="font-weight-bold text-dark">Modal / Hektar</th>
-                <th className="font-weight-bold text-dark">Modal Tanam / Kg (HPP)</th>
-                <th className="font-weight-bold text-dark">Harga Jual / Kg</th>
-                <th className="font-weight-bold text-dark">Keuntungan Bersih / Kg</th>
+              <tr style={{ fontSize: 11.5 }}>
+                <th className="font-weight-bold text-muted">KOMODITAS & BLOK</th>
+                <th className="font-weight-bold text-muted">LUAS</th>
+                <th className="font-weight-bold text-muted">TOTAL BIAYA</th>
+                <th className="font-weight-bold text-muted">YIELD (KG)</th>
+                <th className="font-weight-bold text-muted">HPP / KG</th>
+                <th className="font-weight-bold text-muted">HARGA JUAL</th>
+                <th className="font-weight-bold text-muted text-end">MARGIN LABA</th>
               </tr>
             </thead>
             <tbody>
-              {hppData.map((hpp, idx) => (
+              {hppData.map((row, idx) => (
                 <tr key={idx}>
-                  <td className="font-weight-bold text-dark">{hpp.cropName}</td>
-                  <td><span className="badge bg-light text-dark border font-weight-bold">{hpp.areaHa} Ha</span></td>
-                  <td className="text-danger font-weight-bold">Rp {hpp.totalCostRp.toLocaleString('id-ID')}</td>
-                  <td className="font-weight-bold text-dark">{hpp.totalYieldKg.toLocaleString('id-ID')} Kg</td>
-                  <td className="text-secondary">Rp {hpp.costPerHaRp.toLocaleString('id-ID')} / Ha</td>
-                  <td><span className="badge bg-light text-dark border font-mono font-weight-bold">Rp {hpp.hppPerKgRp.toLocaleString('id-ID')} / Kg</span></td>
-                  <td className="text-secondary">Rp {hpp.marketPriceRp.toLocaleString('id-ID')} / Kg</td>
-                  <td className="text-success font-weight-extrabold" style={{ fontSize: 14 }}>
-                    + Rp {hpp.marginRp.toLocaleString('id-ID')} / Kg
+                  <td className="font-weight-bold text-dark">{row.cropName}</td>
+                  <td>{row.areaHa} Ha</td>
+                  <td>Rp {row.totalCostRp.toLocaleString('id-ID')}</td>
+                  <td>{row.totalYieldKg.toLocaleString('id-ID')} Kg</td>
+                  <td className="font-weight-bold text-success">Rp {row.hppPerKgRp.toLocaleString('id-ID')}</td>
+                  <td>Rp {row.marketPriceRp.toLocaleString('id-ID')}</td>
+                  <td className="text-end font-weight-extrabold text-primary">
+                    +Rp {row.marginRp.toLocaleString('id-ID')} / Kg
                   </td>
                 </tr>
               ))}

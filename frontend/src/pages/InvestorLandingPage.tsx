@@ -109,7 +109,7 @@ export const InvestorLandingPage = () => {
                 </div>
                 <div>
                   <h3 className="m-0 font-weight-extrabold text-dark" style={{ fontSize: 18, letterSpacing: '-0.5px' }}>
-                    AgroJaya Indonesia
+                    Smart Farming Indonesia
                   </h3>
                   <span className="text-success font-weight-bold d-block" style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Portal Akuntabilitas Investor
@@ -130,9 +130,12 @@ export const InvestorLandingPage = () => {
               </nav>
             </div>
 
-            <div className="col-lg-3 col-md-8 col-6 text-end">
-              <Link to="/dashboard/investor" className="btn btn-primary-gradient px-4 py-2.5 text-white font-weight-extrabold rounded-3 shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13 }}>
-                <i className="ri-user-line !text-sm"></i> Portal Investor ({userName})
+            <div className="col-lg-3 col-md-8 col-6 text-end d-flex align-items-center justify-content-end gap-2">
+              <Link to="/login" className="btn btn-sm btn-outline-success font-weight-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12.5 }}>
+                <i className="ri-login-box-line"></i> Masuk Akun
+              </Link>
+              <Link to="/dashboard/investor" className="btn btn-primary-gradient px-3.5 py-2 text-white font-weight-extrabold rounded-3 shadow-xs d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12.5 }}>
+                <i className="ri-dashboard-line !text-sm"></i> Portal Investor
               </Link>
             </div>
           </div>
@@ -150,13 +153,16 @@ export const InvestorLandingPage = () => {
                   <span className="text-success" style={{ color: '#059669' }}>Perkebunan Agro Jaya</span>
                 </h1>
 
-                <div className="d-flex justify-content-center gap-3 pt-2 mb-2">
-                  <button onClick={handleExportPDF} className="btn btn-primary-gradient px-4 py-3 text-white rounded-3 font-weight-extrabold shadow-sm d-inline-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-                    <i className="ri-file-download-line !text-base"></i> Unduh Laporan Auditor 5D
-                  </button>
-                  <Link to="/dashboard/investor" className="btn btn-outline-success px-4 py-3 text-success font-weight-extrabold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 14 }}>
-                    <i className="ri-dashboard-line !text-base"></i> Masuk Dasbor Investor
+                <div className="d-flex flex-wrap justify-content-center gap-3 pt-2 mb-2">
+                  <Link to="/dashboard/investor" className="btn btn-primary-gradient px-4 py-3 text-white rounded-3 font-weight-extrabold shadow-sm d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
+                    <i className="ri-funds-box-line !text-base"></i> Masuk Dasbor Investor
                   </Link>
+                  <Link to="/login" className="btn btn-outline-success px-4 py-3 text-success font-weight-extrabold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
+                    <i className="ri-shield-user-line !text-base"></i> Masuk Akun ERP (6 Peran)
+                  </Link>
+                  <button onClick={handleExportPDF} className="btn btn-outline-secondary px-4 py-3 text-dark font-weight-bold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
+                    <i className="ri-file-download-line !text-base"></i> Laporan Auditor 5D
+                  </button>
                 </div>
 
                 {/* Corpox Bento Stat Cards Grid */}
@@ -215,7 +221,7 @@ export const InvestorLandingPage = () => {
               <div className="col-lg-5 order-2 order-lg-1">
                 <div className="section-title text-start mb-4">
                   <span className="tmp-badge-card success mb-2 d-inline-block">
-                    SIKLUS PENUH PERKEBUNAN AGROJAYA
+                    SIKLUS PENUH PERKEBUNAN SMART FARMING
                   </span>
                   <h3 className="font-weight-extrabold text-dark mt-2" style={{ fontSize: 26, letterSpacing: '-0.5px' }}>
                     Tahapan Kesiapan Lahan & Siklus Perkebunan Berkelanjutan
@@ -322,9 +328,9 @@ export const InvestorLandingPage = () => {
                 <i className="feather-phone"></i>
               </div>
               <div>
-                <h5 className="m-0 font-weight-extrabold text-white">Layanan Akuntabilitas & Audit Investor AgroJaya</h5>
+                <h5 className="m-0 font-weight-extrabold text-white">Layanan Akuntabilitas & Audit Investor Smart Farming</h5>
                 <p className="m-0 text-white-50 font-weight-medium" style={{ fontSize: 12 }}>
-                  Hubungi Tim Pertanggungjawaban Investasi PT Agro Jaya Indonesia 24 Jam
+                  Hubungi Tim Pertanggungjawaban Investasi Smart Farming Indonesia 24 Jam
                 </p>
               </div>
             </div>
@@ -458,7 +464,7 @@ export const InvestorLandingPage = () => {
       {/* SECTION 10: Footer Brand Landing Page */}
       <footer className="py-4 bg-dark text-white border-top border-secondary">
         <div className="container-fluid px-4 px-md-5 text-center text-muted font-weight-medium" style={{ fontSize: 12 }}>
-          © 2026 PT Agro Jaya Indonesia • Portal Transparansi & Akuntabilitas Investasi Investor ({userName})
+          © 2026 Smart Farming Indonesia • Portal Transparansi & Akuntabilitas Investasi Investor ({userName})
         </div>
       </footer>
     </main>

@@ -54,3 +54,12 @@ export const getAuditLogs = () => api.get('/reports/audit-logs');
 export const getBmkgWeather = (lat?: string, lng?: string) =>
   api.get('/weather/bmkg', { params: { lat, lng } });
 
+export const sendAIChat = (data: { prompt: string; history?: any[]; role?: string; userName?: string }) =>
+  api.post('/ai/chat', data);
+
+export const diagnoseLeafAI = (data: { imageBase64: string; plantHeight?: number; commodity?: string }) =>
+  api.post('/ai/diagnose-leaf', data);
+
+export const analyzeSoilAI = (data: { phLevel?: string; npk?: string; moisture?: string; commodity?: string }) =>
+  api.post('/ai/analyze-soil', data);
+

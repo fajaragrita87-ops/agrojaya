@@ -4,8 +4,11 @@ import { Layout } from './components/Layout';
 import { LandsPage } from './pages/LandsPage';
 import { CropsPage } from './pages/CropsPage';
 import { DirekturDashboard } from './pages/DirekturDashboard';
+import { ManagerDashboard } from './pages/ManagerDashboard';
+import { KepalaKebunDashboard } from './pages/KepalaKebunDashboard';
 import { InvestorDashboard } from './pages/InvestorDashboard';
 import { InvestorLandingPage } from './pages/InvestorLandingPage';
+import { InvestorPOTransparencyPage } from './pages/InvestorPOTransparencyPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { UsersPage } from './pages/UsersPage';
 import { PayrollPage } from './pages/PayrollPage';
@@ -15,7 +18,12 @@ import { WeighbridgePage } from './pages/WeighbridgePage';
 import { HppCalculatorPage } from './pages/HppCalculatorPage';
 import { InventoryPage } from './pages/InventoryPage';
 import { PlantationLifecyclePage } from './pages/PlantationLifecyclePage';
+import { TreePassportPage } from './pages/TreePassportPage';
 import { AiSmartFarmingPage } from './pages/AiSmartFarmingPage';
+import { LoginPage } from './pages/LoginPage';
+import { MobilePreviewWrapper } from './pages/mobile/MobilePreviewWrapper';
+import { MobileInvestorDashboard } from './pages/mobile/MobileInvestorDashboard';
+import { MobileFinanceDashboard } from './pages/mobile/MobileFinanceDashboard';
 import { useRole, type RoleType, getDefaultPathForRole } from './context/RoleContext';
 
 interface ProtectedRouteProps {
@@ -43,12 +51,36 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<InvestorLandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Dedicated Mobile App Routes & Simulator */}
+        <Route path="/mobile" element={<MobilePreviewWrapper />} />
+        <Route path="/mobile/investor" element={<MobileInvestorDashboard />} />
+        <Route path="/mobile/finance" element={<MobileFinanceDashboard />} />
 
         <Route
           path="/dashboard/direktur"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR']}>
               <DirekturDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/manager"
+          element={
+            <ProtectedRoute allowedRoles={['MANAGER', 'DIREKTUR']}>
+              <ManagerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/kepala-kebun"
+          element={
+            <ProtectedRoute allowedRoles={['KEPALA_KEBUN', 'MANAGER', 'DIREKTUR']}>
+              <KepalaKebunDashboard />
             </ProtectedRoute>
           }
         />
@@ -83,7 +115,7 @@ function App() {
         <Route
           path="/hpp-calculator"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'INVESTOR']}>
               <HppCalculatorPage />
             </ProtectedRoute>
           }
@@ -101,7 +133,7 @@ function App() {
         <Route
           path="/lands"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'FINANCE', 'INVESTOR']}>
               <LandsPage />
             </ProtectedRoute>
           }
@@ -153,6 +185,15 @@ function App() {
         />
 
         <Route
+          path="/tree-passports"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI', 'INVESTOR']}>
+              <TreePassportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/financials"
           element={
             <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'INVESTOR']}>
@@ -162,9 +203,18 @@ function App() {
         />
 
         <Route
+          path="/po-transparency"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'FINANCE', 'INVESTOR']}>
+              <InvestorPOTransparencyPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/ai-smart-farming"
           element={
-            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'INVESTOR']}>
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'INVESTOR', 'FINANCE', 'PETANI']}>
               <AiSmartFarmingPage />
             </ProtectedRoute>
           }

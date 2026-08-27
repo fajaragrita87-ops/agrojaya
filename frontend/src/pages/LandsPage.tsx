@@ -12,6 +12,8 @@ export const LandsPage = () => {
   const [longitude, setLongitude] = useState('107.0544');
   const [activeLat, setActiveLat] = useState('-6.4697');
   const [activeLng, setActiveLng] = useState('107.0544');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const { role, canEdit } = useRole();
 
   const JONGGOL_LAT_BASE = -6.4697;
@@ -64,7 +66,7 @@ export const LandsPage = () => {
     setActiveLng(JONGGOL_LNG_BASE.toFixed(6));
     setLatitude(JONGGOL_LAT_BASE.toFixed(6));
     setLongitude(JONGGOL_LNG_BASE.toFixed(6));
-    alert('Seluruh Koordinat Blok Lahan Berhasil Diperbarui Ke Jonggol, Bogor (-6.4697, 107.0544)!');
+    alert('Koordinat berhasil disinkronkan ke Jonggol, Bogor!');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -82,6 +84,7 @@ export const LandsPage = () => {
       setAreaHa('');
       setSoilType('');
       fetchLands();
+      alert('Blok lahan baru berhasil didaftarkan!');
     } catch (e) {
       console.error(e);
     }
@@ -89,45 +92,107 @@ export const LandsPage = () => {
 
   const canCreateLand = role === 'DIREKTUR' || role === 'MANAGER';
 
+  const totalHa = lands.reduce((acc, curr) => acc + (Number(curr.areaHa) || 0), 0);
+
+  const filteredLands = lands.filter((l) => {
+    const matchStatus = statusFilter === 'ALL' || l.status === statusFilter;
+    const matchSearch = l.name.toLowerCase().includes(searchQuery.toLowerCase()) || l.soilType.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+
   return (
     <div className="w-100 space-y-4">
-      {/* Page Header Banner */}
-      <div className="bg-white p-4 rounded-4 border shadow-sm">
-        <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
-          <i className="ri-map-pin-2-line me-1"></i> PEMETAAN LAHAN GIS SATELIT JONGGOL BOGOR
+      {/* Header Banner */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+            Peta Satelit GIS & Blok Perkebunan
+          </h2>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
+            Pemetaan geofencing GPS satelit per blok kebun Smart Farming Jonggol, Bogor
+          </p>
+        </div>
+
+        <button
+          onClick={handleResetAllToJonggol}
+          className="btn btn-warning text-dark font-weight-bold rounded-3 px-3 py-1.5 shadow-xs d-inline-flex align-items-center gap-1.5"
+          style={{ fontSize: 12 }}
+        >
+          <i className="ri-refresh-line"></i>
+          <span>Sinkron GPS Jonggol</span>
+        </button>
+      </div>
+
+      {/* SUMMARY STATS (3 Metrik Bersih) */}
+      <div className="row g-3">
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm d-flex align-items-center justify-content-between">
+            <div>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Total Luas Lahan</span>
+              <strong className="text-dark font-weight-extrabold d-block" style={{ fontSize: 20 }}>
+                {totalHa.toFixed(1)} Hektar
+              </strong>
+              <span className="text-success font-weight-bold" style={{ fontSize: 11 }}>100% Hak Milik / HGU Legal</span>
+            </div>
+            <div className="corpox-icon-box emerald" style={{ width: 36, height: 36, fontSize: 18 }}>
+              <i className="ri-landscape-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm d-flex align-items-center justify-content-between">
+            <div>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Jumlah Blok Terdaftar</span>
+              <strong className="text-dark font-weight-extrabold d-block" style={{ fontSize: 20 }}>
+                {lands.length} Blok Kebun
+              </strong>
+              <span className="text-primary font-weight-bold" style={{ fontSize: 11 }}>Zona A, B, & C</span>
+            </div>
+            <div className="corpox-icon-box blue" style={{ width: 36, height: 36, fontSize: 18 }}>
+              <i className="ri-grid-line"></i>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm d-flex align-items-center justify-content-between">
+            <div>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Status Geofencing Satelit</span>
+              <strong className="text-success font-weight-extrabold d-block" style={{ fontSize: 20 }}>
+                Aktif 24/7
+              </strong>
+              <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>Sinkron GPS BMKG</span>
+            </div>
+            <div className="corpox-icon-box emerald" style={{ width: 36, height: 36, fontSize: 18 }}>
+              <i className="ri-satellite-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Block Focus Selector Pills */}
+      <div className="card-box p-3 rounded-4 bg-white border shadow-sm d-flex flex-wrap align-items-center gap-2">
+        <span className="text-muted font-weight-bold" style={{ fontSize: 11.5 }}>
+          <i className="ri-focus-3-line text-success me-1"></i> Fokuskan Peta ke Blok:
         </span>
-        <h2 className="page-header-title font-weight-bold text-dark mb-0">Peta GIS Interaktif & Pemetaan Blok Kebun (Jonggol, Jawa Barat)</h2>
-        <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-          Deteksi Koordinat Satelit GPS Lat/Long Secara Real-Time Per Blok Kebun AgroJaya Jonggol
-        </p>
-      </div>
-
-      {/* Control Box: Live Coordinate Bar */}
-      <div className="bg-white p-4 rounded-4 border shadow-sm d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-        <div className="d-flex align-items-center gap-3">
-          <div style={{ width: 40, height: 40, backgroundColor: '#dcfce7', border: '1px solid #86efac', color: '#059669', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
-            <i className="ri-radar-line animate-pulse"></i>
-          </div>
-          <div>
-            <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 14 }}>Detektor Koordinat Satelit GPS Jonggol Bogor</h4>
-            <span className="text-secondary font-mono d-block" style={{ fontSize: 12 }}>
-              Lat: <strong className="text-success">{activeLat}</strong> • Lng: <strong className="text-success">{activeLng}</strong>
-            </span>
-          </div>
-        </div>
-
-        <div className="d-flex align-items-center gap-2">
+        {lands.map((land) => (
           <button
-            onClick={handleResetAllToJonggol}
-            className="btn btn-warning text-dark font-weight-bold rounded-3 px-3 py-2 shadow-xs"
-            style={{ fontSize: 12 }}
+            key={land.id}
+            onClick={() => handleCoordinatesChange(String(land.latitude), String(land.longitude))}
+            className={`btn btn-sm px-3 py-1 rounded-pill font-weight-bold transition ${
+              activeLat === String(land.latitude) && activeLng === String(land.longitude)
+                ? 'btn-success text-white shadow-xs'
+                : 'btn-light text-dark hover-bg-light border'
+            }`}
+            style={{ fontSize: 11.5 }}
           >
-            <i className="ri-refresh-line me-1"></i> Perbaiki Koordinat Ke Jonggol Bogor
+            {land.name.split(' - ')[0] || land.name}
           </button>
-        </div>
+        ))}
       </div>
 
-      {/* GIS Leaflet Satellite Component */}
+      {/* Interactive GIS Map (Leaflet) */}
       <InteractiveGisMap
         lands={lands}
         activeLat={activeLat}
@@ -135,31 +200,105 @@ export const LandsPage = () => {
         onCoordinatesChange={handleCoordinatesChange}
       />
 
-      {/* Form Tambah Blok Lahan (Direktur & Manager Exclusive) */}
-      {canCreateLand && (
-        <div className="bg-white p-4 rounded-4 border shadow-sm space-y-3">
-          <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
+      {/* Tabel Inventaris Blok Lahan */}
+      <div className="card-box p-4 border bg-white rounded-4 shadow-sm space-y-3">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 pb-2 border-bottom">
+          <div>
             <h4 className="font-weight-bold text-dark m-0 !text-sm">
-              <i className="ri-add-circle-line text-success me-2"></i> Tambah Blok Lahan Kebun Baru (GPS Jonggol)
+              Inventaris Lahan & Koordinat Blok Kebun
             </h4>
-            <span className="badge bg-success-subtle text-success border border-success font-weight-bold" style={{ fontSize: 11 }}>
-              Mode Pengeditan Aktif ({role})
-            </span>
+          </div>
+          <div className="d-flex align-items-center gap-2">
+            <input
+              type="text"
+              placeholder="Cari nama blok / tanah..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="form-control form-control-sm p-2 rounded-3 bg-light border-0"
+              style={{ width: '100%', maxWidth: '220px', fontSize: 12 }}
+            />
+            <div className="d-flex align-items-center gap-1">
+              {['ALL', 'AKTIF', 'PANEN'].map((st) => (
+                <button
+                  key={st}
+                  onClick={() => setStatusFilter(st)}
+                  className={`btn btn-sm px-2.5 py-0.5 rounded-pill font-weight-bold ${
+                    statusFilter === st ? 'btn-success text-white' : 'btn-outline-secondary'
+                  }`}
+                  style={{ fontSize: 11 }}
+                >
+                  {st === 'ALL' ? 'Semua' : st}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0" style={{ fontSize: 12.5 }}>
+            <thead className="table-light">
+              <tr style={{ fontSize: 11.5 }}>
+                <th>NAMA BLOK LAHAN</th>
+                <th>LUAS (HA)</th>
+                <th>KARAKTERISTIK TANAH</th>
+                <th>KOORDINAT GPS</th>
+                <th>STATUS</th>
+                <th className="text-center">AKSI PETA</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredLands.map((land) => (
+                <tr key={land.id}>
+                  <td className="font-weight-bold text-dark">{land.name}</td>
+                  <td>{land.areaHa} Ha</td>
+                  <td className="text-secondary">{land.soilType}</td>
+                  <td className="font-mono text-muted" style={{ fontSize: 11.5 }}>
+                    {land.latitude}, {land.longitude}
+                  </td>
+                  <td>
+                    <span className={`badge px-2.5 py-1 font-weight-bold rounded-pill ${land.status === 'AKTIF' || land.status === 'PANEN' ? 'bg-success text-white' : 'bg-warning text-dark'}`} style={{ fontSize: 10.5 }}>
+                      {land.status}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <button
+                      onClick={() => handleCoordinatesChange(String(land.latitude), String(land.longitude))}
+                      className="btn btn-outline-success font-weight-bold btn-sm rounded-2 py-0.5 px-2.5 d-inline-flex align-items-center gap-1"
+                      style={{ fontSize: 11 }}
+                    >
+                      <i className="ri-focus-3-line"></i>
+                      <span>Fokuskan Peta</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Form Tambah Blok Lahan (Hanya Direktur & Manager) */}
+      {canCreateLand && (
+        <div className="card-box p-4 border bg-white rounded-4 shadow-sm space-y-3">
+          <div className="pb-2 border-bottom">
+            <h4 className="font-weight-bold text-dark m-0 !text-sm">
+              <i className="ri-add-circle-line text-success me-1"></i> Tambah Blok Lahan Baru
+            </h4>
           </div>
           <form onSubmit={handleSubmit} className="row g-3">
-            <div className="col-md-4">
+            <div className="col-md-6">
               <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Nama Blok Lahan</label>
               <input
                 type="text"
                 placeholder="misal: Blok C2 - Anggur Impor Shine Muscat"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="form-control p-2.5 bg-light border-0 rounded-3"
-                style={{ fontSize: 13 }}
+                className="form-control p-2 bg-light border-0 rounded-3"
+                style={{ fontSize: 12.5 }}
                 required
               />
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Luas (Hektar)</label>
               <input
                 type="number"
@@ -167,20 +306,20 @@ export const LandsPage = () => {
                 placeholder="1.5"
                 value={areaHa}
                 onChange={(e) => setAreaHa(e.target.value)}
-                className="form-control p-2.5 bg-light border-0 rounded-3"
-                style={{ fontSize: 13 }}
+                className="form-control p-2 bg-light border-0 rounded-3"
+                style={{ fontSize: 12.5 }}
                 required
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Karakteristik Tanah</label>
+              <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Jenis Tanah</label>
               <input
                 type="text"
-                placeholder="misal: Latosol Subur / Humus Greenhouse"
+                placeholder="misal: Latosol Subur / Humus"
                 value={soilType}
                 onChange={(e) => setSoilType(e.target.value)}
-                className="form-control p-2.5 bg-light border-0 rounded-3"
-                style={{ fontSize: 13 }}
+                className="form-control p-2 bg-light border-0 rounded-3"
+                style={{ fontSize: 12.5 }}
                 required
               />
             </div>
@@ -190,77 +329,30 @@ export const LandsPage = () => {
                 type="text"
                 value={latitude}
                 onChange={(e) => setLatitude(e.target.value)}
-                className="form-control p-2.5 bg-light border-0 rounded-3 font-mono font-weight-bold text-success"
-                style={{ fontSize: 13 }}
+                className="form-control p-2 bg-light border-0 rounded-3 font-mono font-weight-bold text-success"
+                style={{ fontSize: 12.5 }}
                 required
               />
             </div>
-            <div className="col-md-3 d-flex align-items-end">
-              <button type="submit" className="tmp-btn bg-success text-white font-weight-bold p-2.5 w-100 rounded-3 border-0 d-flex align-items-center justify-content-center gap-2 shadow-xs" style={{ fontSize: 13 }}>
-                <i className="ri-save-line"></i> Simpan Blok Kebun
+            <div className="col-md-3">
+              <label className="form-label font-weight-bold text-secondary mb-1" style={{ fontSize: 11 }}>Longitude GPS</label>
+              <input
+                type="text"
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                className="form-control p-2 bg-light border-0 rounded-3 font-mono font-weight-bold text-success"
+                style={{ fontSize: 12.5 }}
+                required
+              />
+            </div>
+            <div className="col-md-6 d-flex align-items-end">
+              <button type="submit" className="btn btn-success text-white font-weight-bold p-2 w-100 rounded-3 border-0 d-flex align-items-center justify-content-center gap-1.5 shadow-xs" style={{ fontSize: 12.5 }}>
+                <i className="ri-save-line"></i> Simpan Blok Kebun Baru
               </button>
             </div>
           </form>
         </div>
       )}
-
-      {/* Table Inventaris Blok Lahan */}
-      <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
-        <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0 !text-sm">
-            <i className="ri-table-line text-success me-2"></i> Inventaris Lahan & Koordinat GPS Blok (Jonggol, Bogor)
-          </h4>
-          <button
-            onClick={handleResetAllToJonggol}
-            className="btn btn-sm btn-outline-warning text-dark font-weight-bold"
-            style={{ fontSize: 11 }}
-          >
-            <i className="ri-refresh-line me-1"></i> Perbaiki Koordinat Ke Jonggol
-          </button>
-        </div>
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
-            <thead className="table-light">
-              <tr>
-                <th>Nama Blok Lahan</th>
-                <th>Luas (Ha)</th>
-                <th>Karakteristik Tanah</th>
-                <th>Koordinat GPS (Lat, Lng)</th>
-                <th>Status</th>
-                <th className="text-center">Aksi Kamera</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lands.map((land) => (
-                <tr key={land.id}>
-                  <td className="font-weight-bold text-dark">{land.name}</td>
-                  <td>{land.areaHa} Ha</td>
-                  <td>{land.soilType}</td>
-                  <td className="font-mono text-secondary" style={{ fontSize: 12 }}>
-                    <span className="badge bg-light text-dark border font-mono">
-                      {land.latitude}, {land.longitude}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`badge px-2.5 py-1 font-weight-bold ${land.status === 'AKTIF' || land.status === 'PANEN' ? 'bg-success text-white' : 'bg-warning text-dark'}`} style={{ fontSize: 11 }}>
-                      {land.status}
-                    </span>
-                  </td>
-                  <td className="text-center">
-                    <button
-                      onClick={() => handleCoordinatesChange(String(land.latitude), String(land.longitude))}
-                      className="btn btn-outline-success font-weight-bold btn-sm rounded-3 py-1 px-3"
-                      style={{ fontSize: 11 }}
-                    >
-                      <i className="ri-focus-3-line me-1"></i> Fokuskan Peta
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 };

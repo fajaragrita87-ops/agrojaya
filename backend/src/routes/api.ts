@@ -14,6 +14,7 @@ import { checkIn, checkOut, getAttendances, getPayrollSummary } from '../control
 import { getFinancials, createFinancial, getFinancialSummary } from '../controllers/financialController';
 import { getWeighbridgeTickets, createWeighbridgeTicket } from '../controllers/weighbridgeController';
 import { getBmkgWeather } from '../controllers/weatherController';
+import { handleAIChat, handleAIDiagnoseLeaf, handleAIAnalyzeSoil } from '../controllers/aiController';
 
 const router = Router();
 
@@ -70,6 +71,11 @@ router.post('/weighbridge', createWeighbridgeTicket);
 
 // BMKG Weather API Integration
 router.get('/weather/bmkg', getBmkgWeather);
+
+// AI Smart Farming Integration (Chat, Gemini Vision, Soil Chemistry)
+router.post('/ai/chat', handleAIChat);
+router.post('/ai/diagnose-leaf', handleAIDiagnoseLeaf);
+router.post('/ai/analyze-soil', handleAIAnalyzeSoil);
 
 // Dashboards & Reports
 router.get('/dashboard/direktur', getDirekturDashboard);

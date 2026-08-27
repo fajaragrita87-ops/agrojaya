@@ -18,6 +18,26 @@ export interface LifecycleStep {
   updatedAt?: string;
 }
 
+// Strictly curated, 100% relevant high-definition agricultural photography for each step
+const STEP_PHOTOS: Record<number, string> = {
+  // Tahap 1: Pembersihan semak belukar & persiapan lahan terbuka
+  1: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 2: Traktor pembajak tanah & pembuatan bedengan drainase
+  2: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 3: Tanah gembur organik kaya kompos bio-pupuk & kapur dolomit penyeimbang pH
+  3: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 4: Bibit tanaman muda ditanam ke dalam tanah kebun
+  4: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 5: Irigasi tetes (drip fertigation) presisi di kebun greenhouse
+  5: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 6: Panen raya komoditas segar berkualitas super
+  6: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 7: Truk logistik angkut panen ke timbangan tonase PKS
+  7: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1000&q=80',
+  // Tahap 8: Hamparan lahan rotasi tanaman hijau subur berkelanjutan
+  8: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
+};
+
 export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
   {
     stepNumber: 1,
@@ -29,7 +49,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'SELESAI',
     statusRaw: 'COMPLETED',
     opexEstimateRp: 25000000,
-    photoUrl: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[1],
     durationDays: '14 Hari',
     targetMetrics: 'Bebas Tunggul 100%',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -45,7 +65,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'SELESAI',
     statusRaw: 'COMPLETED',
     opexEstimateRp: 18500000,
-    photoUrl: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[2],
     durationDays: '10 Hari',
     targetMetrics: 'Kedalaman Olah 40 cm',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -61,7 +81,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'SELESAI',
     statusRaw: 'COMPLETED',
     opexEstimateRp: 15000000,
-    photoUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[3],
     durationDays: '15 Hari',
     targetMetrics: 'pH Tanah Ideal 6.5',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -77,7 +97,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'SEDANG BERJALAN',
     statusRaw: 'IN_PROGRESS',
     opexEstimateRp: 35000000,
-    photoUrl: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[4],
     durationDays: '20 Hari',
     targetMetrics: 'Kepadatan 500 Pohon/Ha',
     updatedBy: 'Budi Santoso, S.P. (Manajer Ops)',
@@ -93,7 +113,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'SEDANG BERJALAN',
     statusRaw: 'IN_PROGRESS',
     opexEstimateRp: 28000000,
-    photoUrl: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[5],
     durationDays: 'Berjalan Rutin',
     targetMetrics: 'Efisiensi Pupuk 95%',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -109,7 +129,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'TAHAP BERIKUTNYA',
     statusRaw: 'UPCOMING',
     opexEstimateRp: 22000000,
-    photoUrl: 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[6],
     durationDays: '30 Hari',
     targetMetrics: 'Target Yield 24 Ton/Ha',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -125,7 +145,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'TAHAP BERIKUTNYA',
     statusRaw: 'UPCOMING',
     opexEstimateRp: 12000000,
-    photoUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[7],
     durationDays: 'Berjalan Kontinu',
     targetMetrics: 'Akurasi Timbangan 99.9%',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -141,7 +161,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     status: 'TAHAP BERIKUTNYA',
     statusRaw: 'UPCOMING',
     opexEstimateRp: 10000000,
-    photoUrl: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1000&q=80',
+    photoUrl: STEP_PHOTOS[8],
     durationDays: '15 Hari',
     targetMetrics: 'Pemulihan Hara 100%',
     updatedBy: 'Rahmat Hidayat (Kepala Kebun)',
@@ -154,7 +174,14 @@ export const PlantationLifecycleProgress: React.FC = () => {
   const [steps, setSteps] = useState<LifecycleStep[]>(() => {
     try {
       const saved = localStorage.getItem('agrojaya_lifecycle_steps');
-      return saved ? JSON.parse(saved) : INITIAL_LIFECYCLE_STEPS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.map((s: LifecycleStep) => ({
+          ...s,
+          photoUrl: STEP_PHOTOS[s.stepNumber] || s.photoUrl,
+        }));
+      }
+      return INITIAL_LIFECYCLE_STEPS;
     } catch {
       return INITIAL_LIFECYCLE_STEPS;
     }
@@ -163,12 +190,19 @@ export const PlantationLifecycleProgress: React.FC = () => {
   const [selectedStepIndex, setSelectedStepIndex] = useState<number>(0);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Sync state when updated elsewhere or on storage event
   useEffect(() => {
     const handleSync = () => {
       try {
         const saved = localStorage.getItem('agrojaya_lifecycle_steps');
-        if (saved) setSteps(JSON.parse(saved));
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setSteps(
+            parsed.map((s: LifecycleStep) => ({
+              ...s,
+              photoUrl: STEP_PHOTOS[s.stepNumber] || s.photoUrl,
+            }))
+          );
+        }
       } catch (e) {
         console.error(e);
       }
@@ -181,14 +215,15 @@ export const PlantationLifecycleProgress: React.FC = () => {
     };
   }, []);
 
-  // Form State for Updating Stage Progress
   const activeStep = steps[selectedStepIndex] || steps[0];
+  // Always enforce the exact relevant photo corresponding to the active step number
+  const activePhoto = STEP_PHOTOS[activeStep.stepNumber];
+
   const [editPercent, setEditPercent] = useState<number>(activeStep.progressPercent);
   const [editStatus, setEditStatus] = useState<'SELESAI' | 'SEDANG BERJALAN' | 'TAHAP BERIKUTNYA'>(activeStep.status);
   const [editNotes, setEditNotes] = useState<string>(activeStep.description);
   const [editKearifan, setEditKearifan] = useState<string>(activeStep.kearifanLokalNotes);
 
-  // Who is authorized to edit: KEPALA_KEBUN and MANAGER (and DIREKTUR)
   const canUpdateLifecycle = role === 'KEPALA_KEBUN' || role === 'MANAGER' || role === 'DIREKTUR';
 
   const overallReadiness = Math.round(
@@ -221,6 +256,7 @@ export const PlantationLifecycleProgress: React.FC = () => {
           description: editNotes,
           kearifanLokalNotes: editKearifan,
           updatedBy: updaterName,
+          photoUrl: STEP_PHOTOS[s.stepNumber],
           updatedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
         };
       }
@@ -235,107 +271,131 @@ export const PlantationLifecycleProgress: React.FC = () => {
       console.error(e);
     }
     setIsEditing(false);
-    alert(`Progress Tahap ${activeStep.stepNumber} (${activeStep.title}) Berhasil Diperbarui oleh ${updaterName}!`);
+    alert(`Progress Tahap ${activeStep.stepNumber} (${activeStep.title}) berhasil diperbarui!`);
   };
 
   return (
-    <div className="card-box bg-white p-4 p-md-5 rounded-4 border shadow-sm space-y-4">
-      {/* Header Info */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 border-bottom">
-        <div>
-          <span className="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill uppercase font-weight-bold mb-2 d-inline-block" style={{ fontSize: 12 }}>
-            <i className="ri-plant-line me-1"></i> SIKLUS PENUH PENGOLAHAN LAHAN PERKEBUNAN
-          </span>
-          <h3 className="h4 font-weight-bold text-dark mb-1">
-            Siklus Penuh Pengolahan Lahan (Awal → Panen & Rotasi Tanaman)
-          </h3>
-          <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-            Diisi Eksklusif oleh <b>Kepala Kebun & Manajer Operasional</b> • Transparansi Real-Time Kesiapan Fisik Lahan Investor
-          </p>
-        </div>
-
-        <div className="d-flex align-items-center gap-3">
-          <div className="d-flex align-items-center gap-3 bg-light p-3 rounded-3 border">
-            <div className="text-end">
-              <span className="d-block text-uppercase text-muted font-weight-bold" style={{ fontSize: 11 }}>Tingkat Kesiapan Fisik Lahan</span>
-              <strong className="h4 text-success font-weight-extrabold mb-0">{overallReadiness}% Siap</strong>
+    <div className="space-y-4">
+      {/* Top Overall Progress Strip */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div className="d-flex align-items-center gap-3 w-100 w-md-50">
+          <div className="corpox-icon-box emerald" style={{ width: 44, height: 44, fontSize: 20 }}>
+            <i className="ri-plant-line"></i>
+          </div>
+          <div className="flex-grow-1">
+            <div className="d-flex justify-content-between align-items-center mb-1">
+              <span className="text-dark font-weight-bold" style={{ fontSize: 13 }}>Kesiapan Fisik Lahan Keseluruhan</span>
+              <strong className="text-success font-weight-extrabold" style={{ fontSize: 15 }}>{overallReadiness}% Siap</strong>
             </div>
-            <div style={{ width: 48, height: 48, backgroundColor: '#059669', color: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 18 }}>
-              {overallReadiness}%
+            <div className="progress" style={{ height: 8 }}>
+              <div
+                className="progress-bar bg-success"
+                role="progressbar"
+                style={{ width: `${overallReadiness}%` }}
+              ></div>
             </div>
           </div>
+        </div>
 
+        <div className="d-flex align-items-center gap-2 flex-wrap">
+          <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 font-weight-bold rounded-pill" style={{ fontSize: 11 }}>
+            3 Tahap Selesai
+          </span>
+          <span className="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1 font-weight-bold rounded-pill" style={{ fontSize: 11 }}>
+            2 Sedang Berjalan
+          </span>
+          <span className="badge bg-light text-muted border px-2.5 py-1 font-weight-bold rounded-pill" style={{ fontSize: 11 }}>
+            3 Tahap Berikutnya
+          </span>
           {canUpdateLifecycle && (
             <button
               onClick={() => handleOpenForm(selectedStepIndex)}
-              className="btn btn-success text-white font-weight-bold px-4 py-3 rounded-3 border-0 d-inline-flex align-items-center gap-2 shadow"
-              style={{ fontSize: 13 }}
+              className="btn btn-sm btn-outline-success font-weight-bold px-3 py-1.5 rounded-3 d-inline-flex align-items-center gap-1 shadow-xs"
+              style={{ fontSize: 11.5 }}
             >
-              <i className="ri-edit-box-line h5 m-0"></i> Update Tahap {activeStep.stepNumber}
+              <i className="ri-edit-line"></i>
+              <span>Update Tahap Ini</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Operator Role Badge & Form Toggle Banner */}
-      <div className="bg-success-subtle p-3.5 rounded-3 border border-success d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-        <div className="d-flex align-items-center gap-2">
-          <span className="badge bg-success text-white font-weight-bold px-3 py-1.5 rounded-pill" style={{ fontSize: 11 }}>
-            🔒 PENANGGUNG JAWAB PENGISI FORM: KEPALA KEBUN & MANAJER OPS
-          </span>
-          <span className="text-dark font-weight-bold" style={{ fontSize: 12 }}>
-            Status Peran Aktif: <b>{role}</b>
-          </span>
-        </div>
+      {/* Modern Stepper Pill Bar */}
+      <div className="card-box p-3 rounded-4 bg-white border shadow-sm">
+        <div className="d-flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'thin' }}>
+          {steps.map((step, idx) => {
+            const isSelected = idx === selectedStepIndex;
+            const isCompleted = step.status === 'SELESAI';
+            const isInProgress = step.status === 'SEDANG BERJALAN';
 
-        {canUpdateLifecycle && (
-          <button
-            onClick={() => handleOpenForm(selectedStepIndex)}
-            className="btn btn-success text-white font-weight-bold px-4 py-2.5 rounded-3 border-0 d-inline-flex align-items-center gap-2 shadow-sm"
-            style={{ fontSize: 13 }}
-          >
-            <i className="ri-pencil-line"></i> Buka Form Edit Tahap {activeStep.stepNumber} ({activeStep.status})
-          </button>
-        )}
+            let badgeColorClass = 'bg-light text-muted border';
+            if (isCompleted) badgeColorClass = 'bg-success-subtle text-success border border-success';
+            else if (isInProgress) badgeColorClass = 'bg-primary-subtle text-primary border border-primary';
+
+            return (
+              <button
+                key={step.stepNumber}
+                onClick={() => {
+                  setSelectedStepIndex(idx);
+                  setIsEditing(false);
+                }}
+                className={`btn btn-sm text-start p-2.5 rounded-3 transition flex-shrink-0 ${
+                  isSelected
+                    ? 'bg-success text-white shadow-xs border-0'
+                    : 'btn-light border hover-bg-light'
+                }`}
+                style={{ minWidth: 160, maxWidth: 200 }}
+              >
+                <div className="d-flex justify-content-between align-items-center mb-1">
+                  <span className={`badge ${isSelected ? 'bg-white text-success' : badgeColorClass} font-weight-bold`} style={{ fontSize: 10 }}>
+                    Tahap {step.stepNumber}
+                  </span>
+                  <strong className={isSelected ? 'text-white' : isCompleted ? 'text-success' : isInProgress ? 'text-primary' : 'text-muted'} style={{ fontSize: 11 }}>
+                    {step.progressPercent}%
+                  </strong>
+                </div>
+                <div className={`text-truncate font-weight-bold ${isSelected ? 'text-white' : 'text-dark'}`} style={{ fontSize: 12 }}>
+                  {step.title.split(' & ')[0]}
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Interactive Form Drawer (If Editing) */}
-      {isEditing && (
-        <form onSubmit={handleSaveProgress} className="bg-success-subtle p-4 rounded-4 border border-success space-y-3">
-          <div className="d-flex justify-content-between align-items-center pb-2 border-bottom border-success-subtle">
-            <h5 className="font-weight-bold text-success-emphasis m-0 d-flex align-items-center gap-2 !text-sm">
-              <i className="ri-edit-line"></i> Form Update Progress Fisik: Tahap {activeStep.stepNumber} - {activeStep.title}
+      {/* Inline Edit Form for Kepala Kebun & Manager */}
+      {isEditing && canUpdateLifecycle && (
+        <div className="card-box p-4 rounded-4 bg-light border border-success shadow-sm space-y-3">
+          <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
+            <h5 className="font-weight-bold text-dark m-0 !text-sm">
+              <i className="ri-edit-circle-line text-success me-1"></i> Form Update Progres Tahap {activeStep.stepNumber}: {activeStep.title}
             </h5>
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="btn btn-sm btn-outline-secondary font-weight-bold"
-              style={{ fontSize: 11 }}
-            >
-              Batal
+            <button onClick={() => setIsEditing(false)} className="btn btn-sm btn-light border text-muted">
+              Tutup
             </button>
           </div>
 
-          <div className="row g-3">
+          <form onSubmit={handleSaveProgress} className="row g-3">
             <div className="col-12 col-md-4">
-              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>Persentase Selesai (%):</label>
+              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 11.5 }}>Progres Tahap (%):</label>
               <input
                 type="number"
                 min="0"
                 max="100"
                 value={editPercent}
                 onChange={(e) => setEditPercent(Number(e.target.value))}
-                className="form-control p-2.5 bg-white border font-weight-bold"
+                className="form-control p-2 bg-white border font-weight-bold text-success"
                 style={{ fontSize: 13 }}
                 required
               />
             </div>
+
             <div className="col-12 col-md-4">
-              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>Status Tahapan:</label>
+              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 11.5 }}>Status Tahap:</label>
               <select
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value as any)}
-                className="form-select p-2.5 bg-white border font-weight-bold"
+                className="form-select p-2 bg-white border font-weight-bold text-dark"
                 style={{ fontSize: 13 }}
               >
                 <option value="SELESAI">SELESAI (100%)</option>
@@ -343,160 +403,106 @@ export const PlantationLifecycleProgress: React.FC = () => {
                 <option value="TAHAP BERIKUTNYA">TAHAP BERIKUTNYA</option>
               </select>
             </div>
-            <div className="col-12 col-md-4">
-              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>Petugas Pengisi Form:</label>
-              <input
-                type="text"
-                value={role === 'KEPALA_KEBUN' ? 'Rahmat Hidayat (Kepala Kebun)' : 'Budi Santoso, S.P. (Manajer Ops)'}
-                className="form-control p-2.5 bg-light border font-weight-bold"
-                style={{ fontSize: 13 }}
-                disabled
-              />
-            </div>
-          </div>
 
-          <div>
-            <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>Catatan Pengamatan Agronomi & Kondisi Fisik Lahan Lapangan:</label>
-            <textarea
-              rows={2}
-              value={editNotes}
-              onChange={(e) => setEditNotes(e.target.value)}
-              className="form-control p-2.5 bg-white border"
-              style={{ fontSize: 13 }}
-              required
-            ></textarea>
-          </div>
-
-          <div>
-            <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 12 }}>Standar Perkebunan & Kearifan Lokal Nusantara:</label>
-            <input
-              type="text"
-              value={editKearifan}
-              onChange={(e) => setEditKearifan(e.target.value)}
-              className="form-control p-2.5 bg-white border"
-              style={{ fontSize: 13 }}
-            />
-          </div>
-
-          <div className="d-flex justify-content-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setIsEditing(false)}
-              className="btn btn-light border font-weight-bold px-3 py-2"
-              style={{ fontSize: 12 }}
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              className="btn btn-success text-white font-weight-bold px-4 py-2 shadow-sm"
-              style={{ fontSize: 12 }}
-            >
-              <i className="ri-save-line me-1"></i> Simpan & Perbarui Progress Lahan
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Stepper Navigation */}
-      <div className="row g-2 py-2">
-        {steps.map((step, idx) => {
-          const isSelected = idx === selectedStepIndex;
-          const isCompleted = step.statusRaw === 'COMPLETED';
-          const isInProgress = step.statusRaw === 'IN_PROGRESS';
-
-          return (
-            <div key={step.stepNumber} className="col-6 col-sm-3 col-md-3 col-lg-1-5">
+            <div className="col-12 col-md-4 d-flex align-items-end">
               <button
-                onClick={() => {
-                  setSelectedStepIndex(idx);
-                  setIsEditing(false);
-                }}
-                className={`w-100 p-2.5 text-center rounded-3 border-2 transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-success text-white border-success shadow'
-                    : isCompleted
-                    ? 'bg-success-subtle text-success border-success'
-                    : isInProgress
-                    ? 'bg-warning-subtle text-warning border-warning'
-                    : 'bg-light text-muted border-secondary-subtle'
-                }`}
-                style={{ borderStyle: 'solid' }}
+                type="submit"
+                className="btn btn-success text-white font-weight-bold p-2 w-100 rounded-3 shadow-xs d-flex align-items-center justify-content-center gap-1.5"
+                style={{ fontSize: 12.5 }}
               >
-                <div className="font-weight-extrabold" style={{ fontSize: 12 }}>
-                  TAHAP {step.stepNumber}
-                </div>
-                <div style={{ fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {step.status} ({step.progressPercent}%)
-                </div>
+                <i className="ri-save-line"></i> Simpan Progres Tahap
               </button>
             </div>
-          );
-        })}
-      </div>
 
-      {/* Selected Step Detail Box */}
-      <div className="row g-4 bg-light p-4 rounded-4 border align-items-center">
-        {/* Real Photography Asset */}
-        <div className="col-lg-6">
-          <div className="rounded-3 overflow-hidden border bg-white shadow-sm">
-            <img
-              key={activeStep.stepNumber}
-              src={activeStep.photoUrl}
-              alt={activeStep.title}
-              className="w-100"
-              style={{ height: 320, objectFit: 'cover' }}
-            />
-          </div>
-          <div className="d-flex justify-content-between align-items-center mt-3 bg-white p-3 rounded-3 border text-secondary" style={{ fontSize: 13 }}>
-            <span><i className="ri-time-line me-1 text-success"></i> Durasi: <b>{activeStep.durationDays}</b></span>
-            <span><i className="ri-target-line me-1 text-primary"></i> Target: <b>{activeStep.targetMetrics}</b></span>
-          </div>
+            <div className="col-12 col-md-6">
+              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 11.5 }}>Keterangan Lapangan:</label>
+              <textarea
+                value={editNotes}
+                onChange={(e) => setEditNotes(e.target.value)}
+                className="form-control p-2 bg-white border"
+                rows={2}
+                style={{ fontSize: 12 }}
+                required
+              />
+            </div>
+
+            <div className="col-12 col-md-6">
+              <label className="form-label font-weight-bold text-dark mb-1" style={{ fontSize: 11.5 }}>Standar SOP & Catatan:</label>
+              <textarea
+                value={editKearifan}
+                onChange={(e) => setEditKearifan(e.target.value)}
+                className="form-control p-2 bg-white border"
+                rows={2}
+                style={{ fontSize: 12 }}
+                required
+              />
+            </div>
+          </form>
         </div>
+      )}
 
-        {/* Info & Financials */}
-        <div className="col-lg-6 space-y-3">
-          <div className="d-flex justify-content-between align-items-start mb-2">
-            <div>
-              <span className="badge bg-success text-white px-2.5 py-1 rounded uppercase font-weight-bold" style={{ fontSize: 11 }}>
-                TAHAP {activeStep.stepNumber} DARI 8
+      {/* Stage Detail Card (Modern Split View) */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm">
+        <div className="row g-4 align-items-center">
+          {/* Strictly Relevant Photo */}
+          <div className="col-12 col-lg-5">
+            <div className="position-relative rounded-4 overflow-hidden border shadow-xs bg-light">
+              <img
+                key={activeStep.stepNumber}
+                src={activePhoto}
+                alt={activeStep.title}
+                className="w-100 object-fit-cover"
+                style={{ height: 260, transition: 'all 0.3s ease' }}
+              />
+              <div className="position-absolute bottom-0 start-0 end-0 p-2.5 bg-dark bg-opacity-75 text-white d-flex justify-content-between align-items-center" style={{ fontSize: 11.5 }}>
+                <span><i className="ri-time-line me-1"></i> Durasi: <b>{activeStep.durationDays}</b></span>
+                <span><i className="ri-focus-3-line me-1"></i> Target: <b>{activeStep.targetMetrics}</b></span>
+              </div>
+            </div>
+          </div>
+
+          {/* Details on Right */}
+          <div className="col-12 col-lg-7 space-y-3">
+            <div className="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <span className="badge bg-success text-white font-weight-bold px-2.5 py-1 rounded-pill mb-1.5 d-inline-block" style={{ fontSize: 10.5 }}>
+                  Tahap {activeStep.stepNumber} dari 8
+                </span>
+                <h3 className="font-weight-extrabold text-dark mb-0" style={{ fontSize: 18 }}>
+                  {activeStep.title}
+                </h3>
+                <span className="text-muted font-weight-medium" style={{ fontSize: 12 }}>
+                  {activeStep.subtitle}
+                </span>
+              </div>
+
+              <span className={`badge px-3 py-1.5 rounded-pill font-weight-bold ${activeStep.status === 'SELESAI' ? 'bg-success text-white' : activeStep.status === 'SEDANG BERJALAN' ? 'bg-primary text-white' : 'bg-secondary text-white'}`} style={{ fontSize: 11 }}>
+                {activeStep.status} ({activeStep.progressPercent}%)
               </span>
-              <h4 className="font-weight-bold text-dark mt-2 mb-1">{activeStep.title}</h4>
-              <p className="text-muted font-weight-bold" style={{ fontSize: 13 }}>{activeStep.subtitle}</p>
-            </div>
-            <span className={`badge px-3 py-1.5 font-weight-bold ${
-              activeStep.statusRaw === 'COMPLETED' ? 'bg-success text-white' : activeStep.statusRaw === 'IN_PROGRESS' ? 'bg-warning text-dark' : 'bg-secondary text-white'
-            }`}>
-              {activeStep.status} ({activeStep.progressPercent}%)
-            </span>
-          </div>
-
-          <p className="bg-white p-3 rounded-3 border text-dark" style={{ fontSize: 14, lineHeight: 1.6 }}>
-            {activeStep.description}
-          </p>
-
-          <div className="bg-warning-subtle border border-warning p-3 rounded-3 text-dark" style={{ fontSize: 13 }}>
-            <strong className="d-block text-warning-emphasis mb-1"><i className="ri-checkbox-circle-line me-1"></i> Standar Perkebunan & Kearifan Lokal Nusantara:</strong>
-            <span className="text-secondary">{activeStep.kearifanLokalNotes}</span>
-          </div>
-
-          {/* Audit Verification Log */}
-          <div className="bg-white p-3 rounded-3 border space-y-2">
-            <div className="d-flex justify-content-between align-items-center text-dark" style={{ fontSize: 14 }}>
-              <span>Alokasi Anggaran OPEX Tahap Ini:</span>
-              <strong className="h5 font-weight-extrabold text-success mb-0">Rp {activeStep.opexEstimateRp.toLocaleString('id-ID')}</strong>
             </div>
 
-            <div className="w-100 bg-light rounded-pill overflow-hidden border" style={{ height: 12 }}>
-              <div
-                className="bg-success h-100 transition-all rounded-pill"
-                style={{ width: `${activeStep.progressPercent}%` }}
-              ></div>
+            <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13, lineHeight: 1.6 }}>
+              {activeStep.description}
+            </p>
+
+            {/* SOP & Standar Box */}
+            <div className="p-3 rounded-3 bg-success-subtle border border-success-subtle d-flex align-items-start gap-2.5">
+              <i className="ri-shield-check-line text-success mt-0.5" style={{ fontSize: 18 }}></i>
+              <div>
+                <strong className="d-block text-success font-weight-bold" style={{ fontSize: 11.5 }}>Standar SOP & Mutu Kebun:</strong>
+                <span className="text-dark font-weight-medium" style={{ fontSize: 12 }}>{activeStep.kearifanLokalNotes}</span>
+              </div>
             </div>
 
-            <div className="pt-1.5 border-top d-flex justify-content-between align-items-center text-muted" style={{ fontSize: 11 }}>
-              <span><i className="ri-user-check-line text-success me-1"></i> Diperbarui Oleh: <b>{activeStep.updatedBy || 'Kepala Kebun'}</b></span>
-              <span><i className="ri-calendar-event-line me-1"></i> Tanggal: <b>{activeStep.updatedAt || '03 Aug 2026'}</b></span>
+            {/* OPEX & Updater Footer */}
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 pt-2 border-top" style={{ fontSize: 12 }}>
+              <div>
+                <span className="text-muted">Alokasi Anggaran OPEX: </span>
+                <strong className="text-dark font-weight-bold">Rp {activeStep.opexEstimateRp?.toLocaleString('id-ID')}</strong>
+              </div>
+              <div className="text-muted">
+                <span>Diperbarui oleh: <b>{activeStep.updatedBy || 'Kepala Kebun'}</b> ({activeStep.updatedAt || 'Terverifikasi'})</span>
+              </div>
             </div>
           </div>
         </div>

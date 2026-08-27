@@ -1,148 +1,171 @@
-import { useRole } from '../context/RoleContext';
+import React from 'react';
 
-export const WeighbridgePage = () => {
-  const { role } = useRole();
-
+export const WeighbridgePage: React.FC = () => {
   const weighbridgeData = [
-    { id: 'WB-001', ticketNo: 'TKG-2026-0801', landName: 'Blok A1 (Kebun Anggur Impor 1000m²)', truckNo: 'F 8812 BGR', brutoKg: 4500, tarraKg: 1500, nettoKg: 3000, grade: 'Mutu A', status: 'VERIFIED', buyer: 'PT Supermarket Fresh Nusantara' },
-    { id: 'WB-002', ticketNo: 'TKG-2026-0802', landName: 'Blok A2 (Tanam Hibrida Utama 2 Ha)', truckNo: 'F 9014 BGR', brutoKg: 14200, tarraKg: 4200, nettoKg: 10000, grade: 'Mutu A', status: 'VERIFIED', buyer: 'PKS Agro Industrial Jawa Barat' },
-    { id: 'WB-003', ticketNo: 'TKG-2026-0803', landName: 'Blok B1 (Melon Premium 5000m²)', truckNo: 'F 7721 BGR', brutoKg: 6500, tarraKg: 2100, nettoKg: 4400, grade: 'Mutu A', status: 'VERIFIED', buyer: 'PT Pangan Mandiri Bogor' },
+    {
+      id: 'WB-001',
+      ticketNo: 'TKG-2026-0801',
+      landName: 'Blok A1 (Kebun Anggur Impor 1000m²)',
+      truckNo: 'F 8812 BGR',
+      brutoKg: 4500,
+      tarraKg: 1500,
+      nettoKg: 3000,
+      grade: 'Mutu A (Ekspor)',
+      status: 'VERIFIED',
+      buyer: 'PT Supermarket Fresh Nusantara',
+    },
+    {
+      id: 'WB-002',
+      ticketNo: 'TKG-2026-0802',
+      landName: 'Blok A2 (Tanam Hibrida Utama 2 Ha)',
+      truckNo: 'F 9014 BGR',
+      brutoKg: 14200,
+      tarraKg: 4200,
+      nettoKg: 10000,
+      grade: 'Mutu A (Grade 1)',
+      status: 'VERIFIED',
+      buyer: 'PKS Agro Industrial Jawa Barat',
+    },
+    {
+      id: 'WB-003',
+      ticketNo: 'TKG-2026-0803',
+      landName: 'Blok B1 (Melon Premium 5000m²)',
+      truckNo: 'F 7721 BGR',
+      brutoKg: 6500,
+      tarraKg: 2100,
+      nettoKg: 4400,
+      grade: 'Mutu A (Super)',
+      status: 'VERIFIED',
+      buyer: 'PT Pangan Mandiri Bogor',
+    },
   ];
 
   const handleExportTicket = (ticketNo: string) => {
     alert(`Mengunduh Bukti Slip Tiket Digital Timbangan PKS ${ticketNo} (PDF)...`);
   };
 
+  const totalNetto = weighbridgeData.reduce((acc, curr) => acc + curr.nettoKg, 0);
+
   return (
     <div className="w-100 space-y-4">
       {/* Header Banner */}
-      <div className="card-box p-4 rounded-4 space-y-3">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-          <div>
-            <span className="tmp-badge-card emerald mb-2 d-inline-block">
-              <i className="ri-scales-3-line me-1"></i> LOGISTIK & TIMBANGAN DIGITAL KEBUN
-            </span>
-            <h2 className="page-header-title font-weight-bold text-dark mb-0">
-              Pencatatan & Timbangan Digital Hasil Panen Kebun
-            </h2>
-            <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-              Pencatatan resmi berat muatan panen (Berat Total Truk, Berat Truk Kosong, & Hasil Bersih Panen Murni)
-            </p>
-          </div>
-          <span className="badge bg-primary text-white px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 11 }}>
-            <i className="ri-shield-user-line"></i> Hak Akses: {role}
-          </span>
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+            Pencatatan & Jembatan Timbang Digital Hasil Panen
+          </h2>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
+            Pencatatan tonase berat kotor (bruto), tara kendaraan, dan berat bersih panen komoditas kebun Jonggol
+          </p>
         </div>
+        <span className="badge bg-success text-white px-3 py-1.5 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1.5 shadow-sm" style={{ fontSize: 11.5 }}>
+          <i className="ri-scales-3-line"></i> Kalibrasi Timbangan Valid
+        </span>
       </div>
 
       {/* Summary KPI Cards */}
-      <div className="row g-4">
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
+      <div className="row g-3">
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
             <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Berat Bersih Panen</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0 !text-lg">17.400 Kg</strong>
-              <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
-                <i className="ri-checkbox-circle-fill me-1"></i> Hasil Bersih Terverifikasi
-              </span>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Total Berat Bersih Panen</span>
+              <strong className="text-dark font-weight-bold d-block my-0.5" style={{ fontSize: 20 }}>
+                {totalNetto.toLocaleString('id-ID')} Kg
+              </strong>
+              <span className="text-success font-weight-medium" style={{ fontSize: 11 }}>Hasil Bersih Terverifikasi</span>
             </div>
-            <div className="corpox-icon-box emerald">
+            <div className="corpox-icon-box emerald" style={{ width: 38, height: 38, fontSize: 18 }}>
               <i className="ri-scales-line"></i>
             </div>
           </div>
         </div>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
             <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Total Truk Pengangkut</span>
-              <strong className="h3 font-weight-extrabold text-dark m-0 !text-lg">3 Armada Truk</strong>
-              <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
-                <i className="ri-file-text-line me-1"></i> Surat Jalan Resmi Sah
-              </span>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Total Truk Pengangkut</span>
+              <strong className="text-dark font-weight-bold d-block my-0.5" style={{ fontSize: 20 }}>
+                {weighbridgeData.length} Armada Truk
+              </strong>
+              <span className="text-primary font-weight-medium" style={{ fontSize: 11 }}>Surat Jalan Resmi Terbit</span>
             </div>
-            <div className="corpox-icon-box blue">
+            <div className="corpox-icon-box blue" style={{ width: 38, height: 38, fontSize: 18 }}>
               <i className="ri-truck-line"></i>
             </div>
           </div>
         </div>
 
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
+        <div className="col-12 col-sm-6 col-xl-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
             <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Kualitas Panen (Grade A)</span>
-              <strong className="h3 font-weight-extrabold text-success m-0 !text-lg">100.0%</strong>
-              <span className="d-block text-success font-weight-bold mt-1.5" style={{ fontSize: 12 }}>
-                <i className="ri-award-line me-1"></i> Sesuai Standar Komersial
-              </span>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Kualitas Sortasi Panen</span>
+              <strong className="text-success font-weight-bold d-block my-0.5" style={{ fontSize: 20 }}>Grade A (100%)</strong>
+              <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>Lolos Uji Standar Buyer Offtaker</span>
             </div>
-            <div className="corpox-icon-box amber">
-              <i className="ri-award-fill"></i>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-12 col-sm-6 col-xl-3">
-          <div className="card-box card-box-hover p-4 d-flex align-items-center justify-content-between h-100">
-            <div>
-              <span className="text-uppercase text-muted font-weight-bold d-block mb-1" style={{ fontSize: 11 }}>Status Alat Timbangan</span>
-              <strong className="h3 font-weight-extrabold text-primary m-0 !text-base">AKURAT & LULUS UJI</strong>
-              <span className="d-block text-secondary font-weight-bold mt-1.5" style={{ fontSize: 12 }}>Toleransi Akurasi &lt; 0.5%</span>
-            </div>
-            <div className="corpox-icon-box blue">
-              <i className="ri-shield-check-line"></i>
+            <div className="corpox-icon-box emerald" style={{ width: 38, height: 38, fontSize: 18 }}>
+              <i className="ri-medal-line"></i>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Weighbridge Table */}
-      <div className="card-box p-4 rounded-4 space-y-4">
-        <div className="d-flex justify-content-between align-items-center pb-3 border-bottom">
-          <h4 className="font-weight-extrabold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
-            <i className="ri-file-list-3-line text-success"></i> Daftar Resi Tiket Timbangan Hasil Panen Kebun
+      {/* Main Table */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm space-y-3">
+        <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
+          <h4 className="font-weight-bold text-dark m-0" style={{ fontSize: 15 }}>
+            <i className="ri-file-list-3-line text-success me-1.5"></i> Register Tiket Timbangan & Surat Jalan Panen
           </h4>
-          <span className="tmp-badge-card success">
-            Total {weighbridgeData.length} Tiket Sah
+          <span className="badge bg-light text-dark border font-weight-bold" style={{ fontSize: 11 }}>
+            Total Tiket: {weighbridgeData.length}
           </span>
         </div>
 
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
-            <thead className="table-light">
+            <thead>
               <tr>
-                <th className="font-weight-bold text-dark">No. Resi Timbangan</th>
-                <th className="font-weight-bold text-dark">Lokasi Lahan & Jenis Tanaman</th>
-                <th className="font-weight-bold text-dark">Nomor Truk</th>
-                <th className="font-weight-bold text-dark">Berat Total (Truk + Panen)</th>
-                <th className="font-weight-bold text-dark">Berat Truk Kosong</th>
-                <th className="font-weight-bold text-dark">Hasil Bersih Panen (Kg)</th>
-                <th className="font-weight-bold text-dark">Kualitas Buah</th>
-                <th className="font-weight-bold text-dark">Tujuan Pembeli / Pabrik</th>
-                <th className="font-weight-bold text-dark">Cetak Tiket</th>
+                <th>NO. TIKET & LOKASI</th>
+                <th>ARMADA TRUK</th>
+                <th>BERAT KOTOR (BRUTO)</th>
+                <th>BERAT TARA</th>
+                <th>BERAT BERSIH (NETTO)</th>
+                <th>KUALITAS & OFFTAKER</th>
+                <th className="text-end">SLIP TIKET</th>
               </tr>
             </thead>
             <tbody>
               {weighbridgeData.map((wb) => (
                 <tr key={wb.id}>
-                  <td><strong className="text-primary font-mono">{wb.ticketNo}</strong></td>
-                  <td className="font-weight-bold text-dark">{wb.landName}</td>
-                  <td><span className="badge bg-light text-dark border font-mono font-weight-bold">{wb.truckNo}</span></td>
-                  <td className="text-secondary">{wb.brutoKg.toLocaleString('id-ID')} Kg</td>
-                  <td className="text-secondary">{wb.tarraKg.toLocaleString('id-ID')} Kg</td>
-                  <td className="text-success font-weight-extrabold" style={{ fontSize: 14 }}>
-                    {wb.nettoKg.toLocaleString('id-ID')} Kg
-                  </td>
-                  <td><span className="badge bg-success-subtle text-success border border-success font-weight-bold">{wb.grade}</span></td>
-                  <td className="text-dark font-weight-medium">{wb.buyer}</td>
                   <td>
+                    <div>
+                      <strong className="text-slate-900 d-block font-mono font-weight-bold" style={{ fontSize: 12.5 }}>{wb.ticketNo}</strong>
+                      <span className="text-muted" style={{ fontSize: 11 }}>{wb.landName}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-800 border">
+                      🚛 {wb.truckNo}
+                    </span>
+                  </td>
+                  <td className="text-slate-600">{wb.brutoKg.toLocaleString('id-ID')} Kg</td>
+                  <td className="text-muted">{wb.tarraKg.toLocaleString('id-ID')} Kg</td>
+                  <td>
+                    <strong className="text-success font-weight-bold" style={{ fontSize: 13.5 }}>
+                      {wb.nettoKg.toLocaleString('id-ID')} Kg
+                    </strong>
+                  </td>
+                  <td>
+                    <strong className="d-block text-slate-900 font-weight-medium" style={{ fontSize: 12.5 }}>{wb.grade}</strong>
+                    <span className="text-muted" style={{ fontSize: 11 }}>{wb.buyer}</span>
+                  </td>
+                  <td className="text-end">
                     <button
-                      type="button"
                       onClick={() => handleExportTicket(wb.ticketNo)}
-                      className="btn btn-sm btn-primary-gradient font-weight-bold d-inline-flex align-items-center gap-1"
+                      className="btn btn-sm btn-outline-success font-weight-bold px-2.5 py-1 rounded-2 d-inline-flex align-items-center gap-1 shadow-xs"
                       style={{ fontSize: 11 }}
                     >
-                      <i className="ri-file-download-line"></i> Cetak Slip
+                      <i className="ri-download-cloud-line"></i>
+                      <span>Unduh Slip</span>
                     </button>
                   </td>
                 </tr>

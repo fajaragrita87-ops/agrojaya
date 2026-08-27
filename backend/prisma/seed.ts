@@ -19,21 +19,41 @@ async function main() {
   await prisma.land.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Users
+  // 2. Users (All 6 Roles with Standard AgroJaya Credentials)
   const direktur = await prisma.user.create({
     data: {
       name: 'Ir. H. Ahmad Wijaya',
-      email: 'direktur@agrojaya.co.id',
+      email: 'direktur@agrojaya.com',
       passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
       role: 'DIREKTUR',
       phone: '0811-7000-111',
     },
   });
 
+  const investor = await prisma.user.create({
+    data: {
+      name: 'Hendra Kusuma, B.Sc.',
+      email: 'investor@agrojaya.com',
+      passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
+      role: 'INVESTOR',
+      phone: '0815-7000-555',
+    },
+  });
+
+  const finance = await prisma.user.create({
+    data: {
+      name: 'Ratna Dewi, S.E., Ak.',
+      email: 'finance@agrojaya.com',
+      passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
+      role: 'FINANCE',
+      phone: '0812-9876-5432',
+    },
+  });
+
   const manager = await prisma.user.create({
     data: {
       name: 'Budi Santoso, S.P.',
-      email: 'manager@agrojaya.co.id',
+      email: 'manager@agrojaya.com',
       passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
       role: 'MANAGER',
       phone: '0812-7000-222',
@@ -43,7 +63,7 @@ async function main() {
   const kepalaKebun = await prisma.user.create({
     data: {
       name: 'Rahmat Hidayat',
-      email: 'kepala.kebun@agrojaya.co.id',
+      email: 'kepalakebun@agrojaya.com',
       passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
       role: 'KEPALA_KEBUN',
       phone: '0813-7000-333',
@@ -53,24 +73,14 @@ async function main() {
   const petani = await prisma.user.create({
     data: {
       name: 'Joko Susilo',
-      email: 'petani@agrojaya.co.id',
+      email: 'petani@agrojaya.com',
       passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
       role: 'PETANI',
       phone: '0814-7000-444',
     },
   });
 
-  await prisma.user.create({
-    data: {
-      name: 'Hendra Kusuma',
-      email: 'investor@agrojaya.co.id',
-      passwordHash: '$2a$10$abcdefghijklmnopqrstuv',
-      role: 'INVESTOR',
-      phone: '0815-7000-555',
-    },
-  });
-
-  console.log('✅ Users seeded');
+  console.log('✅ 6 Core Roles Seeded (DIREKTUR, INVESTOR, FINANCE, MANAGER, KEPALA_KEBUN, PETANI)');
 
   // 3. Lands (Jonggol, Bogor)
   const landA1 = await prisma.land.create({
@@ -101,29 +111,33 @@ async function main() {
       areaHa: 0.5,
       soilType: 'Aluvial Organik Jonggol',
       latitude: -6.4680,
-      longitude: 107.0560,
+      longitude: 107.056,
       status: 'PANEN',
     },
   });
 
   console.log('✅ Lands seeded (Jonggol, Bogor)');
 
-  // 4. Crops (Komoditas)
-  const anggur = await prisma.crop.create({
-    data: {
-      name: 'Anggur Impor Shine Muscat & Black Muscat',
-      cycleDays: 120,
-      sop: JSON.stringify({ perawatan: 'Penyiraman Drip Irrigation Satelit, Pemupukan NPK Humat, Naungan UV Greenhouse.' }),
-      yieldFormula: JSON.stringify({ baseYieldPerHaKg: 12000 }),
-    },
-  });
-
+  // 4. Crops (Komoditas Unggulan)
   const porang = await prisma.crop.create({
     data: {
       name: 'Umbi Porang Kualitas Ekspor',
       cycleDays: 240,
-      sop: JSON.stringify({ perawatan: 'Pembuatan guludan, pemupukan pupuk kandang/kompos, penyiangan gulma rutin, dan menjaga kelembaban tanah.' }),
+      sop: JSON.stringify({
+        perawatan: 'Pembuatan guludan, pemupukan pupuk kandang/kompos, penyiangan gulma rutin, dan menjaga kelembaban tanah.',
+      }),
       yieldFormula: JSON.stringify({ baseYieldPerHaKg: 20000 }),
+    },
+  });
+
+  const anggur = await prisma.crop.create({
+    data: {
+      name: 'Anggur Impor Shine Muscat & Black Muscat',
+      cycleDays: 120,
+      sop: JSON.stringify({
+        perawatan: 'Penyiraman Drip Irrigation Satelit, Pemupukan NPK Humat, Naungan UV Greenhouse.',
+      }),
+      yieldFormula: JSON.stringify({ baseYieldPerHaKg: 12000 }),
     },
   });
 
@@ -131,7 +145,9 @@ async function main() {
     data: {
       name: 'Melon Intanon Golden Sweet',
       cycleDays: 75,
-      sop: JSON.stringify({ perawatan: 'Pencegahan hama lalat buah, fertigasi otomatis, seleksi buah tunggal.' }),
+      sop: JSON.stringify({
+        perawatan: 'Pencegahan hama lalat buah, fertigasi otomatis, seleksi buah tunggal.',
+      }),
       yieldFormula: JSON.stringify({ baseYieldPerHaKg: 15000 }),
     },
   });
@@ -157,7 +173,7 @@ async function main() {
       landId: landA2.id,
       cropId: porang.id,
       startDate: new Date('2026-01-10'),
-      estimatedHarvest: new Date('2026-09-10'), // adjusted for shorter cycle
+      estimatedHarvest: new Date('2026-09-10'),
       status: 'PERAWATAN',
       totalCost: 35000000,
       totalYieldKg: 40000,
@@ -168,7 +184,7 @@ async function main() {
   console.log('✅ Cycles seeded');
 
   // 6. Inventory Items
-  const invPupuk = await prisma.inventory.create({
+  await prisma.inventory.create({
     data: {
       name: 'Pupuk NPK 16-16-16 & Kapur Dolomit',
       category: 'PUPUK',
@@ -180,7 +196,7 @@ async function main() {
     },
   });
 
-  const invBibit = await prisma.inventory.create({
+  await prisma.inventory.create({
     data: {
       name: 'Bibit Anggur Impor Shine Muscat',
       category: 'BIBIT',
@@ -194,7 +210,7 @@ async function main() {
 
   console.log('✅ Inventory seeded');
 
-  // 7. Purchase Orders (PO)
+  // 7. Purchase Orders (PO 3-Layer)
   await prisma.purchase.create({
     data: {
       poNumber: 'PO-2026-0804-01',

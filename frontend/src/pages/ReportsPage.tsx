@@ -1,41 +1,53 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { get5DReport } from '../services/api';
 import { useRole } from '../context/RoleContext';
 
-export const ReportsPage = () => {
+export const ReportsPage: React.FC = () => {
   const [reportData, setReportData] = useState<any[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const { role } = useRole();
+
+  const isKepalaKebun = role === 'KEPALA_KEBUN';
 
   const fallback5DData = [
     {
       id: 'REP-001',
+      category: 'OPS',
       timeSla: { timestamp: '2026-08-03T07:30:00Z', durationMinutes: 180 },
       location: { siteName: 'Blok A1 - Kebun Anggur Impor (1.000m² Jonggol)', soilType: 'Humus Organik Greenhouse' },
       personnel: { executorName: 'Joko Susilo (Teknisi Hortikultura)', supervisorName: 'Rahmat Hidayat (Kepala Kebun)' },
+      physicalOutput: 'Fertigasi 1.000m² & Sterilisasi Stek',
       financial: { opexEstimateRp: 1200000, opexDisbursedRp: 1200000 },
       output: { status: 'SELESAI (BAP TERBIT)', bapDocUrl: '#bap-2026-0801' },
     },
     {
       id: 'REP-002',
+      category: 'OPS',
       timeSla: { timestamp: '2026-08-01T08:00:00Z', durationMinutes: 360 },
       location: { siteName: 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)', soilType: 'Latosol Subur Jonggol Bogor' },
       personnel: { executorName: 'Joko Susilo (Teknisi Lapangan)', supervisorName: 'Budi Santoso, S.P. (Manajer)' },
+      physicalOutput: 'Pemupukan NPK 2.0 Ha & Tebar Dolomit',
       financial: { opexEstimateRp: 18000000, opexDisbursedRp: 18000000 },
       output: { status: 'SELESAI (BAP TERBIT)', bapDocUrl: '#bap-2026-0802' },
     },
     {
       id: 'REP-003',
+      category: 'SDM',
       timeSla: { timestamp: '2026-07-30T09:00:00Z', durationMinutes: 150 },
       location: { siteName: 'Blok B1 - Hortikultura Melon Premium (5.000m² Jonggol)', soilType: 'Aluvial Organik Jonggol' },
       personnel: { executorName: 'Siti Rahma (Petani Lapangan)', supervisorName: 'Rahmat Hidayat (Kepala Kebun)' },
+      physicalOutput: 'Pasang 25 Pheromone Trap & Seleksi Buah',
       financial: { opexEstimateRp: 350000, opexDisbursedRp: 350000 },
       output: { status: 'SELESAI (BAP TERBIT)', bapDocUrl: '#bap-2026-0730' },
     },
     {
       id: 'REP-004',
+      category: 'FINANCE',
       timeSla: { timestamp: '2026-07-28T13:00:00Z', durationMinutes: 150 },
       location: { siteName: 'Workshop & Bengkel Utama Jonggol', soilType: 'Fasilitas Alat & Mesin' },
       personnel: { executorName: 'M. Arifin (Mekanik Alat)', supervisorName: 'Budi Santoso, S.P. (Manajer)' },
+      physicalOutput: 'Ganti Oli Traktor Kubota & Filter Solar',
       financial: { opexEstimateRp: 650000, opexDisbursedRp: 650000 },
       output: { status: 'SELESAI (BAP TERBIT)', bapDocUrl: '#bap-2026-0728' },
     },
@@ -50,88 +62,234 @@ export const ReportsPage = () => {
           setReportData(fallback5DData);
         }
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
         setReportData(fallback5DData);
       });
   }, []);
 
   const handleExportCSV = () => {
-    alert(`Mengunduh Laporan Terpadu 5-Dimensi Auditor Terverifikasi Audit (PDF/Excel) untuk Peran: ${role}...`);
+    alert(`Mengunduh Laporan Terverifikasi Audit (PDF/Excel) untuk Peran: ${role}...`);
   };
+
+  const filteredReports = reportData.filter((item) => {
+    const matchCategory = activeCategory === 'ALL' || item.category === activeCategory;
+    const matchSearch =
+      item.location?.siteName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.personnel?.executorName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.id?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCategory && matchSearch;
+  });
+
+  const totalDisbursed = filteredReports.reduce((acc, curr) => acc + (curr.financial?.opexDisbursedRp || 0), 0);
 
   return (
     <div className="w-100 space-y-4">
-      {/* Header Banner */}
-      <div className="bg-white p-4 rounded-4 border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      {/* Header Banner - Role Contextual */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
-          <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
-            <i className="ri-shield-check-line me-1"></i> MODUL LAPORAN AUDITOR ENTERPRISE
-          </span>
-          <h2 className="page-header-title font-weight-bold text-dark mb-0">Laporan Terpadu 5-Dimensi Auditor Kebun</h2>
-          <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-            Siklus Penuh Operasional Hulu-ke-Hilir Berstandar Audit Transparansi Perkebunan Indonesia
+          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+            {isKepalaKebun
+              ? 'Laporan Operasional Lapangan & Berita Acara (BAP)'
+              : role === 'INVESTOR'
+              ? 'Laporan Akuntabilitas & Transparansi 5-Dimensi Investor'
+              : 'Laporan Terpadu 5-Dimensi Auditor Kebun'}
+          </h2>
+          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
+            {isKepalaKebun
+              ? 'Pemantauan durasi kerja SLA, pengawasan blok kebun, personel pelaksana, dan Berita Acara Pekerjaan (BAP)'
+              : 'Rekap siklus penuh operasional hulu-ke-hilir (Waktu/SLA, Lokasi, SDM, Biaya OPEX, & Output BAP)'}
           </p>
         </div>
+
         <button
           onClick={handleExportCSV}
-          className="tmp-btn bg-success text-white font-weight-bold px-3.5 py-2.5 rounded-3 border-0 d-inline-flex align-items-center gap-2 shadow-sm"
-          style={{ fontSize: 13 }}
+          className="btn btn-success text-white font-weight-bold px-3.5 py-2 rounded-3 border-0 d-inline-flex align-items-center gap-2 shadow-xs"
+          style={{ fontSize: 12.5 }}
         >
-          <i className="ri-download-cloud-2-line"></i> Ekspor Laporan PDF / Excel
+          <i className="ri-download-cloud-2-line"></i>
+          <span>Unduh Laporan BAP (PDF / Excel)</span>
         </button>
       </div>
 
-      {/* Main 5-Dimension Audit Table */}
-      <div className="bg-white rounded-4 border shadow-sm overflow-hidden p-4">
-        <div className="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
-          <h4 className="font-weight-bold text-dark m-0 d-flex align-items-center gap-2 !text-sm">
-            <i className="ri-shield-check-line text-success"></i> Matriks Audit 5-Dimensi Siklus Perkebunan (End-to-End)
+      {/* SUMMARY STATS (Role-Aware: Zero Financial data for Kepala Kebun) */}
+      <div className="row g-3">
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
+            <div>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Total Berkas BAP</span>
+              <strong className="text-dark font-weight-extrabold d-block my-0.5" style={{ fontSize: 20 }}>
+                {filteredReports.length} Dokumen BAP
+              </strong>
+              <span className="text-success font-weight-bold" style={{ fontSize: 11 }}>100% Lolos Verifikasi Lapangan</span>
+            </div>
+            <div className="corpox-icon-box emerald" style={{ width: 36, height: 36, fontSize: 16 }}>
+              <i className="ri-file-shield-line"></i>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Only show OPEX if NOT Kepala Kebun */}
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
+            {isKepalaKebun ? (
+              <>
+                <div>
+                  <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Kepatuhan Durasi SLA</span>
+                  <strong className="text-primary font-weight-extrabold d-block my-0.5" style={{ fontSize: 20 }}>
+                    100% Tepat Waktu
+                  </strong>
+                  <span className="text-primary font-weight-bold" style={{ fontSize: 11 }}>Rata-rata 3.2 Jam / Tugas</span>
+                </div>
+                <div className="corpox-icon-box blue" style={{ width: 36, height: 36, fontSize: 16 }}>
+                  <i className="ri-time-line"></i>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>Total Realisasi Dana OPEX</span>
+                  <strong className="text-dark font-weight-extrabold d-block my-0.5" style={{ fontSize: 20 }}>
+                    Rp {totalDisbursed.toLocaleString('id-ID')}
+                  </strong>
+                  <span className="text-primary font-weight-bold" style={{ fontSize: 11 }}>Tercatat di Jurnal Kas ERP</span>
+                </div>
+                <div className="corpox-icon-box blue" style={{ width: 36, height: 36, fontSize: 16 }}>
+                  <i className="ri-wallet-3-line"></i>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Card 3 */}
+        <div className="col-12 col-md-4">
+          <div className="card-box p-3.5 border bg-white rounded-4 shadow-sm h-100 d-flex justify-content-between align-items-center">
+            <div>
+              <span className="text-uppercase text-muted font-weight-bold d-block" style={{ fontSize: 11 }}>
+                {isKepalaKebun ? 'Status Pelaksanaan' : 'Integritas 5 Dimensi'}
+              </span>
+              <strong className="text-success font-weight-extrabold d-block my-0.5" style={{ fontSize: 20 }}>
+                {isKepalaKebun ? '100% Selesai' : 'Sempurna (5/5)'}
+              </strong>
+              <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>
+                {isKepalaKebun ? 'Semua Pekerjaan Tervalidasi' : 'Waktu, Lokasi, SDM, Biaya, BAP'}
+              </span>
+            </div>
+            <div className="corpox-icon-box emerald" style={{ width: 36, height: 36, fontSize: 16 }}>
+              <i className="ri-checkbox-circle-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FILTER & SEARCH CONTROLS */}
+      <div className="card-box p-3 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+        <div className="d-flex flex-wrap gap-1.5">
+          {[
+            { id: 'ALL', label: 'Semua Laporan' },
+            { id: 'OPS', label: '🌾 Operasional & Panen' },
+            ...(isKepalaKebun ? [] : [{ id: 'FINANCE', label: '💰 Keuangan & OPEX' }]),
+            { id: 'SDM', label: '👥 Tenaga Kerja SDM' },
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`btn btn-sm px-3 py-1 rounded-pill font-weight-bold transition ${
+                activeCategory === cat.id
+                  ? 'btn-success text-white shadow-xs'
+                  : 'btn-light text-secondary border-0'
+              }`}
+              style={{ fontSize: 12 }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="w-100 w-md-auto" style={{ minWidth: 240 }}>
+          <input
+            type="text"
+            placeholder="Cari lokasi blok / pelaksana / ID..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control form-control-sm p-2 rounded-3 bg-light border-0"
+            style={{ fontSize: 12 }}
+          />
+        </div>
+      </div>
+
+      {/* Main Audit Table */}
+      <div className="card-box p-4 rounded-4 bg-white border shadow-sm space-y-3">
+        <div className="d-flex justify-content-between align-items-center pb-2 border-bottom">
+          <h4 className="font-weight-bold text-dark m-0 !text-sm">
+            <i className="ri-shield-check-line text-success me-1.5"></i>
+            {isKepalaKebun ? 'Matriks Rekap Pekerjaan & Berita Acara Lapangan' : 'Matriks Laporan Terpadu 5-Dimensi'} ({filteredReports.length} Berkas)
           </h4>
-          <span className="badge bg-success-subtle text-success border border-success px-3 py-1 font-weight-bold" style={{ fontSize: 11 }}>
-            5D Auditor Standard Verified
+          <span className="badge bg-success-subtle text-success border border-success px-2.5 py-1 font-weight-bold rounded-pill" style={{ fontSize: 11 }}>
+            {isKepalaKebun ? 'BAP Terverifikasi' : '5D Auditor Verified'}
           </span>
         </div>
 
         <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0" style={{ fontSize: 13 }}>
+          <table className="table table-hover align-middle mb-0" style={{ fontSize: 12.5 }}>
             <thead className="table-light">
-              <tr>
-                <th style={{ minWidth: 160 }}><i className="ri-time-line text-success me-1"></i> 1. Waktu & SLA</th>
-                <th style={{ minWidth: 180 }}><i className="ri-map-pin-line text-primary me-1"></i> 2. Lokasi Kebun</th>
-                <th style={{ minWidth: 180 }}><i className="ri-user-3-line text-indigo me-1"></i> 3. Personel Lapangan</th>
-                <th style={{ minWidth: 180 }}><i className="ri-money-dollar-circle-line text-warning me-1"></i> 4. Finansial OPEX</th>
-                <th style={{ minWidth: 200 }}><i className="ri-article-line text-danger me-1"></i> 5. Output & Status</th>
+              <tr style={{ fontSize: 11.5 }}>
+                <th style={{ minWidth: 130 }}>1. WAKTU & SLA</th>
+                <th style={{ minWidth: 180 }}>2. LOKASI BLOK</th>
+                <th style={{ minWidth: 160 }}>3. SDM / PELAKSANA</th>
+                <th style={{ minWidth: 140 }}>
+                  {isKepalaKebun ? '4. HASIL KERJA FISIK' : '4. OPEX / DANA CAIR'}
+                </th>
+                <th style={{ minWidth: 140 }} className="text-end">5. STATUS & BAP</th>
               </tr>
             </thead>
             <tbody>
-              {reportData.map((row) => (
+              {filteredReports.map((row) => (
                 <tr key={row.id}>
                   <td>
-                    <strong className="d-block text-dark">{new Date(row.timeSla?.timestamp || row.createdAt || Date.now()).toLocaleDateString('id-ID')}</strong>
-                    <span className="text-secondary" style={{ fontSize: 11 }}>SLA Pengerjaan: <b>{row.timeSla?.durationMinutes || 120} Menit</b></span>
-                  </td>
-                  <td>
-                    <strong className="d-block text-dark">{row.location?.siteName || row.land?.name || 'Blok A1 - Kebun Anggur Impor'}</strong>
-                    <span className="text-secondary" style={{ fontSize: 11 }}>Jenis Tanah: {row.location?.soilType || 'Humus Organik Jonggol'}</span>
-                  </td>
-                  <td>
-                    <strong className="d-block text-dark">{row.personnel?.executorName || 'Joko Susilo (Teknisi)'}</strong>
-                    <span className="text-secondary" style={{ fontSize: 11 }}>PJ: {row.personnel?.supervisorName || 'Rahmat Hidayat (Kepala Kebun)'}</span>
-                  </td>
-                  <td>
-                    <span className="d-block text-dark">Pengajuan: <b>Rp {Number(row.financial?.opexEstimateRp || 1200000).toLocaleString('id-ID')}</b></span>
-                    <span className="text-success font-weight-bold" style={{ fontSize: 11 }}>Cair: Rp {Number(row.financial?.opexDisbursedRp || 1200000).toLocaleString('id-ID')}</span>
-                  </td>
-                  <td>
-                    <span className="badge bg-success text-white px-2.5 py-1 mb-1 font-weight-bold d-inline-block" style={{ fontSize: 11 }}>
-                      {row.output?.status || 'SELESAI (BAP TERBIT)'}
+                    <strong className="d-block text-dark font-mono" style={{ fontSize: 11.5 }}>{row.id}</strong>
+                    <span className="text-muted" style={{ fontSize: 11 }}>
+                      {new Date(row.timeSla?.timestamp || Date.now()).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </span>
-                    {row.output?.bapDocUrl && (
-                      <a href={row.output.bapDocUrl} onClick={(e) => { e.preventDefault(); alert(`Mengunduh Berita Acara Pekerjaan (BAP) Resmi ${row.id}...`); }} className="d-block text-primary font-weight-bold text-decoration-none cursor-pointer" style={{ fontSize: 11 }}>
-                        <i className="ri-attachment-line me-1"></i> Berita Acara Pekerjaan (BAP)
-                      </a>
+                    <span className="badge bg-light text-dark border d-block w-fit mt-1" style={{ fontSize: 10 }}>
+                      ⏱️ {row.timeSla?.durationMinutes} Menit
+                    </span>
+                  </td>
+                  <td>
+                    <strong className="d-block text-dark font-weight-bold" style={{ fontSize: 12.5 }}>{row.location?.siteName}</strong>
+                    <span className="text-secondary" style={{ fontSize: 11 }}>Tanah: {row.location?.soilType}</span>
+                  </td>
+                  <td>
+                    <strong className="d-block text-dark" style={{ fontSize: 12.5 }}>{row.personnel?.executorName}</strong>
+                    <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>SPV: {row.personnel?.supervisorName}</span>
+                  </td>
+                  <td>
+                    {isKepalaKebun ? (
+                      <span className="text-dark font-weight-medium" style={{ fontSize: 12 }}>
+                        🌱 {row.physicalOutput || 'Pekerjaan Selesai'}
+                      </span>
+                    ) : (
+                      <>
+                        <span className="d-block text-muted" style={{ fontSize: 10.5 }}>Realisasi OPEX:</span>
+                        <strong className="text-success font-mono font-weight-bold" style={{ fontSize: 13 }}>
+                          Rp {(row.financial?.opexDisbursedRp || 0).toLocaleString('id-ID')}
+                        </strong>
+                      </>
                     )}
+                  </td>
+                  <td className="text-end">
+                    <span className="badge bg-success-subtle text-success border border-success mb-1 d-inline-block font-weight-bold" style={{ fontSize: 10.5 }}>
+                      {row.output?.status}
+                    </span>
+                    <br />
+                    <button
+                      onClick={() => alert(`Membuka Berita Acara Pekerjaan (BAP) Digital: ${row.id}`)}
+                      className="btn btn-sm btn-outline-primary font-weight-bold px-2 py-0.5 rounded-2 d-inline-flex align-items-center gap-1"
+                      style={{ fontSize: 10.5 }}
+                    >
+                      <i className="ri-file-pdf-line text-danger"></i>
+                      <span>Unduh BAP</span>
+                    </button>
                   </td>
                 </tr>
               ))}
