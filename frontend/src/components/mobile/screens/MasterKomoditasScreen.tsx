@@ -45,7 +45,10 @@ export const MasterKomoditasScreen: React.FC<MasterKomoditasScreenProps> = ({ on
   ];
 
   return (
-    <div className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]">
+    <div
+      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+    >
       {/* Back Button */}
       <button
         type="button"
@@ -98,27 +101,27 @@ export const MasterKomoditasScreen: React.FC<MasterKomoditasScreenProps> = ({ on
             {/* Parameter Box */}
             <div className="grid grid-cols-2 gap-2 text-[10.5px] bg-[#F8FAF8] p-2.5 rounded-[12px] border border-[#E8F0EB]">
               <div>
-                <span className="text-[#6A7B73] block">⏳ Siklus Tanam:</span>
-                <strong className="text-[#11231D]">{item.cycle}</strong>
+                <span className="text-[#4B5563] font-semibold block text-[10px]">⏳ Siklus Tanam:</span>
+                <strong className="text-[#111827] font-bold block mt-0.5">{item.cycle}</strong>
               </div>
               <div>
-                <span className="text-[#6A7B73] block">🍯 Standar Kualitas:</span>
-                <strong className="text-[#0F5545]">{item.brixTarget}</strong>
+                <span className="text-[#4B5563] font-semibold block text-[10px]">🍯 Standar Kualitas:</span>
+                <strong className="text-[#065F46] font-extrabold block mt-0.5">{item.brixTarget}</strong>
               </div>
-              <div className="border-t border-[#E2EAE5] pt-1 mt-1">
-                <span className="text-[#6A7B73] block">⚖️ Potensi Hasil:</span>
-                <strong className="text-[#11231D]">{item.yieldEst}</strong>
+              <div className="border-t border-[#E2EAE5] pt-1.5 mt-0.5">
+                <span className="text-[#4B5563] font-semibold block text-[10px]">⚖️ Potensi Hasil:</span>
+                <strong className="text-[#111827] font-bold block mt-0.5">{item.yieldEst}</strong>
               </div>
-              <div className="border-t border-[#E2EAE5] pt-1 mt-1">
-                <span className="text-[#6A7B73] block">💰 Harga Offtaker:</span>
-                <strong className="text-[#2563EB]">{item.priceEst}</strong>
+              <div className="border-t border-[#E2EAE5] pt-1.5 mt-0.5">
+                <span className="text-[#4B5563] font-semibold block text-[10px]">💰 Harga Offtaker:</span>
+                <strong className="text-[#1D4ED8] font-extrabold block mt-0.5">{item.priceEst}</strong>
               </div>
             </div>
 
             {/* SOP Protocol */}
-            <div className="bg-[#E8F3ED]/60 p-2.5 rounded-[10px] border border-[#D0E5DA] text-[11px]">
-              <span className="font-extrabold text-[#0F5545] block mb-0.5">📋 Protokol SOP Singkat:</span>
-              <p className="text-[#234B3E] m-0 leading-relaxed">{item.sop}</p>
+            <div className="bg-[#E8F3ED] p-2.5 rounded-[10px] border border-[#C6E2D2] text-[11px]">
+              <span className="font-extrabold text-[#065F46] block mb-0.5 text-[10.5px]">📋 Protokol SOP Singkat:</span>
+              <p className="text-[#1B3E32] font-medium m-0 leading-relaxed text-[10.5px]">{item.sop}</p>
             </div>
           </div>
         ))}

@@ -18,130 +18,116 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
   const [isPOBottomSheetOpen, setIsPOBottomSheetOpen] = useState(false);
   const [isApprovalScreenOpen, setIsApprovalScreenOpen] = useState(false);
 
-  // 1. FITUR UTAMA & EKSEKUTIF
+  // 1. FITUR UTAMA & EKSEKUTIF (Deep Forest Emerald Glass)
   const mainFeatures: RoleModuleItem[] = [
     {
       id: 'dasbor',
       title: 'Dasbor',
       tileType: 'dasbor',
-      gradientStyle: 'bg-gradient-to-b from-[#09483A] via-[#05352A] to-[#02241C]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(5,53,42,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
-      statusDot: { text: 'Live', dotColor: 'bg-[#43D854]' },
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#022C22]',
+      statusDot: { text: 'Live', dotColor: 'bg-[#22C55E]' },
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN'],
     },
     {
       id: 'approval_po',
       title: 'Otorisasi PO',
       tileType: 'approval_po',
-      gradientStyle: 'bg-gradient-to-b from-[#2EB886] via-[#20946B] to-[#147050]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(32,148,107,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
-      statusDot: { text: '2 Pending', dotColor: 'bg-[#FF9800]' },
+      gradientStyle: 'bg-gradient-to-br from-[#059669] via-[#047857] to-[#064E3B]',
+      statusDot: { text: '2 Pending', dotColor: 'bg-[#F59E0B]' },
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER'],
     },
     {
       id: 'tanya_ai',
       title: 'Konsultan AI',
       tileType: 'tanya_ai',
-      gradientStyle: 'bg-gradient-to-b from-[#18B8A6] via-[#129485] to-[#0A6E62]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(18,148,133,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
-      statusDot: { text: 'AI', dotColor: 'bg-[#7C4DFF]' },
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#3B0764]',
+      statusDot: { text: 'AI', dotColor: 'bg-[#A855F7]' },
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER', 'KEPALA_KEBUN'],
     },
     {
       id: 'peta_gis',
       title: 'Peta GIS',
       tileType: 'peta_gis',
-      gradientStyle: 'bg-gradient-to-b from-[#78CB8D] via-[#5FB876] to-[#439A59]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(95,184,118,0.38),0_3px_6px_rgba(0,0,0,0.12)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#075985]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN'],
     },
   ];
 
-  // 2. KEUANGAN & MODAL
+  // 2. KEUANGAN & MODAL (Deep Forest Emerald with Warm Gold & Amber accents)
   const financeModules: RoleModuleItem[] = [
     {
       id: 'buku_kas',
       title: 'Arus Kas',
       tileType: 'buku_kas',
-      gradientStyle: 'bg-gradient-to-b from-[#105F49] via-[#0B4A38] to-[#063326]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(11,74,56,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#064E3B]',
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER'],
     },
     {
       id: 'alokasi_modal',
       title: 'Alokasi Modal',
       tileType: 'alokasi_modal',
-      gradientStyle: 'bg-gradient-to-b from-[#24A67B] via-[#198661] to-[#106649]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(25,134,97,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#78350F]',
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE'],
     },
     {
       id: 'kalkulator',
       title: 'Kalkulator HPP',
       tileType: 'kalkulator',
-      gradientStyle: 'bg-gradient-to-b from-[#16ACB0] via-[#0E8A8E] to-[#07686B]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(14,138,142,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#1E1B4B]',
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER'],
     },
     {
       id: 'laporan_audit',
       title: 'Laporan Audit',
       tileType: 'laporan_audit',
-      gradientStyle: 'bg-gradient-to-b from-[#1FA892] via-[#148875] to-[#0A6657]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(20,136,117,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#831843]',
       roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER'],
     },
   ];
 
-  // 3. OPERASIONAL & AGRONOMI KEBUN
+  // 3. OPERASIONAL & AGRONOMI KEBUN (Deep Forest Pine & Botanical Green)
   const opsModules: RoleModuleItem[] = [
     {
       id: 'siklus_lahan',
       title: 'Bukti 8 Tahap',
       tileType: 'siklus_lahan',
-      gradientStyle: 'bg-gradient-to-b from-[#7CC78C] via-[#61B473] to-[#459657]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(97,180,115,0.38),0_3px_6px_rgba(0,0,0,0.12)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#022C22]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'ktp_sampel',
       title: 'KTP Sampel',
       tileType: 'ktp_sampel',
-      gradientStyle: 'bg-gradient-to-b from-[#157E6B] via-[#0D5E4F] to-[#064237]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(13,94,79,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#1E1B4B]',
       statusDot: { text: 'QR Paspor', dotColor: 'bg-[#C8E86B]' },
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'scan_daun',
-      title: 'Scan Daun AI',
+      title: 'Scan Tumbuhan AI',
       tileType: 'scan_daun',
-      gradientStyle: 'bg-gradient-to-b from-[#56CCA3] via-[#3EB88E] to-[#269E75]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(62,184,142,0.38),0_3px_6px_rgba(0,0,0,0.12)]',
+      gradientStyle: 'bg-gradient-to-br from-[#059669] via-[#047857] to-[#365314]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'master_komoditas',
       title: 'Komoditas SOP',
       tileType: 'master_komoditas',
-      gradientStyle: 'bg-gradient-to-b from-[#4EB87E] via-[#33995E] to-[#1E7843]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(51,153,94,0.38),0_3px_6px_rgba(0,0,0,0.12)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#7C2D12]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'gudang',
       title: 'Stok Gudang',
       tileType: 'gudang',
-      gradientStyle: 'bg-gradient-to-b from-[#1B947E] via-[#127663] to-[#0A5748]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(18,118,99,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#164E63]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'FINANCE'],
     },
     {
       id: 'timbangan',
       title: 'Timbangan',
       tileType: 'timbangan',
-      gradientStyle: 'bg-gradient-to-b from-[#74C58B] via-[#5AB073] to-[#3E9256]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(90,176,115,0.38),0_3px_6px_rgba(0,0,0,0.12)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#0F172A]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI', 'FINANCE'],
     },
   ];
@@ -152,24 +138,21 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
       id: 'jadwal_tugas',
       title: 'Jadwal Tugas',
       tileType: 'jadwal_tugas',
-      gradientStyle: 'bg-gradient-to-b from-[#18B8A6] via-[#118A7D] to-[#096359]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(17,138,125,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#701A75]',
       roles: ['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'presensi_sdm',
       title: 'Presensi SDM',
       tileType: 'presensi_sdm',
-      gradientStyle: 'bg-gradient-to-b from-[#2EB886] via-[#1E9468] to-[#12704E]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(30,148,104,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#075985]',
       roles: ['DIREKTUR', 'MANAGER', 'FINANCE', 'KEPALA_KEBUN', 'PETANI'],
     },
     {
       id: 'kelola_user',
       title: 'Kelola User',
       tileType: 'kelola_user',
-      gradientStyle: 'bg-gradient-to-b from-[#09483A] via-[#05352A] to-[#02241C]',
-      shadowColor: 'shadow-[0_10px_22px_rgba(5,53,42,0.4),0_3px_6px_rgba(0,0,0,0.15)]',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#0F172A]',
       roles: ['DIREKTUR', 'MANAGER'],
     },
   ];
@@ -208,118 +191,113 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
 
   return (
     <div
-      className="min-h-full bg-[#F8FAF7] text-[#11231D] space-y-4 px-1.5 pb-6 antialiased"
+      className="min-h-full bg-[#FAFBF8] text-[#11231D] space-y-4 px-2 pb-6 antialiased"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Title & Subtitle */}
-      <div className="pt-1.5">
-        <h1 className="text-[25px] font-black text-[#11231D] tracking-[-0.03em] m-0 leading-tight">
-          Menu & Modul
-        </h1>
-        <p className="text-[13px] font-normal text-[#5A6D63] m-0 mt-1 leading-snug">
-          Semua kebutuhan AgroJaya dalam satu tempat
-        </p>
+      {/* Header Section (Compact Title Only) */}
+      <div className="pt-0.5">
+        <h2 className="text-[13px] font-bold text-[#11231D] m-0 leading-tight">
+          Menu & Layanan
+        </h2>
       </div>
 
-      {/* Modern Search Input */}
-      <div className="relative pt-0.5">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D8F85]">
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="7" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </div>
+      {/* Compact Global Search Input */}
+      <div className="relative flex items-center">
+        <span className="absolute left-2.5 flex items-center pointer-events-none text-[#5A6D63]" style={{ zIndex: 5 }}>
+          <i className="ri-search-2-line text-[13px]"></i>
+        </span>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Cari fitur atau laporan..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-[12px] bg-white border border-[#D9E3DC] text-[13px] font-medium text-[#11231D] placeholder:text-[#8E9F97] placeholder:font-normal outline-none focus:border-[#0F5545] focus:ring-1 focus:ring-[#0F5545] shadow-[0_1px_4px_rgba(0,0,0,0.03)] transition-all"
+          placeholder="Cari modul atau laporan..."
+          style={{ paddingLeft: '30px', paddingRight: '28px', height: '34px', fontSize: '11.5px' }}
+          className="w-full bg-white text-[#11231D] placeholder-[#8A9B92] rounded-[10px] font-medium border border-[#DDE5DF] shadow-2xs focus:outline-none focus:border-[#047857] focus:ring-1 focus:ring-[#047857] transition-all"
         />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery('')}
+            className="absolute right-2 text-[#8A9B92] hover:text-[#11231D] p-1 flex items-center cursor-pointer"
+            style={{ zIndex: 5 }}
+          >
+            <i className="ri-close-circle-fill text-[13px]"></i>
+          </button>
+        )}
       </div>
 
-      {/* SECTION 1: FITUR UTAMA */}
+      {/* SECTION 1: Fitur Utama & Eksekutif */}
       {visibleMain.length > 0 && (
-        <div className="space-y-2.5 pt-1">
-          <span className="text-[11.5px] font-black text-[#0B3B30] uppercase tracking-[0.06em] block px-0.5">
-            FITUR UTAMA & EKSEKUTIF
-          </span>
-          <div className="grid grid-cols-4 gap-y-3.5 gap-x-1.5">
+        <section className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-extrabold text-[#11231D] tracking-wider uppercase">
+              FITUR UTAMA & EKSEKUTIF
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
             {visibleMain.map((item) => (
-              <ServiceIconTile
-                key={item.id}
-                {...item}
-                onClick={handleTileClick}
-              />
+              <ServiceIconTile key={item.id} {...item} onClick={handleTileClick} />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* SECTION 2: KEUANGAN & MODAL */}
+      {/* SECTION 2: Keuangan & Modal */}
       {visibleFinance.length > 0 && (
-        <div className="space-y-2.5 pt-1">
-          <span className="text-[11.5px] font-black text-[#0B3B30] uppercase tracking-[0.06em] block px-0.5">
-            KEUANGAN & MODAL
-          </span>
-          <div className="grid grid-cols-4 gap-y-3.5 gap-x-1.5">
+        <section className="space-y-2 pt-1 border-t border-[#E8EEEA]">
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-[11px] font-extrabold text-[#11231D] tracking-wider uppercase">
+              KEUANGAN & MODAL
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
             {visibleFinance.map((item) => (
-              <ServiceIconTile
-                key={item.id}
-                {...item}
-                onClick={handleTileClick}
-              />
+              <ServiceIconTile key={item.id} {...item} onClick={handleTileClick} />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* SECTION 3: OPERASIONAL KEBUN */}
+      {/* SECTION 3: Operasional & Agronomi Kebun */}
       {visibleOps.length > 0 && (
-        <div className="space-y-2.5 pt-1">
-          <span className="text-[11.5px] font-black text-[#0B3B30] uppercase tracking-[0.06em] block px-0.5">
-            OPERASIONAL & AGRONOMI KEBUN
-          </span>
-          <div className="grid grid-cols-4 gap-y-3.5 gap-x-1.5">
+        <section className="space-y-2 pt-1 border-t border-[#E8EEEA]">
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-[11px] font-extrabold text-[#11231D] tracking-wider uppercase">
+              OPERASIONAL & AGRONOMI KEBUN
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
             {visibleOps.map((item) => (
-              <ServiceIconTile
-                key={item.id}
-                {...item}
-                onClick={handleTileClick}
-              />
+              <ServiceIconTile key={item.id} {...item} onClick={handleTileClick} />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* SECTION 4: SDM, TUGAS & TATA KELOLA */}
+      {/* SECTION 4: SDM & Tata Kelola */}
       {visibleAdmin.length > 0 && (
-        <div className="space-y-2.5 pt-1">
-          <span className="text-[11.5px] font-black text-[#0B3B30] uppercase tracking-[0.06em] block px-0.5">
-            SDM, TUGAS & TATA KELOLA
-          </span>
-          <div className="grid grid-cols-4 gap-y-3.5 gap-x-1.5">
+        <section className="space-y-2 pt-1 border-t border-[#E8EEEA]">
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-[11px] font-extrabold text-[#11231D] tracking-wider uppercase">
+              SDM & TATA KELOLA
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2">
             {visibleAdmin.map((item) => (
-              <ServiceIconTile
-                key={item.id}
-                {...item}
-                onClick={handleTileClick}
-              />
+              <ServiceIconTile key={item.id} {...item} onClick={handleTileClick} />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-
-
-      {/* ==================== MODULE BOTTOM SHEET (PROMPT 2) ==================== */}
+      {/* PO Bottom Sheet */}
       <ModuleBottomSheet
         isOpen={isPOBottomSheetOpen}
         onClose={() => setIsPOBottomSheetOpen(false)}
         onSelectSubmenu={handleSubmenuSelect}
       />
 
-      {/* ==================== APPROVAL LIST DETAIL SCREEN (PROMPT 3) ==================== */}
+      {/* Full-Screen Approval Screen Modal */}
       {isApprovalScreenOpen && (
         <ApprovalListScreen onBack={() => setIsApprovalScreenOpen(false)} />
       )}

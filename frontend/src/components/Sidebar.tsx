@@ -20,7 +20,7 @@ export const Sidebar = () => {
     { label: 'Presensi Harian', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['PETANI'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['PETANI'] },
     { label: 'SOP Komoditas', path: '/crops', icon: 'ri-plant-line', roles: ['PETANI'] },
-    { label: 'Scan Daun AI', path: '/ai-smart-farming', icon: 'ri-camera-lens-line', roles: ['PETANI'] },
+    { label: 'Scan Tumbuhan AI', path: '/ai-smart-farming', icon: 'ri-camera-lens-line', roles: ['PETANI'] },
 
     // --- KEPALA KEBUN MENU ---
     { label: 'Dasbor Supervisi', path: '/dashboard/kepala-kebun', icon: 'ri-dashboard-line', roles: ['KEPALA_KEBUN'] },
@@ -106,7 +106,7 @@ export const Sidebar = () => {
             <i className="ri-leaf-line"></i>
           </div>
           <div>
-            <h1 className="h6 font-weight-bold text-dark m-0 leading-tight !text-sm">Smart Farming ERP</h1>
+            <h1 className="h6 font-weight-bold text-dark m-0 leading-tight !text-sm">Smart Farm ERP</h1>
             <span className="text-success font-weight-bold d-block" style={{ fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Portal ERP Kebun</span>
           </div>
         </Link>

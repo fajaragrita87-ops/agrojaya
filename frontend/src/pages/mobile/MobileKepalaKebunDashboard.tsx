@@ -5,6 +5,7 @@ import { MobileMenuHubView } from '../../components/mobile/MobileMenuHubView';
 import { MobileProfileSettingsModal } from '../../components/mobile/MobileProfileSettingsModal';
 import { MobileNotificationsModal } from '../../components/mobile/MobileNotificationsModal';
 import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
+import { KtpSampelScreen } from '../../components/mobile/screens/KtpSampelScreen';
 import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapScreen';
 import { ScanDaunAiScreen } from '../../components/mobile/screens/ScanDaunAiScreen';
 import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKomoditasScreen';
@@ -22,6 +23,7 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
     | 'presensi'
     | 'ai'
     | 'peta_gis'
+    | 'ktp_sampel'
     | 'siklus_lahan'
     | 'scan_daun'
     | 'master_komoditas'
@@ -34,29 +36,30 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<string | null>(null);
-
-  const handleSimulateScan = () => {
-    setIsScanning(true);
-    setTimeout(() => {
-      setIsScanning(false);
-      setScanResult('Diagnostik AI: 96% Sehat (Defisiensi Mg ringan). Semprotkan pupuk MgSO4 2 gr/L besok pagi.');
-    }, 1000);
-  };
 
   return (
     <div
       className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
-      style={{ fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif" }}
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* 1. Header forest green #0B3B30 */}
-      <div
-        style={{ height: '48px', minHeight: '48px' }}
-        className="w-full bg-[#0B3B30] border-b border-[#14473B] px-3.5 flex items-center justify-between flex-shrink-0 z-20 shadow-xs antialiased"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0F5545] to-[#1FB88B] border border-white/25 flex items-center justify-center text-[#C8E86B] shadow-xs">
+      {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}
+      <div className="w-full bg-gradient-to-r from-[#064E3B] via-[#047857] to-[#065F46] rounded-b-[26px] px-4 py-4 min-h-[76px] flex items-center justify-between flex-shrink-0 z-20 shadow-[0_12px_28px_-6px_rgba(6,78,59,0.38)] relative overflow-hidden border-b border-white/15 antialiased">
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.15]"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 400 100"
+          preserveAspectRatio="none"
+        >
+          <path d="M-20 60 Q 40 10, 100 40 T 220 20 T 340 50 T 440 20" fill="none" stroke="#C8E86B" strokeWidth="1.2" strokeDasharray="4 3" />
+          <path d="M-10 85 Q 60 30, 140 70 T 280 40 T 420 80" fill="none" stroke="#FFFFFF" strokeWidth="1" opacity="0.8" />
+          <path d="M320 -10 C340 30, 390 40, 420 10 C390 60, 330 50, 320 -10 Z" fill="#C8E86B" opacity="0.6" />
+          <path d="M40 -15 C60 25, 110 35, 130 5 C100 45, 50 35, 40 -15 Z" fill="#A7F3D0" opacity="0.5" />
+          <circle cx="360" cy="50" r="18" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" strokeDasharray="2 2" />
+          <circle cx="80" cy="20" r="14" fill="none" stroke="#C8E86B" strokeWidth="0.8" opacity="0.4" />
+        </svg>
+
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="w-10 h-10 rounded-[13px] bg-gradient-to-tr from-[#0F5545] to-[#1FB88B] border border-white/30 flex items-center justify-center text-[#C8E86B] shadow-xs">
             <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round">
               <path d="M12 3C8 3 4 7 4 12c0 4 3 7 7 8 0-4 1-8 4-11 3-3 7-4 7-4s-1 4-4 7c-3 3-7 4-11 4" strokeWidth="1.75" />
               <path d="M4 17c3-1 6-1 9 1" strokeWidth="1.5" />
@@ -65,21 +68,20 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-1.5 leading-none">
-              <span className="font-extrabold text-[13.5px] tracking-tight text-white">AGROJAYA</span>
-              <span className="bg-[#C8E86B] text-[#08201A] font-extrabold text-[8.5px] px-1.5 py-0.5 rounded-[4px] tracking-wider uppercase shadow-2xs">
+              <span className="font-black text-[15px] tracking-tight text-white">SMART FARM</span>
+              <span className="bg-[#C8E86B] text-[#064E3B] font-black text-[9px] px-2 py-0.5 rounded-[5px] tracking-wider uppercase shadow-xs">
                 KEPALA KEBUN
               </span>
             </div>
-            <span className="text-[8px] text-[#A3D9C9] font-bold tracking-widest uppercase mt-0.5 block">
-              SUPERVISI AGRONOMI
+            <span className="text-[9.5px] text-[#A7F3D0] font-medium tracking-wide mt-1 block">
+              Supervisi Agronomi & Kesehatan Lahan
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {/* Live Sync Status Indicator */}
-          <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-bold text-[#C8E86B]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C8E86B] animate-pulse"></span>
+        <div className="flex items-center gap-1.5 relative z-10">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10.5px] font-extrabold text-[#C8E86B] shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-pulse"></span>
             <span>Live Sync</span>
           </span>
         </div>
@@ -87,47 +89,9 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
 
       {/* 2. Scrollable Body */}
       <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]">
-        {/* ==================== 1. SCAN DAUN ==================== */}
-        {activeTab === 'scan' && (
-          <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <div className="flex items-center justify-between pt-0.5">
-              <div>
-                <h1 className="font-extrabold text-[14px] text-[#17211E] tracking-tight m-0">
-                  Scan Daun & Diagnosa Hama
-                </h1>
-                <p className="text-[10px] text-[#5F6A65] m-0">Kamera AI deteksi dini defisiensi nutrisi & kutu daun.</p>
-              </div>
-              <span className="bg-[#E8F1EA] text-[#0F5545] text-[9.5px] font-bold px-2 py-0.5 rounded">
-                Live Sensor
-              </span>
-            </div>
-
-            <div className="bg-[#0B2F28] text-white rounded-[16px] p-3.5 text-center shadow-xs border border-[#14473B]">
-              <i className="ri-camera-lens-fill text-3xl text-[#C8E86B] mb-1.5 block"></i>
-              <h2 className="font-extrabold text-[13px] mb-0.5">Kamera AI Vision Lapangan</h2>
-              <p className="text-[10px] text-white/75 mb-3">
-                Arahkan lensa kamera pada permukaan daun yang berbercak.
-              </p>
-              <button
-                type="button"
-                onClick={handleSimulateScan}
-                disabled={isScanning}
-                className="w-full py-2 bg-[#C8E86B] text-[#0B2F28] font-extrabold text-[11.5px] rounded-[10px] cursor-pointer hover:bg-[#b5d859] transition-all shadow-xs"
-              >
-                {isScanning ? '🔍 Menganalisis Spektrum...' : '📸 Ambil Foto Daun AI'}
-              </button>
-            </div>
-
-            {scanResult && (
-              <div className="p-3 bg-white rounded-[14px] border border-[#0F5545] shadow-xs space-y-1.5 animate-in fade-in">
-                <div className="flex items-center gap-1.5 text-[#0F5545] font-extrabold text-[11px]">
-                  <i className="ri-checkbox-circle-fill"></i>
-                  <span>Hasil Rekomendasi Agronom AI</span>
-                </div>
-                <p className="text-[11px] text-[#17211E] m-0 leading-relaxed">{scanResult}</p>
-              </div>
-            )}
-          </div>
+        {/* ==================== 1. SCAN TUMBUHAN AI ==================== */}
+        {(activeTab === 'scan' || activeTab === 'scan_daun') && (
+          <ScanDaunAiScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 2. UJI TANAH ==================== */}
@@ -196,6 +160,7 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
             onSelectView={(viewId) => {
               if (viewId === 'dasbor' || viewId === 'scan_daun') setActiveTab('scan_daun');
               else if (viewId === 'peta_gis') setActiveTab('peta_gis');
+              else if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
               else if (viewId === 'siklus_lahan') setActiveTab('siklus_lahan');
               else if (viewId === 'master_komoditas') setActiveTab('master_komoditas');
               else if (viewId === 'gudang') setActiveTab('gudang');
@@ -203,7 +168,7 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
               else if (viewId === 'jadwal_tugas') setActiveTab('jadwal_tugas');
               else if (viewId === 'presensi_sdm') setActiveTab('presensi_sdm');
               else if (viewId === 'tanya_ai') setActiveTab('ai');
-              else if (viewId === 'ktp_pohon' || viewId === 'ktp_sampel') setShowTreeScanner(true);
+              else if (viewId === 'ktp_pohon') setShowTreeScanner(true);
             }}
           />
         )}
@@ -211,6 +176,9 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
         {/* ==================== 7. SCREENS ==================== */}
         {activeTab === 'peta_gis' && (
           <PetaGisMobileScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'ktp_sampel' && (
+          <KtpSampelScreen onBack={() => setActiveTab('menu_hub')} />
         )}
         {activeTab === 'siklus_lahan' && (
           <Bukti8TahapScreen onBack={() => setActiveTab('menu_hub')} />

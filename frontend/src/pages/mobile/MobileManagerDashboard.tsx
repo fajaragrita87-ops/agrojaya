@@ -1,77 +1,212 @@
 import React, { useState } from 'react';
-import { MobileDrawer } from '../../components/mobile/MobileDrawer';
+import { MobileMenuHubView } from '../../components/mobile/MobileMenuHubView';
+import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
+import { KtpSampelScreen } from '../../components/mobile/screens/KtpSampelScreen';
+import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapScreen';
+import { StokGudangScreen } from '../../components/mobile/screens/StokGudangScreen';
+import { KalkulatorHppScreen } from '../../components/mobile/screens/KalkulatorHppScreen';
+import { LaporanAuditScreen } from '../../components/mobile/screens/LaporanAuditScreen';
+import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKomoditasScreen';
+import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
+import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
+import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganPanenScreen';
+import { ScanDaunAiScreen } from '../../components/mobile/screens/ScanDaunAiScreen';
+import { AlokasiModalScreen } from '../../components/mobile/screens/AlokasiModalScreen';
+import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { MobileTreeScannerModal } from '../../components/mobile/MobileTreeScannerModal';
+import { useSmartFarmStore } from '../../store/smartFarmStore';
+
+type ManagerTab =
+  | 'menu_hub'
+  | 'tasklist'
+  | 'po'
+  | 'gudang'
+  | 'timbangan'
+  | 'ai'
+  | 'peta_gis'
+  | 'ktp_sampel'
+  | 'siklus_lahan'
+  | 'kalkulator'
+  | 'laporan_audit'
+  | 'master_komoditas'
+  | 'jadwal_tugas'
+  | 'presensi_sdm'
+  | 'scan_daun'
+  | 'alokasi_modal'
+  | 'kelola_user';
 
 export const MobileManagerDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'tasklist' | 'po' | 'gudang' | 'timbangan' | 'ai'>('tasklist');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [activeTab, setActiveTab] = useState<ManagerTab>('menu_hub');
+  const [showTreeScanner, setShowTreeScanner] = useState(false);
+
+  // Store integration
+  const { tasks, purchaseOrders, createPO, toggleTask } = useSmartFarmStore();
+
+  // New PO State
+  const [poTitle, setPoTitle] = useState('Pupuk Mikro MgSO4 & NPK (10 Sak)');
+  const [poVendor, setPoVendor] = useState('PT Petrokimia Kayaku');
+  const [poAmount, setPoAmount] = useState('4500000');
+  const [poCategory, setPoCategory] = useState<'Saprotan' | 'Bibit' | 'Pupuk' | 'Infrastruktur' | 'Alsintan'>('Pupuk');
+  const [poSuccessMsg, setPoSuccessMsg] = useState<string | null>(null);
+
+  // AI Chat Messages State for Manager
+  const [aiInput, setAiInput] = useState('');
+  const [aiMessages, setAiMessages] = useState<{ sender: 'user' | 'ai'; text: string; time: string }[]>([
+    {
+      sender: 'ai',
+      text: 'Selamat pagi, Pak Irfan (Manajer Ops). Dashboard operasional kebun Jonggol aktif. SLA mandor 92%.',
+      time: '08:00',
+    },
+  ]);
+
+  const handleSendMessage = (textToSend?: string) => {
+    const query = textToSend || aiInput;
+    if (!query.trim()) return;
+
+    const newMsg = { sender: 'user' as const, text: query, time: '08:05' };
+    setAiMessages((prev) => [...prev, newMsg]);
+    setAiInput('');
+
+    setTimeout(() => {
+      let reply = 'Operasional Kebun: Target pengerjaan harian tercatat 92% on-schedule.';
+      const q = query.toLowerCase();
+      if (q.includes('sla') || q.includes('tugas') || q.includes('mandor')) {
+        reply = 'SLA Mandor: Regu A (Kang Asep) menyelesaikan 100% penyiraman drip pagi. Regu B sedang pruning melon Blok A2.';
+      } else if (q.includes('po') || q.includes('pupuk') || q.includes('beli')) {
+        reply = 'Status PO: PO-026 (Pupuk Hayati Rp 28,5 Jt) telah lolos verifikasi Finance dan menunggu persetujuan Direktur & Investor.';
+      } else if (q.includes('panen') || q.includes('timbang') || q.includes('melon')) {
+        reply = 'Jadwal Panen: Panen raya Melon Golden Blok A (14,8 Ton) diprediksi 18 hari lagi. Timbangan digital siap di PKS.';
+      }
+
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: reply, time: '08:05' }]);
+    }, 500);
+  };
+
+  const handleCreatePOSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanAmount = parseInt(poAmount.replace(/[^0-9]/g, '')) || 4500000;
+    createPO({
+      title: poTitle,
+      vendor: poVendor,
+      amount: cleanAmount,
+      category: poCategory,
+      requester: 'Irfan Maulana (Manajer Ops)',
+    });
+    setPoSuccessMsg(`✅ PO "${poTitle}" (Rp ${cleanAmount.toLocaleString('id-ID')}) berhasil diajukan ke Keuangan!`);
+    setTimeout(() => setPoSuccessMsg(null), 4000);
+  };
 
   return (
     <div
       className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#071915] text-[#FAFBF8]"
-      style={{ fontFamily: "'Manrope', sans-serif" }}
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* 1. Sleek Compact Header */}
-      <div
-        style={{ height: '46px', minHeight: '46px' }}
-        className="w-full bg-[#071E19] border-b border-[#14473B] px-3 flex items-center justify-between flex-shrink-0 z-20 shadow-xs"
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-[7px] bg-[#C8E86B] text-[#051C16] flex items-center justify-center font-black text-sm shadow-xs">
+      {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}
+      <div className="w-full bg-gradient-to-r from-[#064E3B] via-[#047857] to-[#065F46] rounded-b-[26px] px-4 py-4 min-h-[76px] flex items-center justify-between flex-shrink-0 z-20 shadow-[0_12px_28px_-6px_rgba(6,78,59,0.38)] relative overflow-hidden border-b border-white/15 antialiased">
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.15]"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 400 100"
+          preserveAspectRatio="none"
+        >
+          <path d="M-20 60 Q 40 10, 100 40 T 220 20 T 340 50 T 440 20" fill="none" stroke="#C8E86B" strokeWidth="1.2" strokeDasharray="4 3" />
+          <path d="M-10 85 Q 60 30, 140 70 T 280 40 T 420 80" fill="none" stroke="#FFFFFF" strokeWidth="1" opacity="0.8" />
+          <path d="M320 -10 C340 30, 390 40, 420 10 C390 60, 330 50, 320 -10 Z" fill="#C8E86B" opacity="0.6" />
+          <path d="M40 -15 C60 25, 110 35, 130 5 C100 45, 50 35, 40 -15 Z" fill="#A7F3D0" opacity="0.5" />
+          <circle cx="360" cy="50" r="18" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" strokeDasharray="2 2" />
+          <circle cx="80" cy="20" r="14" fill="none" stroke="#C8E86B" strokeWidth="0.8" opacity="0.4" />
+        </svg>
+
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="w-10 h-10 rounded-[13px] bg-gradient-to-tr from-[#0F5545] to-[#1FB88B] border border-white/30 flex items-center justify-center text-[#C8E86B] shadow-xs text-lg">
             <i className="ri-building-2-fill"></i>
           </div>
           <div>
-            <span className="font-extrabold text-[11.5px] tracking-tight text-white block leading-none">
-              AGROJAYA <span className="text-[#C8E86B] font-bold text-[8.5px] ml-1">MANAJER OPS</span>
+            <div className="flex items-center gap-1.5 leading-none">
+              <span className="font-black text-[15px] tracking-tight text-white">SMART FARM</span>
+              <span className="bg-[#C8E86B] text-[#064E3B] font-black text-[9px] px-2 py-0.5 rounded-[5px] tracking-wider uppercase shadow-xs">
+                MANAJER OPS
+              </span>
+            </div>
+            <span className="text-[9.5px] text-[#A7F3D0] font-medium tracking-wide mt-1 block">
+              Operasional Lahan & Produksi
             </span>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsDrawerOpen(true)}
-          className="px-2 py-1 rounded-[6px] bg-white/10 hover:bg-white/20 text-[10.5px] font-bold text-white flex items-center gap-1 cursor-pointer transition-colors"
-        >
-          <i className="ri-menu-3-line"></i>
-          <span>Menu</span>
-        </button>
+        {/* Live Status Pill */}
+        <div className="flex items-center gap-1.5 relative z-10">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10.5px] font-extrabold text-[#C8E86B] shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-pulse"></span>
+            <span>Live Sync</span>
+          </span>
+        </div>
       </div>
 
       {/* 2. Scrollable Body */}
       <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]">
+        
         {/* ==================== 1. TASKLIST ==================== */}
         {activeTab === 'tasklist' && (
           <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <div className="flex items-center justify-between pt-0.5">
-              <div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('menu_hub')}
+              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+            >
+              <i className="ri-arrow-left-line"></i>
+              <span>Kembali ke Menu</span>
+            </button>
+            <div className="flex items-center justify-between gap-2 pt-0.5">
+              <div className="min-w-0 flex-1">
                 <h1 className="font-extrabold text-[14px] text-[#17211E] tracking-tight m-0">
-                  Tasklist Mandor Lapangan
+                  Tasklist Mandor
                 </h1>
-                <p className="text-[10px] text-[#5F6A65] m-0">SLA Tim Kebun: 92%</p>
+                <p className="text-[10.5px] text-[#4B5563] m-0 font-medium">
+                  {tasks.filter((t) => t.completed).length} dari {tasks.length} Selesai Dikerjakan
+                </p>
               </div>
-              <span className="text-[9.5px] font-semibold text-[#5F6A65] bg-white px-2 py-0.5 rounded border border-[#DDE5DF]">
-                27 Agu
-              </span>
+              <button
+                type="button"
+                onClick={() => setActiveTab('jadwal_tugas')}
+                className="text-[10.5px] font-extrabold px-3 py-1.5 rounded-[8px] bg-[#0F5545] hover:bg-[#0B3B30] text-white cursor-pointer shrink-0 shadow-xs active:scale-95 transition-all"
+              >
+                + Buat Tugas
+              </button>
             </div>
 
-            <div className="p-2.5 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-1">
-              <div className="flex justify-between items-center">
-                <strong className="text-[12px] text-[#17211E]">Blok A1: Pemupukan Drip NPK</strong>
-                <span className="bg-[#E8F1EA] text-[#0F5545] font-bold text-[9.5px] px-1.5 py-0.2 rounded">
-                  92% Selesai
-                </span>
-              </div>
-              <p className="text-[10px] text-[#5F6A65] m-0">Mandor: Pak Joko (8 Petani) • 400 Lubang</p>
-            </div>
-
-            <div className="p-2.5 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-1">
-              <div className="flex justify-between items-center">
-                <strong className="text-[12px] text-[#17211E]">Blok B2: Pemasangan Ajir Bambu</strong>
-                <span className="bg-[#FAF5EE] text-[#D68B21] font-bold text-[9.5px] px-1.5 py-0.2 rounded">
-                  Berjalan
-                </span>
-              </div>
-              <p className="text-[10px] text-[#5F6A65] m-0">Mandor: Pak Budi (6 Petani) • 250 Batang</p>
+            <div className="space-y-2">
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  onClick={() => toggleTask(task.id)}
+                  className={`p-2.5 rounded-[12px] border transition-all cursor-pointer space-y-1.5 ${
+                    task.completed
+                      ? 'bg-[#F0FDF4] border-[#86EFAC]'
+                      : 'bg-white border-[#DDE5DF] shadow-2xs hover:border-[#0F5545]'
+                  }`}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <strong
+                      className={`text-[12px] font-bold leading-snug ${
+                        task.completed ? 'text-[#1F2937] line-through decoration-[#059669]' : 'text-[#11231D]'
+                      }`}
+                    >
+                      {task.title}
+                    </strong>
+                    <span
+                      className={`font-bold text-[9.5px] px-2 py-0.5 rounded-full shrink-0 ${
+                        task.completed ? 'bg-[#DCFCE7] text-[#166534]' : 'bg-[#FAF5EE] text-[#D68B21]'
+                      }`}
+                    >
+                      {task.completed ? '✓ Selesai' : 'Berjalan'}
+                    </span>
+                  </div>
+                  <p className="text-[10.5px] text-[#374151] font-medium m-0">
+                    Pelaksana: <strong className="text-[#11231D] font-bold">{task.assignedTo}</strong> • {task.target}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -79,91 +214,250 @@ export const MobileManagerDashboard: React.FC = () => {
         {/* ==================== 2. AJUKAN PO ==================== */}
         {activeTab === 'po' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Pengajuan Belanja (PO)</h2>
-            <div className="p-3 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-2 text-[11px]">
+            <button
+              type="button"
+              onClick={() => setActiveTab('menu_hub')}
+              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+            >
+              <i className="ri-arrow-left-line"></i>
+              <span>Kembali ke Menu</span>
+            </button>
+            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Pengajuan Belanja Saprotan (PO)</h2>
+            <p className="text-[10px] text-[#5F6A65] m-0">
+              Pengajuan akan langsung diteruskan ke Tim Finance untuk verifikasi anggaran.
+            </p>
+
+            {poSuccessMsg && (
+              <div className="p-2 bg-[#E8F1EA] text-[#0F5545] rounded-[8px] text-[11px] font-bold border border-[#0F5545]/20">
+                {poSuccessMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleCreatePOSubmit} className="p-3 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-2 text-[11px]">
               <div>
-                <label className="block font-bold text-[#17211E] mb-1">Nama Kebutuhan</label>
+                <label className="block font-bold text-[#17211E] mb-0.5">Nama Kebutuhan / Barang</label>
                 <input
                   type="text"
-                  defaultValue="Pupuk Mikro MgSO4 & NPK (10 Sak)"
-                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px]"
+                  value={poTitle}
+                  onChange={(e) => setPoTitle(e.target.value)}
+                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
+                  required
                 />
               </div>
+
               <div>
-                <label className="block font-bold text-[#17211E] mb-1">Estimasi Biaya</label>
+                <label className="block font-bold text-[#17211E] mb-0.5">Vendor / Toko Pertanian</label>
                 <input
                   type="text"
-                  defaultValue="Rp 4.500.000"
-                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px]"
+                  value={poVendor}
+                  onChange={(e) => setPoVendor(e.target.value)}
+                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
+                  required
                 />
               </div>
-              {isSubmitted ? (
-                <div className="p-1.5 bg-[#E8F1EA] text-[#0F5545] rounded-[6px] text-[10.5px] font-bold text-center">
-                  ✅ Berhasil Diajukan ke Keuangan
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block font-bold text-[#17211E] mb-0.5">Estimasi Biaya (Rp)</label>
+                  <input
+                    type="number"
+                    value={poAmount}
+                    onChange={(e) => setPoAmount(e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
+                    required
+                  />
                 </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsSubmitted(true)}
-                  className="w-full py-2 bg-[#0F5545] text-white font-bold text-[11px] rounded-[6px] cursor-pointer"
-                >
-                  Kirim Pengajuan
-                </button>
-              )}
+                <div>
+                  <label className="block font-bold text-[#17211E] mb-0.5">Kategori</label>
+                  <select
+                    value={poCategory}
+                    onChange={(e) => setPoCategory(e.target.value as any)}
+                    className="w-full px-2 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[10.5px] font-medium bg-white"
+                  >
+                    <option value="Pupuk">Pupuk</option>
+                    <option value="Bibit">Bibit</option>
+                    <option value="Saprotan">Saprotan</option>
+                    <option value="Infrastruktur">Infrastruktur</option>
+                    <option value="Alsintan">Alsintan</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2 bg-[#0F5545] hover:bg-[#0B3B30] text-white font-bold text-[11.5px] rounded-[8px] cursor-pointer shadow-xs mt-1"
+              >
+                Kirim Pengajuan ke Keuangan
+              </button>
+            </form>
+
+            {/* Riwayat PO dari Store */}
+            <div className="bg-white rounded-[12px] p-3 border border-[#DDE5DF] shadow-2xs space-y-1.5">
+              <span className="font-extrabold text-[11.5px] text-[#17211E] block">Status Pengajuan PO Terkini</span>
+              <div className="space-y-1">
+                {purchaseOrders.slice(0, 4).map((po) => (
+                  <div key={po.id} className="p-2 rounded-[8px] bg-[#F8FAF8] border border-[#DDE5DF] flex justify-between items-center text-[10.5px]">
+                    <div>
+                      <strong className="block text-[#17211E]">{po.id}: {po.title}</strong>
+                      <span className="text-[#0F5545] font-bold">Rp {po.amount.toLocaleString('id-ID')}</span>
+                    </div>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white border border-[#DDE5DF] text-[#0F5545]">
+                      {po.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
         {/* ==================== 3. GUDANG ==================== */}
         {activeTab === 'gudang' && (
-          <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Stok Gudang Jonggol</h2>
-            <div className="bg-white rounded-[12px] p-3 border border-[#DDE5DF] shadow-2xs space-y-2 text-[11px]">
-              <div className="flex justify-between"><span>Pupuk NPK 16-16-16:</span><strong className="text-[#0F5545]">45 Sak (Aman)</strong></div>
-              <div className="flex justify-between"><span>Benih Melon Golden:</span><strong className="text-[#0F5545]">12 Pack (Aman)</strong></div>
-              <div className="flex justify-between"><span>Pestisida Nabati:</span><strong className="text-[#D68B21]">4 Botol (Restock)</strong></div>
-            </div>
-          </div>
+          <StokGudangScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 4. TIMBANGAN ==================== */}
         {activeTab === 'timbangan' && (
-          <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Jembatan Timbang PKS</h2>
-            <div className="p-2.5 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-1">
-              <div className="flex justify-between">
-                <span className="badge bg-[#0B2F28] text-white text-[8.5px] px-1.5 py-0.2 rounded font-bold">SLIP-WB-092</span>
-                <strong className="text-[13px] font-bold text-[#0F5545]">Netto: 8.420 Kg</strong>
-              </div>
-              <span className="text-[10px] text-[#5F6A65]">Truk B 9182 JYR • Melon Golden Grade A</span>
-            </div>
-          </div>
+          <TimbanganPanenScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 5. AI OPS ==================== */}
         {activeTab === 'ai' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
+            <button
+              type="button"
+              onClick={() => setActiveTab('menu_hub')}
+              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+            >
+              <i className="ri-arrow-left-line"></i>
+              <span>Kembali ke Menu</span>
+            </button>
             <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">AI Asisten Operasional</h2>
-            <div className="p-2.5 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs text-[11px] space-y-1.5">
-              <div>💡 <strong>SLA Tips:</strong> Tambah 2 orang di Blok B2 untuk pemasangan ajir sebelum hujan.</div>
-              <div>📦 <strong>Restock:</strong> Pesan pupuk MgSO4 3 hari sebelum fase pembuahan.</div>
+            
+            <div className="h-44 overflow-y-auto space-y-1.5 p-2 bg-[#FAFBF8] rounded-[10px] border border-[#DDE5DF]">
+              {aiMessages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={`p-2 rounded-[8px] text-[10.5px] ${
+                    m.sender === 'user' ? 'bg-[#0F5545] text-white ml-6' : 'bg-white text-[#17211E] mr-6 border border-[#DDE5DF]'
+                  }`}
+                >
+                  <p className="m-0">{m.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-1">
+              <input
+                type="text"
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                placeholder="Tanyakan SLA mandor, stok pupuk, jadwal panen..."
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                className="flex-1 px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] bg-white text-[#17211E]"
+              />
+              <button
+                type="button"
+                onClick={() => handleSendMessage()}
+                className="px-3 bg-[#0F5545] text-white font-bold text-[11px] rounded-[6px] cursor-pointer"
+              >
+                Kirim
+              </button>
             </div>
           </div>
         )}
+
+        {/* ==================== SCREEN MODUL LAINNYA ==================== */}
+        {activeTab === 'peta_gis' && (
+          <PetaGisMobileScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'ktp_sampel' && (
+          <KtpSampelScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'siklus_lahan' && (
+          <Bukti8TahapScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'kalkulator' && (
+          <KalkulatorHppScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'laporan_audit' && (
+          <LaporanAuditScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'master_komoditas' && (
+          <MasterKomoditasScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'jadwal_tugas' && (
+          <JadwalTasklistScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'presensi_sdm' && (
+          <PresensiUpahScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'scan_daun' && (
+          <ScanDaunAiScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'alokasi_modal' && (
+          <AlokasiModalScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'kelola_user' && (
+          <KelolaUserScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+
+        {/* ==================== 6. MENU HUB SUPER APP ==================== */}
+        {activeTab === 'menu_hub' && (
+          <MobileMenuHubView
+            onSelectView={(viewId) => {
+              if (viewId === 'dasbor' || viewId === 'jadwal_tugas') setActiveTab('jadwal_tugas');
+              else if (viewId === 'approval_po') setActiveTab('po');
+              else if (viewId === 'peta_gis') setActiveTab('peta_gis');
+              else if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
+              else if (viewId === 'siklus_lahan') setActiveTab('siklus_lahan');
+              else if (viewId === 'gudang') setActiveTab('gudang');
+              else if (viewId === 'timbangan') setActiveTab('timbangan');
+              else if (viewId === 'kalkulator') setActiveTab('kalkulator');
+              else if (viewId === 'laporan_audit') setActiveTab('laporan_audit');
+              else if (viewId === 'master_komoditas') setActiveTab('master_komoditas');
+              else if (viewId === 'presensi_sdm') setActiveTab('presensi_sdm');
+              else if (viewId === 'scan_daun') setActiveTab('scan_daun');
+              else if (viewId === 'alokasi_modal' || viewId === 'buku_kas') setActiveTab('alokasi_modal');
+              else if (viewId === 'tanya_ai') setActiveTab('ai');
+              else if (viewId === 'kelola_user') setActiveTab('kelola_user');
+              else if (viewId === 'ktp_pohon') setShowTreeScanner(true);
+            }}
+          />
+        )}
       </div>
 
-      {/* 3. Sleek Bottom Nav (Height: 54px) */}
+      {/* 3. Sleek Bottom Nav */}
       <div
         style={{
-          height: '54px',
-          minHeight: '54px',
+          height: '56px',
+          minHeight: '56px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
         }}
-        className="w-full bg-white border-t border-[#DDE5DF] px-1 shadow-md flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-1 shadow-md flex-shrink-0"
       >
+        {/* 1. Menu Hub Grid */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('menu_hub')}
+          style={{ background: 'transparent', border: 'none', outline: 'none' }}
+          className={`flex-1 flex flex-col items-center justify-center py-1 text-center cursor-pointer relative ${
+            activeTab === 'menu_hub' ? 'text-[#0F5545]' : 'text-[#5F6A65]'
+          }`}
+        >
+          <i className={`${activeTab === 'menu_hub' ? 'ri-apps-2-fill' : 'ri-apps-2-line'} text-[18px] leading-none mb-0.5`}></i>
+          <span className={`text-[9px] ${activeTab === 'menu_hub' ? 'font-extrabold text-[#0F5545]' : 'font-medium'}`}>
+            Menu
+          </span>
+          {activeTab === 'menu_hub' && (
+            <span className="w-4 h-0.5 rounded-full bg-[#82C341] absolute bottom-0.5 shadow-xs"></span>
+          )}
+        </button>
+
+        {/* 2. Tasklist */}
         <button
           type="button"
           onClick={() => setActiveTab('tasklist')}
@@ -178,6 +472,7 @@ export const MobileManagerDashboard: React.FC = () => {
           </span>
         </button>
 
+        {/* 3. Pengajuan PO */}
         <button
           type="button"
           onClick={() => setActiveTab('po')}
@@ -192,6 +487,7 @@ export const MobileManagerDashboard: React.FC = () => {
           </span>
         </button>
 
+        {/* 4. Gudang */}
         <button
           type="button"
           onClick={() => setActiveTab('gudang')}
@@ -206,6 +502,7 @@ export const MobileManagerDashboard: React.FC = () => {
           </span>
         </button>
 
+        {/* 5. Timbangan */}
         <button
           type="button"
           onClick={() => setActiveTab('timbangan')}
@@ -219,33 +516,12 @@ export const MobileManagerDashboard: React.FC = () => {
             Timbangan
           </span>
         </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('ai')}
-          style={{ background: 'transparent', border: 'none', outline: 'none' }}
-          className={`flex-1 flex flex-col items-center justify-center py-1 text-center cursor-pointer ${
-            activeTab === 'ai' ? 'text-[#0F5545]' : 'text-[#5F6A65]'
-          }`}
-        >
-          <i className="ri-sparkling-fill text-[18px] leading-none mb-0.5"></i>
-          <span className={`text-[9px] ${activeTab === 'ai' ? 'font-extrabold text-[#0F5545]' : 'font-medium'}`}>
-            AI Ops
-          </span>
-        </button>
       </div>
 
-      {/* Drawer */}
-      <MobileDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        onSelectView={(viewId) => {
-          if (viewId === 'tasklist' || viewId === 'dasbor') setActiveTab('tasklist');
-          else if (viewId === 'approval_po') setActiveTab('po');
-          else if (viewId === 'gudang') setActiveTab('gudang');
-          else if (viewId === 'timbangan') setActiveTab('timbangan');
-          else if (viewId === 'tanya_ai') setActiveTab('ai');
-        }}
+      {/* Full Modal Scanner Camera */}
+      <MobileTreeScannerModal
+        isOpen={showTreeScanner}
+        onClose={() => setShowTreeScanner(false)}
       />
     </div>
   );

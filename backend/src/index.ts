@@ -29,6 +29,22 @@ app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
 
+// Serve static frontend build if available
+const frontendDist = path.resolve(__dirname, '../../frontend/dist');
+app.use(express.static(frontendDist));
+
+// Fallback to index.html for SPA client-side routing
+app.get('*', (req: Request, res: Response, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(frontendDist, 'index.html'), (err) => {
+    if (err) {
+      next();
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

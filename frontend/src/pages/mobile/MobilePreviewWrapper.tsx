@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MobileInvestorDashboard } from './MobileInvestorDashboard';
 import { MobileFinanceDashboard } from './MobileFinanceDashboard';
 import { MobileDirekturDashboard } from './MobileDirekturDashboard';
@@ -7,11 +7,35 @@ import { MobileKepalaKebunDashboard } from './MobileKepalaKebunDashboard';
 import { MobilePetaniDashboard } from './MobilePetaniDashboard';
 import { Link } from 'react-router-dom';
 import { useRole, type RoleType } from '../../context/RoleContext';
+import { Capacitor } from '@capacitor/core';
 
-export const MobilePreviewWrapper: React.FC = () => {
+interface MobilePreviewWrapperProps {
+  isNative?: boolean;
+}
+
+export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNative: isNativeProp }) => {
   const { role, setRole } = useRole();
   const [activeScreen, setActiveScreen] = useState<RoleType>(role || 'INVESTOR');
   const [deviceFrame, setDeviceFrame] = useState<boolean>(true);
+  const [isMobileScreen, setIsMobileScreen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isNative = Capacitor.isNativePlatform();
+      const isSmallScreen = window.innerWidth <= 768;
+      setIsMobileScreen(Boolean(isNativeProp || isNative || isSmallScreen));
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [isNativeProp]);
+
+  useEffect(() => {
+    if (role) {
+      setActiveScreen(role);
+    }
+  }, [role]);
 
   const handleRoleSelect = (r: RoleType) => {
     setActiveScreen(r);
@@ -46,24 +70,34 @@ export const MobilePreviewWrapper: React.FC = () => {
     { id: 'PETANI', label: 'Petani Lapangan', icon: '🚜' },
   ];
 
+  // 1. IF ON REAL MOBILE / CAPACITOR / SCREEN <= 768px: RENDER FULL NATIVE SCREEN DIRECTLY
+  if (isMobileScreen) {
+    return (
+      <div className="w-full min-h-screen bg-[#FAFBF8] text-[#17211E] overflow-x-hidden" style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+        {renderActiveScreen()}
+      </div>
+    );
+  }
+
+  // 2. IF ON DESKTOP BROWSER: RENDER BEAUTIFUL INTERACTIVE SMARTPHONE SIMULATOR
   return (
     <div
       className="min-h-screen w-full bg-[#0A1412] text-white flex flex-col items-center justify-start py-4 px-3"
-      style={{ fontFamily: "'Manrope', sans-serif" }}
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* Top Header & Role Switcher Bar */}
       <div className="w-full max-w-[840px] bg-[#0E2822] border border-[#1C8361]/40 rounded-[18px] p-3.5 mb-4 shadow-xl flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Link
             to="/login"
-            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[12px] font-bold flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-[12px] font-bold flex items-center gap-1.5 transition-colors text-decoration-none"
           >
             <i className="ri-arrow-left-line"></i>
-            <span>Kembali ke Web</span>
+            <span>Kembali ke Login</span>
           </Link>
           <div>
             <h2 className="font-bold text-[14px] text-white m-0 leading-tight">
-              Simulator Mobile AgroJaya
+              Simulator Mobile Smart Farm
             </h2>
             <span className="text-[11px] text-[#7AE3B6]">
               Mode Aktif: {rolesConfig.find((r) => r.id === activeScreen)?.label}

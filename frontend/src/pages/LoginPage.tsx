@@ -7,48 +7,62 @@ export const LoginPage: React.FC = () => {
   const { role, setRole } = useRole();
 
   const [selectedRole, setSelectedRole] = useState<RoleType>(role || 'FINANCE');
-  const [email, setEmail] = useState('finance@agrojaya.com');
+  const [email, setEmail] = useState('finance@smartfarm.id');
   const [password, setPassword] = useState('finance123');
   const [rememberDevice, setRememberDevice] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 4 Primary Roles exactly matched from the Reference Design
-  const roleCards: { role: RoleType; label: string; email: string; pass: string; desc: string }[] = [
+  // All 6 Full Operational & Executive Roles
+  const roleCards: { role: RoleType; label: string; email: string; pass: string; desc: string; icon: string }[] = [
+    {
+      role: 'INVESTOR',
+      label: 'Pemodal / Investor',
+      email: 'investor@smartfarm.id',
+      pass: 'investor123',
+      desc: 'Transparansi Modal & ROI',
+      icon: 'ri-funds-box-line',
+    },
     {
       role: 'DIREKTUR',
       label: 'Direktur Utama',
-      email: 'direktur@agrojaya.com',
+      email: 'direktur@smartfarm.id',
       pass: 'admin123',
-      desc: 'Akses penuh',
+      desc: 'Otorisasi & Kebijakan',
+      icon: 'ri-vip-crown-line',
     },
     {
       role: 'FINANCE',
       label: 'Manajer Keuangan',
-      email: 'finance@agrojaya.com',
+      email: 'finance@smartfarm.id',
       pass: 'finance123',
-      desc: 'Keuangan & laporan',
+      desc: 'Verifikasi PO & Kas',
+      icon: 'ri-wallet-3-line',
     },
     {
       role: 'MANAGER',
-      label: 'Manajer Operasional',
-      email: 'manager@agrojaya.com',
+      label: 'Manajer Ops',
+      email: 'manager@smartfarm.id',
       pass: 'manager123',
-      desc: 'SLA & produksi',
+      desc: 'SLA Kebun & Produksi',
+      icon: 'ri-building-2-line',
     },
     {
       role: 'KEPALA_KEBUN',
       label: 'Kepala Kebun',
-      email: 'kepalakebun@agrojaya.com',
+      email: 'kepalakebun@smartfarm.id',
       pass: 'kebun123',
-      desc: 'Agronomi & sensor',
+      desc: 'Agronomi & Tugas',
+      icon: 'ri-plant-line',
     },
-  ];
-
-  // Secondary roles available via quick selector
-  const secondaryRoles: { role: RoleType; label: string; email: string; pass: string }[] = [
-    { role: 'INVESTOR', label: 'Pemodal / Investor', email: 'investor@agrojaya.com', pass: 'investor123' },
-    { role: 'PETANI', label: 'Mandor / Petani', email: 'petani@agrojaya.com', pass: 'petani123' },
+    {
+      role: 'PETANI',
+      label: 'Petani / Mandor',
+      email: 'petani@smartfarm.id',
+      pass: 'petani123',
+      desc: 'Eksekusi & Scan QR',
+      icon: 'ri-user-follow-line',
+    },
   ];
 
   const handleRoleSelect = (r: RoleType, em: string, pass: string) => {
@@ -66,68 +80,58 @@ export const LoginPage: React.FC = () => {
       setIsLoading(false);
       const targetPath = getDefaultPathForRole(selectedRole);
       navigate(targetPath);
-    }, 450);
+    }, 400);
   };
 
-  const activeRoleObj =
-    roleCards.find((p) => p.role === selectedRole) ||
-    secondaryRoles.find((p) => p.role === selectedRole);
+  const activeRoleObj = roleCards.find((p) => p.role === selectedRole);
 
   return (
     <div
-      className="h-screen w-screen max-h-screen overflow-hidden flex flex-col lg:flex-row bg-[#FBFBF6] selection:bg-[#0D5C47] selection:text-white"
-      style={{ fontFamily: "'Manrope', -apple-system, BlinkMacSystemFont, sans-serif" }}
+      className="min-h-screen w-full flex flex-col lg:flex-row bg-[#FBFBF6] selection:bg-[#0D5C47] selection:text-white"
+      style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}
     >
       {/* =========================================================================
-          KOLOM KIRI: 56% Desktop (100% Visual Asli Bersih dari Gambar Referensi)
-          Terkunci pas di layar tanpa scroll (h-full overflow-hidden)
+          KOLOM KIRI: Hero Image Bersih (Desktop: 52%, Mobile: Header Ringkas)
          ========================================================================= */}
-      <div className="w-full lg:w-[56%] h-[320px] lg:h-full relative overflow-hidden bg-[#072B20] flex-shrink-0">
+      <div className="w-full lg:w-[50%] h-[160px] sm:h-[200px] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden bg-[#072B20] flex-shrink-0">
         <img
-          src="/assets/login/left_hero_clean.png"
-          alt="Smart Farming Indonesia Hero"
-          className="w-full h-full object-cover object-left"
+          src="/assets/login/left_hero_bg.png"
+          alt="Smart Farming Kebun"
+          className="w-full h-full object-cover object-left-top"
         />
       </div>
 
       {/* =========================================================================
-          KOLOM KANAN: 44% Desktop
-          Form Ruang Kerja Interaktif Pas 1 Layar Penuh Tanpa Scroll
+          KOLOM KANAN: Form Login Responsif (Selalu Bisa Di-scroll & Tidak Terpotong)
          ========================================================================= */}
-      <div className="w-full lg:w-[44%] h-full overflow-hidden flex flex-col justify-between p-5 sm:p-6 lg:p-8 xl:px-12 xl:py-6 bg-[#FBFBF6] z-10">
-        {/* Top Header Link */}
-        <div className="flex justify-end items-center">
+      <div className="w-full lg:w-[50%] min-h-[calc(100vh-160px)] lg:min-h-screen flex flex-col justify-between p-4 sm:p-6 lg:p-10 xl:px-14 bg-[#FBFBF6] overflow-y-auto">
+        {/* Top Header Navigation */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-[11px] font-bold text-[#1C8361] uppercase tracking-wider">
+            Portal Akses Karyawan & Investor
+          </span>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#668177] hover:text-[#193E33] transition-colors"
+            className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#668177] hover:text-[#193E33] transition-colors"
           >
-            <i className="ri-arrow-left-line"></i> Kembali ke beranda
+            <i className="ri-arrow-left-line"></i> Kembali
           </Link>
         </div>
 
-        {/* Center Main Form Container (max-w-[456px]) */}
-        <div className="w-full max-w-[440px] mx-auto my-auto py-1">
-          {/* Overline & Heading */}
-          <div className="mb-3 text-left">
-            <span
-              className="block font-bold text-[10.5px] tracking-[1.2px] uppercase mb-0.5"
-              style={{ color: '#1C8361' }}
-            >
-              SATU AKSES UNTUK SELURUH MODUL
-            </span>
-            <h2
-              className="text-[28px] sm:text-[32px] leading-tight tracking-[-0.5px] text-[#193E33] mb-1"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontWeight: 400 }}
-            >
-              Masuk ke ruang kerja Anda.
-            </h2>
-            <p className="text-[12.5px] text-[#668177] leading-relaxed">
-              Gunakan kredensial Anda untuk melanjutkan ke Portal ERP Smart Farming.
+        {/* Center Main Form Container */}
+        <div className="w-full max-w-[420px] mx-auto my-auto py-2">
+          {/* Ringkas Heading */}
+          <div className="mb-3.5 text-left">
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#193E33] m-0">
+              Masuk ke Ruang Kerja
+            </h1>
+            <p className="text-[12px] text-[#668177] mt-0.5">
+              Pilih peran atau masukkan akun terdaftar Anda:
             </p>
           </div>
 
-          {/* 4-Role Cards Selector (2-Column Grid) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2.5">
+          {/* 6-Role Cards Selector (2-Column Grid) */}
+          <div className="grid grid-cols-2 gap-1.5 mb-3">
             {roleCards.map((card) => {
               const isSelected = selectedRole === card.role;
               return (
@@ -135,39 +139,36 @@ export const LoginPage: React.FC = () => {
                   key={card.role}
                   type="button"
                   onClick={() => handleRoleSelect(card.role, card.email, card.pass)}
-                  className={`w-full p-2 rounded-[8px] text-left flex items-center justify-between transition-all duration-200 ${
+                  className={`w-full p-2 rounded-[10px] text-left flex items-center justify-between transition-all duration-150 cursor-pointer ${
                     isSelected
-                      ? 'bg-[#F1FAF4] border-[1.5px] border-[#0D5C47] shadow-xs'
+                      ? 'bg-[#EBF7F2] border-[1.5px] border-[#0D5C47] shadow-xs'
                       : 'bg-white border border-[#DFE8DF] hover:border-[#1C8361]/50 hover:bg-[#FAFDFB]'
                   }`}
                 >
                   <div className="flex items-center gap-2 overflow-hidden">
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[13px] ${
-                        isSelected ? 'bg-[#D6EFE3] text-[#0D5C47]' : 'bg-[#F1FAF4] text-[#668177]'
+                      className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[12px] ${
+                        isSelected ? 'bg-[#0D5C47] text-white' : 'bg-[#EBF7F2] text-[#1C8361]'
                       }`}
                     >
-                      <i className="ri-leaf-line"></i>
+                      <i className={card.icon}></i>
                     </div>
                     <div className="overflow-hidden">
                       <strong
-                        className={`block text-[12px] leading-tight truncate ${
-                          isSelected ? 'text-[#193E33] font-bold' : 'text-[#193E33] font-medium'
+                        className={`block text-[11px] leading-tight truncate ${
+                          isSelected ? 'text-[#0D5C47] font-bold' : 'text-[#193E33] font-medium'
                         }`}
                       >
                         {card.label}
                       </strong>
-                      <span className="block text-[10.5px] text-[#668177] truncate mt-0.5">
+                      <span className="block text-[9.5px] text-[#668177] truncate">
                         {card.desc}
                       </span>
                     </div>
                   </div>
 
                   {isSelected && (
-                    <div
-                      className="w-[16px] h-[16px] rounded-full flex items-center justify-center text-white text-[10px] flex-shrink-0"
-                      style={{ backgroundColor: '#0D5C47' }}
-                    >
+                    <div className="w-3.5 h-3.5 rounded-full bg-[#0D5C47] text-white flex items-center justify-center text-[9px] flex-shrink-0">
                       <i className="ri-check-line font-bold"></i>
                     </div>
                   )}
@@ -176,42 +177,24 @@ export const LoginPage: React.FC = () => {
             })}
           </div>
 
-          {/* Quick toggle for Investor & Petani */}
-          <div className="flex items-center justify-end gap-2 mb-2.5 text-[11px] text-[#668177]">
-            <span>Peran Lainnya:</span>
-            {secondaryRoles.map((s) => (
-              <button
-                key={s.role}
-                type="button"
-                onClick={() => handleRoleSelect(s.role, s.email, s.pass)}
-                className={`px-2 py-0.5 rounded text-[10.5px] font-semibold transition-colors ${
-                  selectedRole === s.role
-                    ? 'bg-[#0D5C47] text-white'
-                    : 'bg-[#DFE8DF]/60 text-[#193E33] hover:bg-[#DFE8DF]'
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-2.5 text-left">
             {/* Email Field */}
             <div>
-              <label className="block text-[11.5px] font-semibold text-[#193E33] mb-1">
-                Email akun
+              <label className="block text-[11.5px] font-bold text-[#193E33] mb-1">
+                Email Akun
               </label>
               <div className="relative flex items-center">
-                <span className="absolute left-3 flex items-center pointer-events-none text-[#668177]">
+                <span className="absolute left-3 flex items-center pointer-events-none text-[#668177]" style={{ zIndex: 10 }}>
                   <i className="ri-mail-line text-[14px]"></i>
                 </span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-[40px] rounded-[8px] border border-[#DFE8DF] bg-white pl-9 pr-3.5 text-[13px] text-[#193E33] font-medium focus:outline-none focus:border-[#0D5C47] focus:ring-1 focus:ring-[#0D5C47] transition-all"
-                  placeholder="finance@agrojaya.com"
+                  className="w-full h-[40px] rounded-[8px] border border-[#DFE8DF] bg-white text-[13px] text-[#193E33] font-medium focus:outline-none focus:border-[#0D5C47] focus:ring-1 focus:ring-[#0D5C47] transition-all"
+                  style={{ paddingLeft: '38px', paddingRight: '14px' }}
+                  placeholder="nama@smartfarm.id"
                   required
                 />
               </div>
@@ -220,29 +203,34 @@ export const LoginPage: React.FC = () => {
             {/* Password Field */}
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="block text-[11.5px] font-semibold text-[#193E33]">
-                  Kata sandi
+                <label className="block text-[11.5px] font-bold text-[#193E33]">
+                  Kata Sandi
                 </label>
-                <span className="text-[11px] font-semibold text-[#1C8361] hover:text-[#0D5C47] cursor-pointer transition-colors">
-                  Lupa kata sandi?
+                <span
+                  onClick={() => alert('Petunjuk pemulihan kata sandi telah dikirimkan ke email Anda.')}
+                  className="text-[11px] font-semibold text-[#1C8361] hover:text-[#0D5C47] cursor-pointer transition-colors"
+                >
+                  Lupa sandi?
                 </span>
               </div>
               <div className="relative flex items-center">
-                <span className="absolute left-3 flex items-center pointer-events-none text-[#668177]">
+                <span className="absolute left-3 flex items-center pointer-events-none text-[#668177]" style={{ zIndex: 10 }}>
                   <i className="ri-lock-line text-[14px]"></i>
                 </span>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[40px] rounded-[8px] border border-[#DFE8DF] bg-white pl-9 pr-10 text-[13px] text-[#193E33] font-medium focus:outline-none focus:border-[#0D5C47] focus:ring-1 focus:ring-[#0D5C47] transition-all"
+                  className="w-full h-[40px] rounded-[8px] border border-[#DFE8DF] bg-white text-[13px] text-[#193E33] font-medium focus:outline-none focus:border-[#0D5C47] focus:ring-1 focus:ring-[#0D5C47] transition-all"
+                  style={{ paddingLeft: '38px', paddingRight: '40px' }}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   title={showPassword ? 'Sembunyikan sandi' : 'Lihat sandi'}
-                  className="absolute right-3 flex items-center text-[#668177] hover:text-[#0D5C47] transition-colors"
+                  className="absolute right-3 flex items-center text-[#668177] hover:text-[#0D5C47] transition-colors cursor-pointer"
+                  style={{ zIndex: 10 }}
                 >
                   <i className={showPassword ? 'ri-eye-off-line text-[#1C8361]' : 'ri-eye-line'}></i>
                 </button>
@@ -259,20 +247,20 @@ export const LoginPage: React.FC = () => {
                   className="w-3.5 h-3.5 rounded border-[#DFE8DF] text-[#0D5C47] focus:ring-[#0D5C47] cursor-pointer"
                   style={{ accentColor: '#0D5C47' }}
                 />
-                <span className="text-[12px] font-medium text-[#193E33]">
+                <span className="text-[11.5px] font-medium text-[#193E33]">
                   Ingat perangkat ini
                 </span>
               </label>
-              <span className="text-[11.5px] font-semibold text-[#1C8361] hover:text-[#0D5C47] cursor-pointer transition-colors">
-                Butuh bantuan?
+              <span className="text-[11px] text-[#668177]">
+                🔒 Terenkripsi SSL
               </span>
             </div>
 
-            {/* Main Full-Width Action CTA Button */}
+            {/* Main Action CTA Button - GUARANTEED FULLY VISIBLE & CLICKABLE ON MOBILE */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-[42px] rounded-[8px] text-white font-semibold text-[13px] flex items-center justify-center gap-2 shadow-xs transition-all duration-200 hover:-translate-y-[1px] active:scale-[0.98] mt-2.5"
+              className="w-full h-[44px] rounded-[10px] text-white font-bold text-[13.5px] flex items-center justify-center gap-2 shadow-sm transition-all duration-150 hover:-translate-y-[1px] active:scale-[0.98] mt-3 cursor-pointer"
               style={{
                 backgroundColor: '#0D5C47',
               }}
@@ -281,8 +269,8 @@ export const LoginPage: React.FC = () => {
             >
               {isLoading ? (
                 <>
-                  <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  <span>Menghubungkan ke Portal...</span>
+                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Menghubungkan...</span>
                 </>
               ) : (
                 <>
@@ -294,16 +282,16 @@ export const LoginPage: React.FC = () => {
           </form>
 
           {/* Security Note */}
-          <div className="flex items-center justify-center gap-1.5 mt-2.5 text-[11px] text-[#668177]">
-            <i className="ri-shield-check-line text-[#1C8361] text-[13px]"></i>
-            <span>Data Anda dilindungi dengan autentikasi terenkripsi.</span>
+          <div className="flex items-center justify-center gap-1.5 mt-3 text-[10.5px] text-[#668177]">
+            <i className="ri-shield-check-line text-[#1C8361]"></i>
+            <span>Data terlindungi dengan sistem keamanan berbasis peran.</span>
           </div>
         </div>
 
-        {/* Right Column Footer */}
-        <div className="flex justify-between items-center text-[11px] text-[#668177]">
-          <span>&copy; 2026 Smart Farming Indonesia</span>
-          <span className="cursor-pointer hover:text-[#193E33] transition-colors font-medium">ID⌄</span>
+        {/* Footer */}
+        <div className="flex justify-between items-center text-[10.5px] text-[#668177] mt-3 pt-2 border-t border-[#DFE8DF]/60">
+          <span>&copy; 2026 Smart Farm Indonesia</span>
+          <span className="font-semibold text-[#193E33]">ID / Indonesia</span>
         </div>
       </div>
     </div>

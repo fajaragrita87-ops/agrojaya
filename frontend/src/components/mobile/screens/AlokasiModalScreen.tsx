@@ -14,11 +14,14 @@ export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = ({ onBack }
 
   const shareHolders = [
     { name: 'Konsorsium Investor Utama', share: '65.0%', value: 'Rp 1.625.000.000', returnEst: 'Rp 487.500.000 (30% ROI)' },
-    { name: 'PT AgroJaya Nusantara (Pengelola)', share: '35.0%', value: 'Rp 875.000.000', returnEst: 'Bagi Hasil Kinerja' },
+    { name: 'PT Smart Farm Nusantara (Pengelola)', share: '35.0%', value: 'Rp 875.000.000', returnEst: 'Bagi Hasil Kinerja' },
   ];
 
   return (
-    <div className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]">
+    <div
+      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+    >
       {/* Back Button */}
       <button
         type="button"

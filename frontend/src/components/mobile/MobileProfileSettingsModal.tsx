@@ -88,7 +88,7 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
             <i className="ri-user-settings-fill text-[#C8E86B] text-lg"></i>
             <div>
               <strong className="text-[12.5px] text-white block leading-tight">Profil & Pengaturan Akun</strong>
-              <span className="text-[8.5px] text-[#A3D9C9]">AgroJaya Smart Farming Suite</span>
+              <span className="text-[8.5px] text-[#A3D9C9]">Smart Farm Suite</span>
             </div>
           </div>
           <button

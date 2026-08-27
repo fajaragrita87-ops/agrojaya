@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.agrojaya.smartfarming',
-  appName: 'AgroJaya Smart Farming',
+  appId: 'com.smartfarm.app',
+  appName: 'Smart Farm',
   webDir: 'dist',
   server: {
     androidScheme: 'https',

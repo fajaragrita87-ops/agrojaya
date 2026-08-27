@@ -131,11 +131,8 @@ export const InvestorLandingPage = () => {
             </div>
 
             <div className="col-lg-3 col-md-8 col-6 text-end d-flex align-items-center justify-content-end gap-2">
-              <Link to="/login" className="btn btn-sm btn-outline-success font-weight-bold px-3 py-2 rounded-3 d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12.5 }}>
+              <Link to="/login" className="btn btn-success text-white font-weight-bold px-3.5 py-2 rounded-3 d-inline-flex align-items-center gap-1.5 shadow-xs" style={{ fontSize: 13, backgroundColor: '#059669', borderColor: '#047857' }}>
                 <i className="ri-login-box-line"></i> Masuk Akun
-              </Link>
-              <Link to="/dashboard/investor" className="btn btn-primary-gradient px-3.5 py-2 text-white font-weight-extrabold rounded-3 shadow-xs d-inline-flex align-items-center gap-1.5" style={{ fontSize: 12.5 }}>
-                <i className="ri-dashboard-line !text-sm"></i> Portal Investor
               </Link>
             </div>
           </div>
@@ -150,15 +147,12 @@ export const InvestorLandingPage = () => {
               <div className="text-center mx-auto" style={{ maxWidth: '900px' }}>
                 <h1 className="font-weight-extrabold text-dark mb-4 text-center" style={{ fontSize: 'clamp(30px, 4vw, 48px)', lineHeight: 1.2, letterSpacing: '-1px' }}>
                   Portal Transparansi Investasi & Akuntabilitas Lahan <br />
-                  <span className="text-success" style={{ color: '#059669' }}>Perkebunan Agro Jaya</span>
+                  <span className="text-success" style={{ color: '#059669' }}>Perkebunan Smart Farm</span>
                 </h1>
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 pt-2 mb-2">
-                  <Link to="/dashboard/investor" className="btn btn-primary-gradient px-4 py-3 text-white rounded-3 font-weight-extrabold shadow-sm d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
-                    <i className="ri-funds-box-line !text-base"></i> Masuk Dasbor Investor
-                  </Link>
-                  <Link to="/login" className="btn btn-outline-success px-4 py-3 text-success font-weight-extrabold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
-                    <i className="ri-shield-user-line !text-base"></i> Masuk Akun ERP (6 Peran)
+                  <Link to="/login" className="btn btn-success px-4 py-3 text-white rounded-3 font-weight-extrabold shadow-sm d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5, backgroundColor: '#059669', borderColor: '#047857' }}>
+                    <i className="ri-shield-user-line !text-base"></i> Masuk Akun Sistem
                   </Link>
                   <button onClick={handleExportPDF} className="btn btn-outline-secondary px-4 py-3 text-dark font-weight-bold rounded-3 bg-white shadow-xs d-inline-flex align-items-center gap-2" style={{ fontSize: 13.5 }}>
                     <i className="ri-file-download-line !text-base"></i> Laporan Auditor 5D
@@ -304,7 +298,7 @@ export const InvestorLandingPage = () => {
                         ? 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1200&q=80'
                         : 'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1200&q=80'
                     }
-                    alt="Perkebunan AgroJaya"
+                    alt="Perkebunan Smart Farm"
                     className="w-100"
                     style={{ height: 380, objectFit: 'cover' }}
                   />

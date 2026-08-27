@@ -55,10 +55,11 @@ jobs:
         run: |
           cd frontend/android
           ./gradlew assembleDebug --no-daemon --stacktrace
+          cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/smart-farm.apk
 
       - name: 📤 Upload APK Artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: AgroJaya-SmartFarming-Debug-APK
-          path: frontend/android/app/build/outputs/apk/debug/app-debug.apk
+          name: Smart-Farm-APK
+          path: frontend/android/app/build/outputs/apk/debug/smart-farm.apk
           retention-days: 14

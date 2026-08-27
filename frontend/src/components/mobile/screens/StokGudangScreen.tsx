@@ -14,7 +14,10 @@ export const StokGudangScreen: React.FC<StokGudangScreenProps> = ({ onBack }) =>
   ];
 
   return (
-    <div className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]">
+    <div
+      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+    >
       {/* Back Button */}
       <button
         type="button"

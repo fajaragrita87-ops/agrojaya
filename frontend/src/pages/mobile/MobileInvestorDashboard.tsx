@@ -18,6 +18,8 @@ import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTask
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 
+import { useSmartFarmStore } from '../../store/smartFarmStore';
+
 export const MobileInvestorDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     | 'menu_hub'
@@ -44,7 +46,8 @@ export const MobileInvestorDashboard: React.FC = () => {
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
   const [showPOModal, setShowPOModal] = useState<string | null>(null);
-  const [approvedPOs, setApprovedPOs] = useState<string[]>(['PO-024']);
+
+  const { purchaseOrders, authorizePOByInvestor } = useSmartFarmStore();
 
   // AI Chat Messages State for Investor
   const [aiInput, setAiInput] = useState('');
@@ -82,48 +85,78 @@ export const MobileInvestorDashboard: React.FC = () => {
   };
 
   const handleApprovePO = (poId: string) => {
-    setApprovedPOs([...approvedPOs, poId]);
+    authorizePOByInvestor(poId);
     setShowPOModal(null);
   };
 
   return (
     <div
       className="w-full h-full flex flex-col justify-between overflow-hidden bg-[#F4F7F5] text-[#17211E]"
-      style={{ fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif" }}
+      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* 1. Header forest green #0B3B30 */}
-      <div
-        style={{ height: '48px', minHeight: '48px' }}
-        className="w-full bg-[#0B3B30] border-b border-[#14473B] px-3.5 flex items-center justify-between flex-shrink-0 z-20 shadow-xs antialiased"
-      >
-        <div className="flex items-center gap-2">
-          {/* Logo AgroJaya: Daun + Garis Kontur Lahan */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0F5545] to-[#1FB88B] border border-white/25 flex items-center justify-center text-[#C8E86B] shadow-xs">
+      {/* 1. Header Forest Emerald with Curved Corners & Subtle Batik/Botanical Silhouette Overlay */}
+      <div className="w-full bg-gradient-to-r from-[#064E3B] via-[#047857] to-[#065F46] rounded-b-[26px] px-4 py-4 min-h-[76px] flex items-center justify-between flex-shrink-0 z-20 shadow-[0_12px_28px_-6px_rgba(6,78,59,0.38)] relative overflow-hidden border-b border-white/15 antialiased">
+        {/* Subtle Batik & Botanical Leaf Veins Silhouette Background Overlay */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.15]"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 400 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M-20 60 Q 40 10, 100 40 T 220 20 T 340 50 T 440 20"
+            fill="none"
+            stroke="#C8E86B"
+            strokeWidth="1.2"
+            strokeDasharray="4 3"
+          />
+          <path
+            d="M-10 85 Q 60 30, 140 70 T 280 40 T 420 80"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="1"
+            opacity="0.8"
+          />
+          <path
+            d="M320 -10 C340 30, 390 40, 420 10 C390 60, 330 50, 320 -10 Z"
+            fill="#C8E86B"
+            opacity="0.6"
+          />
+          <path
+            d="M40 -15 C60 25, 110 35, 130 5 C100 45, 50 35, 40 -15 Z"
+            fill="#A7F3D0"
+            opacity="0.5"
+          />
+          <circle cx="360" cy="50" r="18" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.4" strokeDasharray="2 2" />
+          <circle cx="80" cy="20" r="14" fill="none" stroke="#C8E86B" strokeWidth="0.8" opacity="0.4" />
+        </svg>
+
+        {/* Brand & Role Identity */}
+        <div className="flex items-center gap-2.5 relative z-10">
+          <div className="w-10 h-10 rounded-[13px] bg-gradient-to-tr from-[#0F5545] to-[#1FB88B] border border-white/30 flex items-center justify-center text-[#C8E86B] shadow-xs">
             <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round">
-              {/* Leaf */}
               <path d="M12 3C8 3 4 7 4 12c0 4 3 7 7 8 0-4 1-8 4-11 3-3 7-4 7-4s-1 4-4 7c-3 3-7 4-11 4" strokeWidth="1.75" />
-              {/* Contour lines */}
               <path d="M4 17c3-1 6-1 9 1" strokeWidth="1.5" />
               <path d="M5 21c4-2 8-2 12 0" strokeWidth="1.5" />
             </svg>
           </div>
           <div>
             <div className="flex items-center gap-1.5 leading-none">
-              <span className="font-extrabold text-[13.5px] tracking-tight text-white">AGROJAYA</span>
-              <span className="bg-[#C8E86B] text-[#08201A] font-extrabold text-[8.5px] px-1.5 py-0.5 rounded-[4px] tracking-wider uppercase shadow-2xs">
+              <span className="font-black text-[15px] tracking-tight text-white">SMART FARM</span>
+              <span className="bg-[#C8E86B] text-[#064E3B] font-black text-[9px] px-2 py-0.5 rounded-[5px] tracking-wider uppercase shadow-xs">
                 INVESTOR
               </span>
             </div>
-            <span className="text-[8px] text-[#A3D9C9] font-bold tracking-widest uppercase mt-0.5 block">
-              PORTAL AKUNTABILITAS
+            <span className="text-[9.5px] text-[#A7F3D0] font-medium tracking-wide mt-1 block">
+              Transparansi & Kinerja Kebun
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {/* Live Sync Status Indicator */}
-          <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-bold text-[#C8E86B]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C8E86B] animate-pulse"></span>
+        {/* Live Status Pill */}
+        <div className="flex items-center gap-1.5 relative z-10">
+          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10.5px] font-extrabold text-[#C8E86B] shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-pulse"></span>
             <span>Live Sync</span>
           </span>
         </div>
@@ -268,7 +301,7 @@ export const MobileInvestorDashboard: React.FC = () => {
                     Rp 28.500.000 <span className="text-[8.5px] text-[#64746D] font-normal">• Disahkan Direktur</span>
                   </span>
                 </div>
-                {approvedPOs.includes('PO-026') ? (
+                {purchaseOrders.find((p) => p.id === 'PO-026')?.status === 'APPROVED' ? (
                   <span className="px-2 py-1 rounded-[8px] bg-[#E8F3ED] text-[#0F5545] font-extrabold text-[9.5px]">
                     ✅ Disetujui
                   </span>
@@ -335,7 +368,7 @@ export const MobileInvestorDashboard: React.FC = () => {
                 </div>
                 <strong className="text-[13px] font-black text-[#0F5545]">Rp 28,5 Jt</strong>
               </div>
-              {approvedPOs.includes('PO-026') ? (
+              {purchaseOrders.find((p) => p.id === 'PO-026')?.status === 'APPROVED' ? (
                 <div className="p-2 bg-[#E8F3ED] rounded-[8px] text-[10.5px] font-extrabold text-[#0F5545] text-center">
                   ✅ Dana Disetujui Investor
                 </div>
@@ -359,7 +392,7 @@ export const MobileInvestorDashboard: React.FC = () => {
                 </div>
                 <strong className="text-[13px] font-black text-[#0F5545]">Rp 41,2 Jt</strong>
               </div>
-              {approvedPOs.includes('PO-027') ? (
+              {purchaseOrders.find((p) => p.id === 'PO-027')?.status === 'APPROVED' ? (
                 <div className="p-2 bg-[#E8F3ED] rounded-[8px] text-[10.5px] font-extrabold text-[#0F5545] text-center">
                   ✅ Dana Disetujui Investor
                 </div>

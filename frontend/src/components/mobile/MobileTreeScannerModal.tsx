@@ -706,7 +706,7 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
                   <div className="flex justify-between items-start border-b border-[#DDE5DF] pb-1.5">
                     <div>
                       <span className="text-[8px] font-bold text-[#5F6A65] uppercase tracking-wider block">
-                        AGROJAYA TRACEABILITY
+                        SMART FARM TRACEABILITY
                       </span>
                       <strong className="text-[11.5px] text-[#17211E] block">Sertifikat Asal-Usul Mutu</strong>
                       <span className="text-[8.5px] text-[#5F6A65]">No: CERT/JGL/2026/0982</span>

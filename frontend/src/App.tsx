@@ -46,11 +46,22 @@ const RootRedirect: React.FC = () => {
   return <Navigate to={getDefaultPathForRole(role)} replace />;
 };
 
+import { Capacitor } from '@capacitor/core';
+
+const SmartRootRoute: React.FC = () => {
+  const isMobileApp = Capacitor.isNativePlatform() || (typeof window !== 'undefined' && window.innerWidth <= 768);
+  if (isMobileApp) {
+    return <MobilePreviewWrapper isNative={true} />;
+  }
+  return <InvestorLandingPage />;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<InvestorLandingPage />} />
+        <Route path="/" element={<SmartRootRoute />} />
+        <Route path="/landing" element={<InvestorLandingPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         {/* Dedicated Mobile App Routes & Simulator */}
