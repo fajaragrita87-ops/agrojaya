@@ -28,6 +28,8 @@ yarn-debug.log*
 .env*
 
 lucky/
+themeforest*/
+**/themeforest*
 
 # Database files (SQLite - jangan pernah masuk git!)
 *.db

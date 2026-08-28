@@ -30,7 +30,7 @@ export const callLiveAI = async (
   const groqKey =
     import.meta.env.VITE_GROQ_API_KEY ||
     (typeof window !== 'undefined' ? localStorage.getItem('groq_api_key') : null) ||
-    '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';
+    '';
 
   const geminiKey =
     import.meta.env.VITE_GEMINI_API_KEY ||
@@ -163,7 +163,7 @@ export const diagnoseCropWithAI = async (
   const groqKey =
     import.meta.env.VITE_GROQ_API_KEY ||
     (typeof window !== 'undefined' ? localStorage.getItem('groq_api_key') : null) ||
-    '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';
+    '';
 
   if (groqKey && groqKey.startsWith('gsk_')) {
     try {
