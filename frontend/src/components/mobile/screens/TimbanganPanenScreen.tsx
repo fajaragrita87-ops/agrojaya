@@ -1,13 +1,13 @@
 import React from 'react';
 
 interface TimbanganPanenScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const TimbanganPanenScreen: React.FC<TimbanganPanenScreenProps> = ({ onBack }) => {
+export const TimbanganPanenScreen: React.FC<TimbanganPanenScreenProps> = () => {
   const harvestBatches = [
     {
-      batchId: 'BATCH-JGL-2026-08A',
+      batchId: 'BATCH-HV-2026-08A',
       crop: 'Golden Melon Alisha (Blok A1)',
       date: '26 Agu 2026 • 10:15 WIB',
       totalWeight: '2.450 Kg',
@@ -18,7 +18,7 @@ export const TimbanganPanenScreen: React.FC<TimbanganPanenScreenProps> = ({ onBa
       grossRevenue: 'Rp 64.925.000',
     },
     {
-      batchId: 'BATCH-JGL-2026-07B',
+      batchId: 'BATCH-HV-2026-07B',
       crop: 'Golden Melon Alisha (Blok A2)',
       date: '20 Agu 2026 • 09:30 WIB',
       totalWeight: '3.950 Kg',
@@ -32,18 +32,9 @@ export const TimbanganPanenScreen: React.FC<TimbanganPanenScreenProps> = ({ onBa
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-gradient-to-br from-[#0F5545] to-[#04201A] text-white rounded-[18px] p-4 shadow-md border border-[#1FB88B]/30 relative overflow-hidden">

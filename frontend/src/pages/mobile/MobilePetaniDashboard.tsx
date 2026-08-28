@@ -146,20 +146,12 @@ export const MobilePetaniDashboard: React.FC = () => {
         {/* ==================== 1. TUGAS HARIAN & TASKLIST ==================== */}
         {activeTab === 'tugas' && (
           <div className="space-y-3 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <div className="flex items-center justify-between pt-0.5">
               <div>
                 <h1 className="font-extrabold text-[14px] text-[#17211E] tracking-tight m-0">
                   Tugas Harian Mandor
                 </h1>
-                <p className="text-[10px] text-[#5F6A65] m-0">Jadwal kerja harian kebun Jonggol Blok A & B.</p>
+                <p className="text-[10px] text-[#5F6A65] m-0">Jadwal kerja harian kebun Blok A & B.</p>
               </div>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[#047857] border border-[#047857]/20">
                 {tasks.filter(t => t.completed).length} / {tasks.length} Selesai
@@ -207,14 +199,6 @@ export const MobilePetaniDashboard: React.FC = () => {
         {/* ==================== 2. MASTER KOMODITAS & SOP ==================== */}
         {activeTab === 'sop' && (
           <div className="space-y-3 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <div className="pt-0.5">
               <h1 className="font-extrabold text-[14px] text-[#17211E] tracking-tight m-0">
                 SOP Komoditas & Dosis Perawatan
@@ -330,14 +314,6 @@ export const MobilePetaniDashboard: React.FC = () => {
         {/* ==================== 3. SCAN KTP POHON ==================== */}
         {activeTab === 'scan_ktp' && (
           <div className="space-y-3 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <div className="flex items-center justify-between pt-0.5">
               <div>
                 <h1 className="font-extrabold text-[13.5px] text-[#17211E] tracking-tight m-0">
@@ -370,7 +346,7 @@ export const MobilePetaniDashboard: React.FC = () => {
                   </div>
                   <div>
                     <strong className="text-[12px] text-white block leading-tight">
-                      {selectedTreeCode === 'SAMPLE-JGL-A2-0842' ? 'Melon Apollo (Ajir #18)' : 'Porang Super (Ajir #08)'}
+                      {selectedTreeCode === 'SAMPLE-TR-A2-0842' ? 'Melon Apollo (Ajir #18)' : 'Porang Super (Ajir #08)'}
                     </strong>
                     <span className="text-[9.5px] text-[#A3D9C9] font-mono">{selectedTreeCode}</span>
                   </div>
@@ -380,8 +356,8 @@ export const MobilePetaniDashboard: React.FC = () => {
                   onChange={(e) => setSelectedTreeCode(e.target.value)}
                   className="bg-black/30 border border-white/20 rounded-[6px] text-[10px] text-white px-2 py-1 outline-none"
                 >
-                  <option value="SAMPLE-JGL-A2-0842">Pohon Melon A2</option>
-                  <option value="SAMPLE-JGL-B1-0412">Pohon Porang B1</option>
+                  <option value="SAMPLE-TR-A2-0842">Pohon Melon A2</option>
+                  <option value="SAMPLE-TR-B1-0412">Pohon Porang B1</option>
                 </select>
               </div>
 
@@ -476,19 +452,11 @@ export const MobilePetaniDashboard: React.FC = () => {
         {/* ==================== 5. PRESENSI ABSEN ==================== */}
         {activeTab === 'absen' && (
           <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <div className="pt-0.5">
               <h1 className="font-extrabold text-[13.5px] text-[#17211E] tracking-tight m-0">
                 Presensi Mandor / Petani
               </h1>
-              <p className="text-[10px] text-[#5F6A65] m-0">Kebun Jonggol Blok A • Regu A</p>
+              <p className="text-[10px] text-[#5F6A65] m-0">Sentra Kebun Blok A • Regu A</p>
             </div>
 
             <div className="bg-white rounded-[14px] p-3 border border-[#DDE5DF] shadow-2xs text-center space-y-2">
@@ -542,14 +510,15 @@ export const MobilePetaniDashboard: React.FC = () => {
       {/* 3. Bottom Navigation Bar: Menu Modul, Scan QR, Notifikasi, Profil */}
       <div
         style={{
-          height: '56px',
-          minHeight: '56px',
+          height: '62px',
+          minHeight: '62px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          paddingBottom: 'env(safe-area-inset-bottom, 2px)',
         }}
-        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)] flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex-shrink-0"
       >
         {/* 1. Menu Modul (Super App Grid) */}
         <button

@@ -342,7 +342,7 @@ export const AiSmartFarmingPage = () => {
 
                   {plantResult.summary && (
                     <div className="p-2.5 bg-success-subtle rounded-3 border border-success text-success font-weight-bold" style={{ fontSize: 11.5 }}>
-                      📌 <b>Intinya:</b> {plantResult.summary}
+                      💡 {plantResult.summary.replace(/^intinya:\s*/i, '')}
                     </div>
                   )}
                 </div>
@@ -447,7 +447,7 @@ export const AiSmartFarmingPage = () => {
                   <p className="mb-0">💧 <b>Irigasi:</b> {soilResult.irrigationAdvice}</p>
                 </div>
                 <div className="p-2 bg-success-subtle rounded-2 text-success font-weight-bold mt-2" style={{ fontSize: 11 }}>
-                  📌 <b>Intinya:</b> {soilResult.executiveSummary}
+                  💡 {soilResult.executiveSummary?.replace(/^intinya:\s*/i, '')}
                 </div>
               </div>
             )}

@@ -38,7 +38,7 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
       id: 'OPEX-001',
       date: '2026-08-01',
       category: 'PUPUK_ORGANIK',
-      note: 'Pengadaan Pupuk NPK & Dolomit Kebun Jonggol (PO-2026-0801)',
+      note: 'Pengadaan Pupuk NPK & Dolomit Kebun Inti (PO-2026-0801)',
       type: 'EXPENSE',
       amount: 18000000,
       pic: 'Budi Santoso, S.P.',
@@ -52,7 +52,7 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
       note: 'Penjualan Perdana Anggur Impor Shine Muscat & Melon Intanon',
       type: 'REVENUE',
       amount: 42000000,
-      pic: 'Tim Pemasaran AgroJaya',
+      pic: 'Tim Pemasaran Smart Farming',
       location: 'Greenhouse Blok A1',
       bapNo: 'BAP-SALES-2026-0620',
     },
@@ -86,7 +86,7 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
           ...f,
           id: f.id || `TX-${idx + 1}`,
           pic: f.pic || 'Budi Santoso, S.P.',
-          location: f.location || 'Kebun Inti Jonggol',
+          location: f.location || 'Kebun Inti Sentra',
           bapNo: f.bapNo || `BAP-OPEX-2026-${100 + idx}`,
         }))
       : initialData
@@ -312,7 +312,7 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
                       <span className="text-muted font-monospace" style={{ fontSize: 10.5 }}>ID: {record.id}</span>
                     </td>
                     <td style={{ fontSize: 11.5 }}>
-                      <div className="text-dark font-weight-medium">{record.location || 'Kebun Jonggol'}</div>
+                      <div className="text-dark font-weight-medium">{record.location || 'Kebun Inti'}</div>
                       <span className="text-muted">PIC: {record.pic || 'Budi Santoso'}</span>
                     </td>
                     <td>
@@ -422,8 +422,8 @@ export const FinancialLedgerShowcase: React.FC<FinancialLedgerShowcaseProps> = (
                         <option value="Blok A2 - Lahan Porang (2.0 Ha)">Blok A2 - Lahan Porang (2.0 Ha)</option>
                         <option value="Blok B1 - Hortikultura Melon Premium">Blok B1 - Hortikultura Melon Premium</option>
                         <option value="Blok C1 - Cabai Rawit Ori 212">Blok C1 - Cabai Rawit Ori 212</option>
-                        <option value="Workshop & Gudang Jonggol">Workshop & Gudang Jonggol</option>
-                        <option value="Seluruh Blok Kebun Jonggol">Seluruh Blok Kebun Jonggol</option>
+                        <option value="Workshop & Gudang Utama">Workshop & Gudang Utama</option>
+                        <option value="Seluruh Blok Kebun Utama">Seluruh Blok Kebun Utama</option>
                       </select>
                     </div>
 

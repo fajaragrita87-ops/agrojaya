@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 declare const L: any;
 
 interface PetaGisMobileScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = ({ onBack }) => {
+export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const [activeLayer, setActiveLayer] = useState<'satellite' | 'street' | 'ndvi'>('satellite');
@@ -75,7 +75,7 @@ export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = ({ onBack
         const satLayer = L.tileLayer(
           'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
           {
-            attribution: 'Esri Satellite &copy; AgroJaya GIS',
+            attribution: 'Esri Satellite &copy; Smart Farming GIS',
             maxZoom: 19,
           }
         );
@@ -125,18 +125,9 @@ export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = ({ onBack
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-3.5 shadow-md border border-[#14473B] flex items-center justify-between">
@@ -145,7 +136,7 @@ export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = ({ onBack
             PETA SATELIT & TELEMETRI IOT
           </span>
           <h1 className="text-[17px] font-black tracking-tight mt-0.5 m-0 text-white">
-            GIS Kebun Inti Jonggol (2.0 Ha)
+            GIS Sentra Kebun Terpadu (2.0 Ha)
           </h1>
           <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
             GPS: -6.4697, 107.0544 • Sensor Tanah Terverifikasi

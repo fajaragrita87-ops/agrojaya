@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface StokGudangScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const StokGudangScreen: React.FC<StokGudangScreenProps> = ({ onBack }) => {
+export const StokGudangScreen: React.FC<StokGudangScreenProps> = () => {
   const stockItems = [
     { name: 'Pupuk Hayati Organik NPK', category: 'Pupuk & Nutrisi', qty: '1.200 Kg', minQty: '500 Kg', status: 'Aman', percent: 85, color: '#0F5545' },
     { name: 'Nutrisi Konsentrat AB Mix Melon', category: 'Pupuk & Nutrisi', qty: '450 Liter', minQty: '200 L', status: 'Aman', percent: 75, color: '#1FB88B' },
@@ -15,18 +15,9 @@ export const StokGudangScreen: React.FC<StokGudangScreenProps> = ({ onBack }) =>
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-4 shadow-md border border-[#14473B] flex items-center justify-between">
@@ -35,7 +26,7 @@ export const StokGudangScreen: React.FC<StokGudangScreenProps> = ({ onBack }) =>
             LOGISTIK & INVENTORI GUDANG
           </span>
           <h1 className="text-[17px] font-black tracking-tight mt-0.5 m-0 text-white">
-            Stok Gudang Sentral Jonggol
+            Stok Gudang Sentral Perkebunan
           </h1>
           <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
             Monitoring ketersediaan bahan baku, nutrisi, & benih

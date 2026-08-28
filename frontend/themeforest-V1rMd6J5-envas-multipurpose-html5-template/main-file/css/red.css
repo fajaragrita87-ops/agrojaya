@@ -1,0 +1,495 @@
+.cssload-inner.cssload-three, .cssload-inner.cssload-two{
+	border-color:#d02552;
+}
+.green_t{
+	color:#d02552;
+}
+
+/* ---------------- Button ---------------- */
+
+.btn-white:before{
+  background:#d02552;
+}
+.btn-green{
+  background:#d02552;
+  border-color:#d02552;
+}
+.btn-white:hover {
+  border-color:#d02552;
+}
+
+/* ---------------- wigdet ----------------  */
+ul.links li a:hover, ul.links li a:focus,
+.footer_small .breadcrumb li a:hover, .footer_small .breadcrumb li a:focus{ color:#d02552;}
+.widget .tags > li a:hover, .widget .tags > li a:focus{
+	border-color:#d02552;
+	color:#d02552;
+}
+.single_post .text a:hover, .single_post .text a:focus{
+	color:#d02552;
+}
+/*Pagination*/
+.pager li > a:hover, .pager li > a:focus, .pager li.active > a:hover{
+	background:#d02552;
+	border-color:#d02552;
+}
+.pager li.active > a{
+	background:#019bb6;
+	border-color:#019bb6;
+}
+
+/*Overlays*/
+.layout_second .overlay{
+	background:rgba(239,35,67, .8);
+}
+.overlay.white{
+	background:rgba(255,255,255, .8);
+}
+.service_wrap .overlay, #layout-project .overlay{
+	background:rgba(115,174,32, .8);
+}
+.overlay a.overlay_center:hover, .overlay a.overlay_center:focus{
+	background:#019bb6;
+}
+a.back-to:hover, a.back-to:focus{ background:#d02552;}
+
+
+
+
+/* ----------------- HEADER -----------------*/ 
+nav.navbar.bootsnav ul.nav > li.dropdown > .dropdown-toggle:hover,
+nav.navbar.bootsnav ul.nav > li.dropdown.on > .dropdown-toggle{
+	color:#d02552;
+}
+nav.navbar.bootsnav ul.nav > li > a.border:before{
+	background:#d02552;
+}
+.navbar.bootsnav .navbar-toggle{
+	color:#d02552;
+}
+
+
+/*Push Menu*/
+/*this is the nav*/
+.pushmenu{ 
+  border-top:5px solid #8ac832;
+}
+
+.pushmenu .push_nav > li > a:hover, .pushmenu  .push_nav > li > a:focus, 
+.pushmenu  .push_nav > li.active > a,
+#layout_bottom  nav.navbar.bootsnav ul.nav > li > a:hover,
+#layout_bottom  nav.navbar.bootsnav ul.nav > li > a:focus,
+#layout_bottom  nav.navbar.bootsnav ul.nav > li.active > a{
+	color:#d02552;
+}
+                                      
+
+/* ----------------- HEADER ----------------- */
+
+
+
+
+/* ----------------- Iconic Text Box  ----------------- */
+#info .text_box:hover span{
+	box-shadow: inset 0 0 0 5px #fff;
+	border:3px solid #d02552;
+	background:#d02552;
+}
+#info .text_box span.fill{
+  background:#d02552;
+  border: 3px solid #d02552;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+#info .text_box:hover span.fill{
+	box-shadow: inset 0 0 0 5px #fff;
+	border:3px solid #019BB6;
+	background:#019BB6;
+}
+#info .desc_box .readmore:hover, #info .desc_box .readmore:focus{
+	color:#ff9f1c;
+}
+.info .icon_box.blue i{
+	color: #d02552;
+}
+.info .icon_box i {
+  color: #00abc9;
+}
+.info .icon_box:hover{ background:#d02552; }
+.info .icon_box.blue:hover{ background:#00abc9; }
+
+/* ----------------- Iconic Text ends  ----------------- */
+
+
+
+
+/* ----------------- OWL Slider  ----------------- */
+.owl-controls .owl-page span:hover, .owl-controls .owl-page.active span{
+	background:#d02552;
+}
+.layout_second .owl-controls .owl-page span:hover, .layout_second .owl-controls .owl-page.active span{
+	background:#F89714 !important;
+}
+.layout_second .btn-border:before{
+  background:#F89714;
+  border-color:#F89714 !important;
+}
+#plan_slider{ position:relative;}
+#plan_slider .item{
+	padding-left:15px;
+	padding-right:15px;
+}
+#plan_slider .item, #plan_slider .item h2, #plan_slider .item p, 
+#plan_slider .item span, #plan_slider .item a{
+	-moz-transform:scale none !important;
+	-ms-transform:scale none !important;
+	-o-transform:scale none !important;
+	-webkit-transform:scale none !important;
+	transform:sscale none !important;
+}
+/* ----------------- OWL Slider ends  ----------------- */
+
+
+
+
+/* ----------------- News & Thoughts / Blog  & Our Team----------------- */
+.team_wrap:hover h3, .news:hover h4,
+.news ul.news_crumb li a:hover, .news ul.news_crumb li a:focus, .news a:hover, .news a:focus, 
+.blog_item:hover a, .blog_item:focus a{
+	color:#d02552;
+}
+/* ----------------- News & Thoughts ends ----------------- */
+
+
+
+/* ----------------- Page Header ----------------- */
+.page_linker .breadcrumb li a:hover, .page_linker .breadcrumb li a:focus, .page_linker .breadcrumb li.active{
+	color:#d02552;
+}
+/* ----------------- Page Header ends ----------------- */
+
+
+
+
+/* ----------------- About Us ----------------- */
+ul.check li > i{
+	color:#d02552;
+}
+/* ----------------- About Us ends ----------------- */
+
+
+
+
+/* ----------------- Layout Wraps ----------------- */
+
+#quality .right .media-object{
+  border:1px solid #d02552;
+}
+.media:hover .media-object{
+	background:#d02552;
+	border-color:#d02552;
+}
+
+/* ----------------- Layout Wraps Ends ----------------- */
+
+
+
+
+/* ----------------- Services ----------------- */
+.services  ul.tabs li:hover, .services ul.tabs li:focus, .services ul.tabs li.active{
+	background:#d02552;
+}
+.services_content .items > li > a.expanded:after,
+.services_content .items > li > a:hover::after{
+	background: #d02552;
+}
+/* ----------------- Services Ends ----------------- */
+
+
+
+/* ----------------- Projects ----------------- */
+.project_cap:hover h3 > a{
+	color:#d02552;
+}
+#project-filter .cbp-filter-item:after, #project-filter .cbp-filter-item.cbp-filter-item-active:after{
+	background:#d02552;
+}
+#project-filter .cbp-filter-item:hover, #project-filter .cbp-filter-item.cbp-filter-item-active{
+	color:#d02552;
+}
+#project .project_nav span:hover, #project .project_nav a:hover{
+	color:#d02552;
+}
+#project .project_nav a.grid_icon:hover, #project .project_nav a.grid_icon:focus{
+	background:#d02552;
+}
+
+/* ----------------- Projects Ends ----------------- */
+
+
+/* ----------------- Faq's ----------------- */
+#faq .accordion_title > a.active, #faq .accordion_title > a:hover, #faq .accordion_title > a:focus{
+  background: #019bb6;
+  color:#fff;
+  margin-bottom:10px;
+  border-color:#019bb6;
+}
+#faq .accordion_title > a.active i, #faq .accordion_title > a:hover i, #faq .accordion_title > a:focus i {
+  color: #019bb6;
+  background:#fff;
+}
+#faq .accordion_title > a i {
+	padding:3px 4px 2px 4px;
+	background:#019bb6;
+	border-radius:1px;
+	color:#fff;
+	margin:0;
+	top:50%;
+	position:absolute;
+	transform:translateY(-50%);
+	right:10px;
+}
+.content { border:1px solid #d9d9d9;}
+/* ----------------- Faq's ends ----------------- */
+
+
+
+/* ----------------- Comming Soon ----------------- */
+.comming_center .input-group-btn .btn-coming{
+	background:#d02552;
+}
+/* ----------------- Comming Soon ends ----------------- */
+
+
+
+/* ----------------- 404 ----------------- */
+#error{
+	position:relative;
+}
+#error .error_inner {
+  left: 50%;
+  position: relative;
+  -moz-transform: translate(-50%);
+  -ms-transform: translate(-50%);
+  -o-transform: translate(-50%);
+  -webkit-transform: translate(-50%);
+  transform: translate(-50%);
+}
+#error .content{
+	position:absolute;
+	left:50%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	display:block;
+	border:none;
+}
+#error .content h2{
+	font-size:55px;
+	line-height:1;
+}
+/* ----------------- 404 ends ----------------- */
+
+
+
+
+
+
+
+/* ----------------- Contact Info ----------------- */
+.bg_contact.bg_one{
+	background:url(../images/bg-contact.jpg) no-repeat;
+	background-position:center right;
+}
+.bg_contact.bg_two{
+	background:url(../images/bg-contact2.jpg) no-repeat;
+	background-position:center right;
+}
+.bg_contact.red{
+	background:url(../images/bg-contactRed.jpg) no-repeat;
+	background-position:center right;
+}
+
+/* ----------------- Contact Info Ends----------------- */
+
+
+
+/* ----------------- Footer ----------------- */
+.footer_top .footer_panel .media-body a:hover, .footer_top .footer_panel .media-body a:focus{
+	color:#d02552;
+}
+.footer_top.layout_second .footer_panel .media-body a:hover, 
+.footer_top.layout_second .footer_panel .media-body a:focus{
+	color:#ff9f1c;
+}
+.copyright{ background:#0a0a0b; }
+.copyright p{
+	color:#a6a6a6;
+	margin:20px 0;
+}
+.copyright.layout_second p a:hover, .copyright.layout_second p:focus{ color:#ef233c;}
+
+.footer_small{
+	padding:30px 0;
+}
+.footer_small .breadcrumb{
+	background:transparent;
+	padding:0;
+}
+.footer_small .breadcrumb li{
+	display:inline-block;
+}
+
+
+
+
+/*Responsive Layouts*/
+@media screen and (max-width: 1024px){
+.parallax_one, .parallax_two, #bg-video, .parallax_news, .parallax_bg_slider, .page_header{
+	 background-position:center center !important;
+}
+#about .number-counters .counters-item p.data > strong{
+  font-size: 40px;
+}
+#about .number-counters .counters-item p.data > sub{
+  font-size: 26px;
+}
+}
+
+@media screen and (max-width: 992px){
+ h2{
+	font-size:28px;
+}
+h3{
+	font-size:20px;
+}
+h4{
+	font-size:18px;
+}
+.topbar {
+	width:100%;
+	position:relative !important;
+	right:0 !important;
+}
+.attr-nav, .layout_second .attr-nav, #layout_bottom .attr-nav{
+	 left: 50%;
+	 position: absolute;
+	 right: auto;
+	 top: auto !important;
+	 -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+	 transform: translateX(-50%);
+	 margin-top: 12px;
+}
+nav.navbar.bootsnav .navbar-brand{
+	display: inline-block;
+	padding:10px 0;
+}
+nav.navbar.bootsnav .navbar-brand > img{
+	width:75%;
+}
+header.layout_fifth nav.bootsnav.brand-center .navbar-brand {
+  float: left;
+}
+header.layout_fifth .brand-center.no-background {
+  padding-top: 0;
+}
+nav.navbar.bootsnav ul.nav > li > a {
+  font-size:12px;
+  padding:10px 0 !important;
+  border-color:transparent;
+}
+nav.navbar.bootsnav ul.nav > li > a.border:before{
+	display:none;
+}
+#quality .quality_wrap .left{
+  top:0;
+  position:relative;
+  -moz-transform:none;
+  -ms-transform:none;
+  -o-transform:none;
+  -webkit-transform:none;
+  transform:none;
+}
+#quality .right {
+ padding:35px 15px;
+}
+.blog_item .media-left .media-object{
+	max-width:270px;
+}
+.page_header{ padding:80px 0;}
+#faq .accordion_title > a{
+	font-size:14px;
+}
+}
+@media screen and (max-width: 767px){
+.layout_first, .layout_sixth{
+	top:0;
+}
+.topbar, .attr-nav, #rev_slider_second p, .rev_slider p, .tparrows{
+	display:none;
+}
+/*  Good Plan */
+#plans .content_right{
+	top:0;
+	position:relative;
+	-moz-transform:none;
+	-ms-transform:none;
+	-o-transform:none;
+	-webkit-transform:none;
+	transform:none;
+	margin:0 15px 0px 15px;
+}
+#facts .number-counters .counters-item,
+#about .number-counters .counters-item{
+	padding:0 15px;
+}
+#facts .number-counters .counters-item p.data > strong {
+  font-size: 50px;
+}
+#facts .number-counters .counters-item p.data > sub{
+  font-size: 30px;
+}
+#bg-video .video{
+	margin-bottom:30px;
+}
+.page_header h1 {
+  font-size: 30px;
+}
+.services ul.tabs{
+	display:none;
+}
+.services .tab_drawer_heading{
+ 	display:block;
+}
+
+#map{ height:230px;}
+
+
+
+}
+@media screen and (max-width: 544px){
+	.do_media .media-body, .do_media .media-left, .blog_item .media-left, .blog_item .media-body{
+	  display: block;
+	}
+	.do_media .media-left .media-object, .blog_item .media-left .media-object{
+	  width: 100%;
+	}
+	.do_media .media-body, .blog_item .media-body{
+		width:auto;
+		padding-top:30px;
+	}
+	#clockdiv .count-inner span {
+		font-size: 30px;
+	 }
+	 .smalltext {
+	 font-size: 12px;
+  }
+
+}
+@media screen and (max-width: 479px){
+	.attr-nav {
+		display:none;
+  }
+}
+

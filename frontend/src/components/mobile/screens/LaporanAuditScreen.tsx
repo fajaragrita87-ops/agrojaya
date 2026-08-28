@@ -1,17 +1,17 @@
 import React from 'react';
 
 interface LaporanAuditScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const LaporanAuditScreen: React.FC<LaporanAuditScreenProps> = ({ onBack }) => {
+export const LaporanAuditScreen: React.FC<LaporanAuditScreenProps> = () => {
   const auditReports = [
     {
       id: 'AUD-2026-Q3-01',
       title: 'Audit Kesiapan Fisik Lahan & Irigasi Drip 2.0 Ha',
       date: '24 Agu 2026',
       sla: '48 Jam (Tepat Waktu)',
-      site: 'Site Jonggol • Blok A & B',
+      site: 'Sentra Kebun • Blok A & B',
       auditor: 'Ir. Hendra Gunawan, IPM (Surveyor Independen PT Sucofindo)',
       pic: 'Budi Santoso (Kepala Kebun)',
       financial: {
@@ -19,7 +19,7 @@ export const LaporanAuditScreen: React.FC<LaporanAuditScreenProps> = ({ onBack }
         realisasi: 'Rp 742.800.000',
         selisih: '+Rp 7.200.000 (Hemat 0.96%)',
       },
-      bapNumber: 'BAP-JGL-2026/08/24-IRG',
+      bapNumber: 'BAP-SF-2026/08/24-IRG',
       status: 'TERVERIFIKASI & SAH',
     },
     {
@@ -27,7 +27,7 @@ export const LaporanAuditScreen: React.FC<LaporanAuditScreenProps> = ({ onBack }
       title: 'Audit Pengadaan Benih Golden Melon F1 & Nutrisi AB Mix',
       date: '10 Agu 2026',
       sla: '24 Jam',
-      site: 'Site Jonggol • Gudang Logistik',
+      site: 'Sentra Kebun • Gudang Logistik',
       auditor: 'KAP Tanubrata & Rekan (Auditor Finansial)',
       pic: 'Rian Pratama (Manajer Pengadaan)',
       financial: {
@@ -35,25 +35,16 @@ export const LaporanAuditScreen: React.FC<LaporanAuditScreenProps> = ({ onBack }
         realisasi: 'Rp 488.500.000',
         selisih: '+Rp 11.500.000 (Sesuai PO)',
       },
-      bapNumber: 'BAP-JGL-2026/08/10-SEED',
+      bapNumber: 'BAP-SF-2026/08/10-SEED',
       status: 'TERVERIFIKASI & SAH',
     },
   ];
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-4 shadow-md border border-[#14473B] flex items-center justify-between">

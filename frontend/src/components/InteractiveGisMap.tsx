@@ -60,7 +60,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
 
       // Base tile layer
       const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap | Smart Farming Jonggol',
+        attribution: '&copy; OpenStreetMap | Smart Farming Indonesia',
         maxZoom: 19,
       });
 
@@ -78,7 +78,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
       });
 
       const marker = L.marker([parsedLat, parsedLng], { icon: redIcon, draggable: true }).addTo(map);
-      marker.bindPopup(`<b>Pusat GPS Kebun Jonggol</b><br>Lat: ${parsedLat.toFixed(6)}, Lng: ${parsedLng.toFixed(6)}`);
+      marker.bindPopup(`<b>Pusat GPS Lahan Perkebunan</b><br>Lat: ${parsedLat.toFixed(6)}, Lng: ${parsedLng.toFixed(6)}`);
       centerMarkerRef.current = marker;
 
       marker.on('dragend', () => {
@@ -111,7 +111,7 @@ export const InteractiveGisMap: React.FC<InteractiveGisMapProps> = ({
       });
     } else {
       newLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap | Smart Farming Jonggol',
+        attribution: '&copy; OpenStreetMap | Smart Farming Indonesia',
         maxZoom: 19,
       });
     }

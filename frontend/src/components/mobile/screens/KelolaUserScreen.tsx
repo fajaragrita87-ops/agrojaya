@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface KelolaUserScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const KelolaUserScreen: React.FC<KelolaUserScreenProps> = ({ onBack }) => {
+export const KelolaUserScreen: React.FC<KelolaUserScreenProps> = () => {
   const users = [
     { name: 'Dr. Ir. H. Bambang Soedibyo', role: 'DIREKTUR', email: 'direktur@agrojaya.id', status: 'Aktif • Full Access', badgeColor: 'bg-emerald-100 text-emerald-800' },
     { name: 'Konsorsium Investasi Batavia', role: 'INVESTOR', email: 'investor@agrojaya.id', status: 'Aktif • Read-Only Portofolio', badgeColor: 'bg-blue-100 text-blue-800' },
@@ -16,18 +16,9 @@ export const KelolaUserScreen: React.FC<KelolaUserScreenProps> = ({ onBack }) =>
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-4 shadow-md border border-[#14473B] flex items-center justify-between">

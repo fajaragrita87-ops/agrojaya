@@ -43,7 +43,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
     stepNumber: 1,
     title: 'Pembukaan & Pembabatan Lahan',
     subtitle: 'Pembersihan Semak Belukar Tropis & Sanitasi Lahan',
-    description: 'Pembersihan fisik vegetasi liar, pembabatan semak tropis, serta pemetaan batas topografi geofencing lokasi kebun Jonggol.',
+    description: 'Pembersihan fisik vegetasi liar, pembabatan semak tropis, serta pemetaan batas topografi geofencing lokasi sentra perkebunan.',
     kearifanLokalNotes: 'Penggunaan alat mekanis ramah lingkungan tanpa pembakaran lahan (Standar Tanpa Bakar Indonesia).',
     progressPercent: 100,
     status: 'SELESAI',

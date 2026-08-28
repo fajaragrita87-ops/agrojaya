@@ -214,7 +214,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex overflow-hidden">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-xs transition-opacity cursor-pointer animate-in fade-in duration-150"

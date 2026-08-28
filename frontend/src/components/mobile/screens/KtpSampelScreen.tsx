@@ -6,21 +6,23 @@ interface KtpSampelScreenProps {
   onBack?: () => void;
 }
 
-export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = ({ onBack }) => {
+export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
   const { treeSamples, addTreeLog } = useSmartFarmStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [activeMainTab, setActiveMainTab] = useState<'scanner' | 'ktp_view'>('scanner');
+  const [selectedTree, setSelectedTree] = useState<TreeSample>(treeSamples[0] || null);
+  const [ktpSubTab, setKtpSubTab] = useState<'kpi' | 'growth' | 'logs' | 'add_log'>('kpi');
+
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [selectedTree, setSelectedTree] = useState<TreeSample | null>(null);
-  const [activeTab, setActiveTab] = useState<'ktp' | 'input_log' | 'riwayat'>('ktp');
 
   // Form State for Field Maintenance Log
-  const [actionCategory, setActionCategory] = useState('PEMUPUKAN');
-  const [actionDetail, setActionDetail] = useState('Semprot Pupuk Mikro MgSO4 & Boron (2 gr/L)');
+  const [actionCategory, setActionCategory] = useState<'PENYIRAMAN' | 'PEMUPUKAN' | 'PRUNING' | 'HAMA'>('PEMUPUKAN');
+  const [actionDetail, setActionDetail] = useState('Nutrisi AB Mix Khusus (EC 2.2, pH 6.2) 2.0L / pohon');
   const [workerName, setWorkerName] = useState('Kang Asep (Regu A)');
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
@@ -50,10 +52,15 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = ({ onBack }) => {
   };
 
   useEffect(() => {
+    if (activeMainTab === 'scanner') {
+      startCamera();
+    } else {
+      stopCamera();
+    }
     return () => {
       stopCamera();
     };
-  }, []);
+  }, [activeMainTab]);
 
   const handleScanSample = (sample: TreeSample) => {
     setIsScanning(true);
@@ -61,8 +68,9 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = ({ onBack }) => {
       setIsScanning(false);
       stopCamera();
       setSelectedTree(sample);
-      setActiveTab('ktp');
-    }, 500);
+      setActiveMainTab('ktp_view');
+      setKtpSubTab('kpi');
+    }, 400);
   };
 
   const handleSaveLog = (e: React.FormEvent) => {
@@ -79,14 +87,23 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = ({ onBack }) => {
     };
 
     addTreeLog(selectedTree.code, newLog);
-    setSuccessMsg(`✅ Berhasil mencatat "${actionCategory}" untuk pohon ${selectedTree.code}.`);
+    setSuccessMsg(`✅ Berhasil mencatat "${actionCategory}" untuk ajir ${selectedTree.code}.`);
     setTimeout(() => setSuccessMsg(null), 3500);
-    setActiveTab('riwayat');
+    setKtpSubTab('logs');
+  };
+
+  const getCommodityEmoji = (name: string) => {
+    const lower = name.toLowerCase();
+    if (lower.includes('melon')) return '🍈';
+    if (lower.includes('porang')) return '🥔';
+    if (lower.includes('cabai') || lower.includes('cabe')) return '🌶️';
+    if (lower.includes('alpukat')) return '🥑';
+    return '🌿';
   };
 
   return (
     <div
-      className="space-y-3 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
       {/* Hidden File Input for Native Camera QR capture */}
@@ -99,403 +116,457 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = ({ onBack }) => {
         onChange={() => handleScanSample(treeSamples[0])}
       />
 
-      {/* Back Button */}
-      {onBack && (
+      {/* Segmented Main Navigation Tabs */}
+      <div className="bg-[#E8F1EA] p-1 rounded-[14px] flex items-center gap-1 shadow-2xs">
         <button
           type="button"
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
+          onClick={() => setActiveMainTab('scanner')}
+          className={`flex-1 py-2 rounded-[11px] text-[11.5px] font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            activeMainTab === 'scanner'
+              ? 'bg-[#0F5545] text-white shadow-sm'
+              : 'text-[#5F6A65] hover:text-[#0F5545]'
+          }`}
         >
-          <i className="ri-arrow-left-line text-sm"></i>
-          <span>Kembali ke Menu Utama</span>
+          <i className="ri-qr-scan-2-line text-sm"></i>
+          <span>Pindai QR Ajir</span>
         </button>
-      )}
 
-      {/* Header Info */}
-      <div className="bg-gradient-to-r from-[#064E3B] via-[#047857] to-[#065F46] rounded-[20px] p-4 text-white shadow-md border border-white/15 relative overflow-hidden">
-        <div className="flex justify-between items-start">
-          <div>
-            <span className="text-[9px] font-black uppercase tracking-wider text-[#C8E86B] block">
-              SCANNER LAPANGAN & KTP PASPOR DIGITAL
-            </span>
-            <h1 className="text-[15.5px] font-black tracking-tight mt-0.5 m-0 text-white leading-tight">
-              Pindai QR Barcode Ajir Pohon
-            </h1>
-            <p className="text-[10px] text-[#A7F3D0] m-0 mt-0.5">
-              Pindai ajir di bedengan untuk membuka KTP identitas dan mencatat perawatan harian
-            </p>
-          </div>
-          <span className="bg-[#C8E86B] text-[#064E3B] px-2.5 py-0.5 rounded-full text-[9px] font-black shrink-0 shadow-xs">
-            IoT Live Sync
-          </span>
-        </div>
+        <button
+          type="button"
+          onClick={() => setActiveMainTab('ktp_view')}
+          className={`flex-1 py-2 rounded-[11px] text-[11.5px] font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            activeMainTab === 'ktp_view'
+              ? 'bg-[#0F5545] text-white shadow-sm'
+              : 'text-[#5F6A65] hover:text-[#0F5545]'
+          }`}
+        >
+          <i className="ri-id-card-line text-sm"></i>
+          <span>KTP Paspor ({selectedTree ? getCommodityEmoji(selectedTree.variety) : 'Pohon'})</span>
+        </button>
       </div>
 
-      {/* Scanner Viewfinder Box */}
-      <div className="relative h-56 rounded-[20px] bg-black border border-[#14473B] flex flex-col items-center justify-center text-white overflow-hidden shadow-lg p-3 text-center">
-        {/* Live Video */}
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className={`absolute inset-0 w-full h-full object-cover ${isCameraActive ? 'opacity-100' : 'opacity-0'}`}
-        />
+      {/* ==================== TAB 1: SCANNER QR AJIR ==================== */}
+      {activeMainTab === 'scanner' && (
+        <div className="space-y-3 animate-in fade-in duration-150">
+          {/* High-Tech Futuristic HUD Viewfinder Box */}
+          <div className="relative h-72 rounded-[22px] bg-neutral-950 border-2 border-[#1FB88B]/40 flex flex-col items-center justify-center text-white overflow-hidden shadow-xl p-3 text-center">
+            {/* Live Video */}
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className={`absolute inset-0 w-full h-full object-cover ${isCameraActive ? 'opacity-100' : 'opacity-0'}`}
+            />
 
-        {/* Laser Viewfinder Animation */}
-        <div className="absolute inset-x-8 top-6 bottom-6 border-2 border-dashed border-[#C8E86B] rounded-[16px] flex items-center justify-center pointer-events-none z-10">
-          {isScanning ? (
-            <div className="w-full h-0.5 bg-[#C8E86B] shadow-[0_0_16px_#C8E86B] animate-pulse"></div>
-          ) : (
-            <span className="text-[9.5px] text-[#C8E86B] font-black bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-xs">
-              Area Scan Barcode QR
-            </span>
-          )}
-        </div>
+            {/* HUD Grid Overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
-        {!isCameraActive && (
-          <div className="relative z-10 flex flex-col items-center px-4">
-            <div className="w-11 h-11 rounded-full bg-white/10 border border-[#C8E86B]/40 flex items-center justify-center mb-1 text-[#C8E86B] text-xl">
-              <i className="ri-qr-code-line"></i>
+            {/* Glowing Corner Brackets */}
+            <div className="absolute top-4 left-4 w-7 h-7 border-t-2 border-l-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+            <div className="absolute top-4 right-4 w-7 h-7 border-t-2 border-r-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+            <div className="absolute bottom-4 left-4 w-7 h-7 border-b-2 border-l-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+            <div className="absolute bottom-4 right-4 w-7 h-7 border-b-2 border-r-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+
+            {/* Scan Reticle with Sweeping Laser */}
+            <div className="w-44 h-44 border border-white/20 rounded-[18px] flex items-center justify-center pointer-events-none relative z-10">
+              <div className="absolute inset-x-2 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#C8E86B] to-transparent shadow-[0_0_16px_#C8E86B] animate-pulse"></div>
+              <div className="w-2 h-2 rounded-full bg-[#C8E86B] shadow-[0_0_8px_#C8E86B]"></div>
             </div>
-            <strong className="text-[12px] text-white">Arahkan Kamera ke Ajir Bedengan</strong>
-            <span className="text-[9px] text-[#A7F3D0] max-w-[240px] mt-0.5">
-              Tekan tombol kamera untuk memindai plat QR fisik yang tertempel di tiang ajir
-            </span>
-            <div className="flex gap-2 mt-2.5">
+
+            {/* Top HUD Telemetry Tags */}
+            <div className="absolute top-3 inset-x-4 flex justify-between items-center text-[8.5px] font-mono text-[#C8E86B] z-20 pointer-events-none">
+              <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
+                🎯 QR TARGET DETECTED
+              </span>
+              <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
+                📍 GPS LOCKED
+              </span>
+            </div>
+
+            {!isCameraActive && (
+              <div className="relative z-10 flex flex-col items-center px-4">
+                <div className="w-12 h-12 rounded-full bg-white/10 border border-[#C8E86B]/30 flex items-center justify-center mb-2 text-[#C8E86B] text-2xl animate-pulse">
+                  <i className="ri-qr-code-line"></i>
+                </div>
+                <strong className="text-[12px] text-white">Arahkan Kamera ke Barcode Ajir Sampel</strong>
+                <span className="text-[9.5px] text-[#A3D9C9] max-w-[240px] mt-0.5">
+                  Pindai plat barcode di tiang ajir kebun untuk membuka KTP tanaman.
+                </span>
+              </div>
+            )}
+
+            {/* In-Camera Action Buttons */}
+            <div className="absolute bottom-3.5 inset-x-4 z-20 flex justify-center gap-2">
               <button
                 type="button"
-                onClick={startCamera}
-                className="px-3.5 py-1.5 bg-white/15 hover:bg-white/25 rounded-full text-[10px] font-bold text-white border border-white/20 cursor-pointer shadow-xs"
+                onClick={() => handleScanSample(selectedTree || treeSamples[0])}
+                className="py-2.5 px-6 rounded-full bg-[#C8E86B] hover:bg-[#b8d85c] text-[#08201A] font-black text-[12px] cursor-pointer shadow-lg active:scale-95 transition-all flex items-center gap-2"
               >
-                📷 Buka Kamera Live
+                <i className="ri-qr-scan-line text-sm"></i>
+                <span>{isScanning ? 'Membaca QR...' : '📸 Pindai Barcode Ajir'}</span>
               </button>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3.5 py-1.5 bg-[#C8E86B] hover:bg-[#b8d85c] rounded-full text-[10px] font-black text-[#061E18] cursor-pointer shadow-xs"
+                className="py-2.5 px-3.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md text-white font-bold text-[11px] border border-white/30 cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-95"
               >
-                📸 Ambil Foto QR
+                <i className="ri-camera-fill text-sm"></i>
+                <span>Galeri</span>
               </button>
             </div>
           </div>
-        )}
 
-        {isCameraActive && (
-          <div className="absolute bottom-2.5 inset-x-4 z-20 flex justify-center">
-            <button
-              type="button"
-              onClick={() => handleScanSample(treeSamples[0])}
-              className="px-4 py-1.5 rounded-full bg-[#C8E86B] text-[#061E18] text-[11px] font-black shadow-lg cursor-pointer flex items-center gap-1.5 active:scale-95 transition-transform"
-            >
-              <i className="ri-qr-scan-line text-sm"></i>
-              <span>Pindai Barcode Sekarang</span>
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Quick Select Detected Ajir Pins */}
-      <div className="space-y-1.5">
-        <div className="flex justify-between items-center px-0.5">
-          <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545]">
-            AJIR SAMPEL TERDETEKSI DI LAHAN:
-          </span>
-          <span className="text-[9px] font-bold text-[#6A7B73]">
-            {treeSamples.length} Pohon Aktif
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          {treeSamples.map((tree) => (
-            <button
-              key={tree.id}
-              type="button"
-              onClick={() => handleScanSample(tree)}
-              className="p-2.5 rounded-[14px] bg-white border border-[#D9E3DC] shadow-xs text-left cursor-pointer hover:border-[#0F5545] transition-all flex items-center gap-2 hover:bg-[#F8FAF8]"
-            >
-              <div className="w-10 h-10 rounded-[10px] bg-[#E8F3ED] border border-[#C6E2D2] flex items-center justify-center text-xl shrink-0">
-                {tree.icon}
-              </div>
-              <div className="min-w-0 flex-1">
-                <strong className="text-[11px] font-black text-[#11231D] block truncate leading-tight">
-                  {tree.name}
-                </strong>
-                <span className="text-[8.5px] font-mono text-[#0F5545] font-bold block truncate mt-0.5">
-                  {tree.code}
-                </span>
-                <span className="text-[8px] text-[#6A7B73] block truncate">
-                  {tree.locationDetail}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ==================== POP-UP MODAL KTP PASPOR DIGITAL ==================== */}
-      {selectedTree && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex flex-col justify-end p-0 animate-in fade-in duration-150">
-          <div className="bg-[#FAFBF8] w-full rounded-t-[26px] max-h-[92%] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200 border-t border-[#C8E86B]/30">
-            {/* Header Modal */}
-            <div className="p-3.5 bg-gradient-to-r from-[#061E18] via-[#0A382E] to-[#0F4E40] text-white flex items-center justify-between shadow-xs flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[8px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-black text-sm">
-                  <i className="ri-shield-check-fill"></i>
-                </div>
-                <div>
-                  <span className="text-[8px] font-black uppercase tracking-widest text-[#C8E86B] block">
-                    PASPOR DIGITAL TERVERIFIKASI
-                  </span>
-                  <strong className="text-[12.5px] text-white block leading-tight">
-                    {selectedTree.name} ({selectedTree.variety})
-                  </strong>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedTree(null)}
-                className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-base transition-colors cursor-pointer"
-              >
-                &times;
-              </button>
+          {/* List of Detected Sample Plants on Farm */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center px-1">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545]">
+                DAFTAR AJIR SAMPEL PERKEBUNAN:
+              </span>
+              <span className="text-[9.5px] font-bold text-[#5F6A65] bg-white px-2 py-0.5 rounded-full border border-[#DDE5DF]">
+                {treeSamples.length} Pohon Aktif
+              </span>
             </div>
 
-            {/* Sub Tabs Inside Passport Modal */}
-            <div className="flex border-b border-[#E2EAE5] bg-white px-3 pt-2 gap-2 flex-shrink-0">
-              <button
-                type="button"
-                onClick={() => setActiveTab('ktp')}
-                className={`pb-2 text-[11px] font-black cursor-pointer border-b-2 transition-all ${
-                  activeTab === 'ktp'
-                    ? 'border-[#0F5545] text-[#0F5545]'
-                    : 'border-transparent text-[#6A7B73] hover:text-[#0F5545]'
-                }`}
-              >
-                💳 KTP Pintar
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('input_log')}
-                className={`pb-2 text-[11px] font-black cursor-pointer border-b-2 transition-all ${
-                  activeTab === 'input_log'
-                    ? 'border-[#0F5545] text-[#0F5545]'
-                    : 'border-transparent text-[#6A7B73] hover:text-[#0F5545]'
-                }`}
-              >
-                📝 Catat Perawatan HST
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('riwayat')}
-                className={`pb-2 text-[11px] font-black cursor-pointer border-b-2 transition-all ${
-                  activeTab === 'riwayat'
-                    ? 'border-[#0F5545] text-[#0F5545]'
-                    : 'border-transparent text-[#6A7B73] hover:text-[#0F5545]'
-                }`}
-              >
-                📜 Riwayat Rawat ({selectedTree.recentLogs?.length || 0})
-              </button>
-            </div>
-
-            {/* Scrollable Modal Body */}
-            <div className="p-3.5 overflow-y-auto space-y-3 flex-1 text-[#11231D]">
-              {successMsg && (
-                <div className="p-2.5 bg-[#E8F1EA] text-[#0F5545] rounded-[10px] text-[11px] font-bold border border-[#0F5545]/20 animate-in fade-in">
-                  {successMsg}
-                </div>
-              )}
-
-              {/* TAB 1: KARTU TANDA POHON PASPOR */}
-              {activeTab === 'ktp' && (
-                <div className="space-y-3">
+            <div className="space-y-2">
+              {treeSamples.map((tree) => {
+                const isCurrent = selectedTree?.id === tree.id;
+                return (
                   <div
-                    className="rounded-[22px] p-4 text-white shadow-xl relative overflow-hidden space-y-3 border border-white/20"
-                    style={{
-                      background: 'linear-gradient(145deg, #072B22 0%, #0B4436 45%, #05221B 100%)',
-                    }}
+                    key={tree.id}
+                    onClick={() => handleScanSample(tree)}
+                    className={`p-3 rounded-[16px] border transition-all cursor-pointer flex items-center justify-between gap-3 shadow-xs ${
+                      isCurrent
+                        ? 'bg-gradient-to-r from-[#F0FDF4] to-[#E8F8EE] border-[#0F5545] ring-1 ring-[#0F5545]/20'
+                        : 'bg-white border-[#E2EAE5] hover:border-[#0F5545]'
+                    }`}
                   >
-                    <div className="flex justify-between items-start border-b border-white/15 pb-2.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-[8px] bg-[#C8E86B] text-[#08201A] flex items-center justify-center font-black text-base shadow-xs">
-                          <i className="ri-shield-check-fill"></i>
-                        </div>
-                        <div>
-                          <span className="text-[8px] font-black uppercase tracking-widest text-[#C8E86B] block">
-                            REPUBLIK INDONESIA • SMART FARM ERP
-                          </span>
-                          <h2 className="text-[13px] font-black tracking-tight m-0 text-white leading-tight">
-                            KARTU IDENTITAS POHON SAMPEL
-                          </h2>
-                          <span className="text-[8.5px] text-[#A7F3D0] font-mono font-semibold block mt-0.5">
-                            Kode Ajir: <strong className="text-white">{selectedTree.code}</strong>
-                          </span>
-                        </div>
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-[12px] bg-[#E8F1EA] text-[#0F5545] border border-[#0F5545]/15 flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+                        {getCommodityEmoji(tree.variety)}
                       </div>
-                      <span className="text-[8.5px] font-black px-2 py-0.5 rounded-full bg-[#C8E86B] text-[#08201A] uppercase">
-                        TERVERIFIKASI
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-12 gap-3 items-center">
-                      <div className="col-span-4 bg-white p-2 rounded-[14px] shadow-md flex flex-col items-center justify-center border border-white/30 shrink-0">
-                        <DynamicQRCode value={`https://agrojaya.id/tree/${selectedTree.code}`} size={76} />
-                        <span className="text-[8px] font-black text-[#08201A] mt-1 text-center leading-none">
-                          PIN AJIR #{selectedTree.locationDetail.split('#')[1]?.split(' ')[0] || '17'}
-                        </span>
-                      </div>
-
-                      <div className="col-span-8 space-y-1 text-[10.5px]">
-                        <div>
-                          <span className="text-[#C8E86B] font-extrabold text-[8.5px] block uppercase">
-                            Varietas Komoditas:
-                          </span>
-                          <strong className="text-[12.5px] font-black text-white block leading-snug">
-                            {selectedTree.variety}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <strong className="text-[12px] font-black text-[#11231D] truncate leading-tight">
+                            {tree.variety}
                           </strong>
                         </div>
-                        <div className="grid grid-cols-2 gap-1 pt-0.5">
-                          <div>
-                            <span className="text-[#A7F3D0] text-[8px] block">📍 Lokasi Blok:</span>
-                            <span className="text-white font-bold text-[10px] block">{selectedTree.block}</span>
-                          </div>
-                          <div>
-                            <span className="text-[#A7F3D0] text-[8px] block">⏳ Umur Tanaman:</span>
-                            <span className="text-[#C8E86B] font-extrabold text-[10px] block">{selectedTree.ageHst}</span>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-1 pt-0.5">
-                          <div>
-                            <span className="text-[#A7F3D0] text-[8px] block">👨‍🌾 Petani Binaan:</span>
-                            <span className="text-white font-bold text-[9.5px] block">{selectedTree.farmer}</span>
-                          </div>
-                          <div>
-                            <span className="text-[#A7F3D0] text-[8px] block">🛰️ GPS Ajir:</span>
-                            <span className="text-white font-mono text-[8.5px] block">{selectedTree.gpsCoords}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 3 Telemetry Metrics */}
-                    <div className="grid grid-cols-3 gap-2 pt-1 border-t border-white/15">
-                      <div className="bg-white/10 backdrop-blur-xs rounded-[10px] p-2 text-center border border-white/10">
-                        <span className="text-[8px] text-[#A7F3D0] font-semibold block">Skor Sehat</span>
-                        <strong className="text-[12px] text-[#C8E86B] font-black block mt-0.5">{selectedTree.healthScore}</strong>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-xs rounded-[10px] p-2 text-center border border-white/10">
-                        <span className="text-[8px] text-[#A7F3D0] font-semibold block">Taksasi Brix</span>
-                        <strong className="text-[12px] text-[#C8E86B] font-black block mt-0.5">{selectedTree.targetBrix}</strong>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur-xs rounded-[10px] p-2 text-center border border-white/10">
-                        <span className="text-[8px] text-[#A7F3D0] font-semibold block">Est. Bobot</span>
-                        <strong className="text-[12px] text-[#C8E86B] font-black block mt-0.5">{selectedTree.estWeight}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Button Action to input log */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('input_log')}
-                    className="w-full py-2.5 bg-[#0F5545] hover:bg-[#0B3B30] text-white font-black text-[11.5px] rounded-[12px] shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <i className="ri-edit-line"></i>
-                    <span>Catat Tindakan Perawatan Baru untuk Ajir Ini</span>
-                  </button>
-                </div>
-              )}
-
-              {/* TAB 2: INPUT LOG PERAWATAN */}
-              {activeTab === 'input_log' && (
-                <form onSubmit={handleSaveLog} className="space-y-3 bg-white p-3.5 rounded-[16px] border border-[#D9E3DC] shadow-xs">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545] block">
-                    FORM INPUT TINDAKAN PERAWATAN (HST):
-                  </span>
-
-                  <div>
-                    <label className="text-[10.5px] font-bold text-[#11231D] block mb-1">
-                      Kategori Tindakan:
-                    </label>
-                    <select
-                      value={actionCategory}
-                      onChange={(e) => setActionCategory(e.target.value)}
-                      className="w-full bg-[#F8FAF8] border border-[#D9E3DC] rounded-[8px] px-2.5 py-1.5 text-[11px] font-bold text-[#0F5545] outline-none"
-                    >
-                      <option value="PENYIRAMAN">💧 Penyiraman Drip & Fertigasi AB Mix</option>
-                      <option value="PEMUPUKAN">🌱 Aplikasi Pupuk Mikro MgSO4 + Boron</option>
-                      <option value="PRUNING">✂️ Pewiwitan Tunas Air & Pruning</option>
-                      <option value="UJI_BRIX">🍯 Uji Refraktometer Brix Buah</option>
-                      <option value="PENGENDALIAN_HAMA">🛡️ Aplikasi Agen Hayati Trichoderma</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-[10.5px] font-bold text-[#11231D] block mb-1">
-                      Detail Tindakan / Dosis Bahan:
-                    </label>
-                    <input
-                      type="text"
-                      value={actionDetail}
-                      onChange={(e) => setActionDetail(e.target.value)}
-                      placeholder="Contoh: Dosis 2 gr/L, disiram jam 07:15..."
-                      className="w-full bg-[#F8FAF8] border border-[#D9E3DC] rounded-[8px] px-2.5 py-1.5 text-[11px] text-[#11231D] outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[10.5px] font-bold text-[#11231D] block mb-1">
-                      Petani / Mandor Eksekutor:
-                    </label>
-                    <input
-                      type="text"
-                      value={workerName}
-                      onChange={(e) => setWorkerName(e.target.value)}
-                      className="w-full bg-[#F8FAF8] border border-[#D9E3DC] rounded-[8px] px-2.5 py-1.5 text-[11px] text-[#11231D] outline-none font-semibold"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-2 bg-[#C8E86B] hover:bg-[#b8d85c] text-[#061E18] font-black text-[11.5px] rounded-[10px] cursor-pointer shadow-xs flex items-center justify-center gap-1 mt-2"
-                  >
-                    <i className="ri-save-line"></i>
-                    <span>Simpan Log & Perbarui QR Code Real-Time</span>
-                  </button>
-                </form>
-              )}
-
-              {/* TAB 3: RIWAYAT RAWAT */}
-              {activeTab === 'riwayat' && (
-                <div className="space-y-2">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545] block">
-                    TIMELINE PERAWATAN TERVALIDASI:
-                  </span>
-                  <div className="space-y-1.5">
-                    {selectedTree.recentLogs?.map((log, idx) => (
-                      <div
-                        key={log.id || idx}
-                        className="p-2.5 bg-white rounded-[12px] border border-[#D9E3DC] shadow-2xs space-y-1"
-                      >
-                        <div className="flex justify-between items-center text-[10px]">
-                          <span className="bg-[#E8F3ED] text-[#0F5545] font-black px-2 py-0.5 rounded-full">
-                            {log.action}
-                          </span>
-                          <span className="text-[#6A7B73] font-medium">{log.time}</span>
-                        </div>
-                        <p className="text-[11px] text-[#11231D] font-bold m-0 leading-tight">
-                          {log.detail}
-                        </p>
-                        <span className="text-[9.5px] text-[#0F5545] font-semibold block">
-                          Eksekutor: {log.pic}
+                        <span className="text-[9.5px] font-mono text-[#0F5545] font-bold block truncate mt-0.5">
+                          {tree.code} • <span className="text-[#5F6A65] font-sans">{tree.locationDetail}</span>
                         </span>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="text-right shrink-0 flex flex-col items-end gap-1">
+                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#166534] border border-[#166534]/15">
+                        {tree.healthScore.split(' ')[0]} Sehat
+                      </span>
+                      <span className="text-[10px] font-extrabold text-[#0F5545] flex items-center gap-0.5">
+                        Buka KTP <i className="ri-arrow-right-s-line"></i>
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ==================== TAB 2: KTP PASPOR DIGITAL VIEW ==================== */}
+      {activeMainTab === 'ktp_view' && selectedTree && (
+        <div className="space-y-3 animate-in fade-in duration-150">
+          {/* Main Passport Card */}
+          <div className="bg-gradient-to-br from-[#061E18] via-[#09352A] to-[#041611] text-white rounded-[22px] p-4 shadow-xl border border-[#1FB88B]/40 relative overflow-hidden space-y-3.5">
+            {/* Top Passport Header */}
+            <div className="flex justify-between items-start gap-2 border-b border-white/15 pb-3">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="bg-[#C8E86B] text-[#061E18] text-[8.5px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
+                    PASPOR DIGITAL POHON
+                  </span>
+                  <span className="text-[9px] text-[#A7F3D0] font-bold">
+                    ✓ GAP Organik
+                  </span>
+                </div>
+                <h1 className="text-[16px] font-black text-white m-0 leading-tight">
+                  {selectedTree.variety}
+                </h1>
+                <span className="text-[10.5px] font-mono text-[#C8E86B] font-bold block mt-0.5">
+                  {selectedTree.code}
+                </span>
+                <span className="text-[9.5px] text-[#A7F3D0] block mt-0.5">
+                  {selectedTree.block} • {selectedTree.locationDetail}
+                </span>
+              </div>
+
+              {/* QR Code Card Thumbnail */}
+              <div className="bg-white p-1 rounded-[10px] shadow-md shrink-0 border border-white/40 text-center">
+                <DynamicQRCode value={selectedTree.code} size={52} />
+                <span className="text-[7.5px] font-mono font-black text-black block mt-0.5">
+                  SCAN ME
+                </span>
+              </div>
+            </div>
+
+            {/* 4 Key KPI Tiles */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                <span className="text-[9px] text-[#A7F3D0] font-semibold block">📅 Umur & Fase:</span>
+                <strong className="text-[12px] font-black text-[#C8E86B] block mt-0.5">
+                  {selectedTree.ageHst}
+                </strong>
+                <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                  {selectedTree.phase}
+                </span>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                <span className="text-[9px] text-[#A7F3D0] font-semibold block">📏 Ukuran & Bobot:</span>
+                <strong className="text-[12px] font-black text-white block mt-0.5">
+                  {selectedTree.estWeight}
+                </strong>
+                <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                  Tinggi: {selectedTree.growthStory[selectedTree.growthStory.length - 1]?.height || 'Optimal'}
+                </span>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                <span className="text-[9px] text-[#A7F3D0] font-semibold block">🍯 Est. Brix / Mutu:</span>
+                <strong className="text-[12px] font-black text-[#C8E86B] block mt-0.5">
+                  {selectedTree.targetBrix}
+                </strong>
+                <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                  Standar Ekspor Grade A
+                </span>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                <span className="text-[9px] text-[#A7F3D0] font-semibold block">🩺 Skor Kesehatan:</span>
+                <strong className="text-[12px] font-black text-[#7AE3B6] block mt-0.5">
+                  {selectedTree.healthScore}
+                </strong>
+                <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                  PJ: {selectedTree.farmer}
+                </span>
+              </div>
+            </div>
+
+            {/* Biological Asset Valuation & Certification Footer */}
+            <div className="pt-2 border-t border-white/15 flex flex-col gap-1 text-[9px] text-[#A7F3D0]">
+              <div className="flex justify-between items-center">
+                <span>📍 GPS: <strong className="font-mono text-white">{selectedTree.gpsCoords}</strong></span>
+                <span className="bg-[#C8E86B]/20 text-[#C8E86B] px-2 py-0.5 rounded font-mono font-bold">
+                  GAP-EXP-2026
+                </span>
+              </div>
+              <div className="bg-black/30 p-2 rounded-[8px] flex justify-between items-center text-white border border-white/10 mt-1">
+                <span>💰 Valuasi Panen per Pohon:</span>
+                <strong className="text-[#C8E86B] font-black text-[10.5px]">
+                  {selectedTree.variety.includes('Melon') ? 'Rp 60.000 (ROI +32%)' : selectedTree.variety.includes('Porang') ? 'Rp 70.000 (ROI +35%)' : 'Rp 48.000 (ROI +28%)'}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Sub Navigation Inside Passport */}
+          <div className="grid grid-cols-3 gap-1 bg-[#E8EEEA] p-1 rounded-[12px]">
+            <button
+              type="button"
+              onClick={() => setKtpSubTab('growth')}
+              className={`py-1.5 text-[10.5px] font-black rounded-[9px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                ktpSubTab === 'growth' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
+              }`}
+            >
+              <i className="ri-line-chart-line"></i>
+              <span>Siklus (5)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setKtpSubTab('logs')}
+              className={`py-1.5 text-[10.5px] font-black rounded-[9px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                ktpSubTab === 'logs' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
+              }`}
+            >
+              <i className="ri-history-line"></i>
+              <span>Riwayat</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setKtpSubTab('add_log')}
+              className={`py-1.5 text-[10.5px] font-black rounded-[9px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                ktpSubTab === 'add_log' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
+              }`}
+            >
+              <i className="ri-add-circle-line"></i>
+              <span>Catat Rawat</span>
+            </button>
+          </div>
+
+          {successMsg && (
+            <div className="p-2.5 bg-[#E8F1EA] text-[#0F5545] rounded-[12px] text-[11px] font-bold text-center border border-[#0F5545]/20 animate-in fade-in">
+              {successMsg}
+            </div>
+          )}
+
+          {/* SUBTAB 1: GROWTH STORY STEPPER */}
+          {ktpSubTab === 'growth' && (
+            <div className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-3 animate-in fade-in">
+              <span className="text-[11px] font-extrabold text-[#0F5545] uppercase tracking-wider block">
+                🌱 5 TAHAP SIKLUS PERTUMBUHAN
+              </span>
+              
+              <div className="space-y-3 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-[#E2EAE5]">
+                {selectedTree.growthStory.map((st, idx) => {
+                  const isDone = st.status.includes('Selesai');
+                  const isActive = st.status.includes('Aktif');
+                  return (
+                    <div key={idx} className="relative flex items-start gap-3 pl-1">
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-[11px] shrink-0 z-10 ${
+                          isDone
+                            ? 'bg-[#0F5545] text-white'
+                            : isActive
+                            ? 'bg-[#C8E86B] text-[#061E18] ring-4 ring-[#C8E86B]/30'
+                            : 'bg-[#E2EAE5] text-[#5F6A65]'
+                        }`}
+                      >
+                        {isDone ? '✓' : idx + 1}
+                      </div>
+                      <div className="flex-1 bg-[#F8FAF8] p-2.5 rounded-[12px] border border-[#E8F0EB]">
+                        <div className="flex justify-between items-center">
+                          <strong className="text-[11.5px] font-bold text-[#11231D]">
+                            {st.stage}
+                          </strong>
+                          <span
+                            className={`text-[9px] font-extrabold px-2 py-0.2 rounded-full ${
+                              isActive
+                                ? 'bg-[#DCFCE7] text-[#166534]'
+                                : isDone
+                                ? 'bg-[#E8F1EA] text-[#0F5545]'
+                                : 'bg-[#FEF3C7] text-[#92400E]'
+                            }`}
+                          >
+                            {st.status}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-[10px] text-[#5F6A65] mt-1">
+                          <span>📅 {st.date}</span>
+                          <strong className="text-[#0F5545]">Tinggi: {st.height}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* SUBTAB 2: LOGS LIST */}
+          {(ktpSubTab === 'logs' || ktpSubTab === 'kpi') && (
+            <div className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-2.5 animate-in fade-in">
+              <div className="flex justify-between items-center">
+                <span className="text-[11px] font-extrabold text-[#0F5545] uppercase tracking-wider">
+                  📋 RIWAYAT PERAWATAN AJIR INI
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setKtpSubTab('add_log')}
+                  className="text-[10px] font-bold text-[#0F5545] hover:underline cursor-pointer"
+                >
+                  + Tambah Log
+                </button>
+              </div>
+
+              <div className="space-y-2">
+                {selectedTree.recentLogs.map((log, idx) => (
+                  <div key={idx} className="p-2.5 rounded-[12px] bg-[#F8FAF8] border border-[#E8F0EB] space-y-1">
+                    <div className="flex justify-between items-center">
+                      <strong className="text-[11px] font-bold text-[#11231D] flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-[#0F5545]"></span>
+                        {log.action}
+                      </strong>
+                      <span className="text-[9.5px] text-[#0F5545] font-bold">{log.time}</span>
+                    </div>
+                    <p className="text-[10px] text-[#4B5563] m-0 leading-relaxed pl-3.5">
+                      {log.detail}
+                    </p>
+                    <div className="text-[9px] text-[#6B7280] pl-3.5 pt-0.5">
+                      Petugas: <strong className="text-[#11231D]">{log.pic}</strong>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* SUBTAB 3: FORM INPUT ACTION */}
+          {ktpSubTab === 'add_log' && (
+            <form onSubmit={handleSaveLog} className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-3 animate-in fade-in">
+              <span className="text-[11px] font-extrabold text-[#0F5545] uppercase tracking-wider block">
+                ✍️ INPUT TINDAKAN PERAWATAN
+              </span>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-4 gap-1">
+                {(['PENYIRAMAN', 'PEMUPUKAN', 'PRUNING', 'HAMA'] as const).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      setActionCategory(cat);
+                      if (cat === 'PENYIRAMAN') setActionDetail('Irigasi drip otomatis 1.5 Liter / polybag');
+                      if (cat === 'PEMUPUKAN') setActionDetail('Nutrisi AB Mix Khusus (EC 2.2, pH 6.2) 2.0L');
+                      if (cat === 'PRUNING') setActionDetail('Pembuangan tunas air liar & seleksi 1 buah utama');
+                      if (cat === 'HAMA') setActionDetail('Semprot biopestisida nabati daun nimba & serai');
+                    }}
+                    className={`py-1.5 rounded-[8px] font-extrabold text-[9.5px] border cursor-pointer ${
+                      actionCategory === cat
+                        ? 'bg-[#0F5545] text-white border-[#0F5545]'
+                        : 'bg-[#F8FAF8] text-[#5F6A65] border-[#DDE5DF]'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-[#5F6A65] block mb-1">
+                  Detail Tindakan & Dosis:
+                </label>
+                <textarea
+                  rows={2}
+                  value={actionDetail}
+                  onChange={(e) => setActionDetail(e.target.value)}
+                  className="w-full p-2 rounded-[10px] border border-[#DDE5DF] text-[11px] font-medium outline-none focus:border-[#0F5545]"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-[#5F6A65] block mb-1">
+                  Petugas Lapangan (Mandor / Petani):
+                </label>
+                <input
+                  type="text"
+                  value={workerName}
+                  onChange={(e) => setWorkerName(e.target.value)}
+                  className="w-full px-2.5 py-2 rounded-[10px] border border-[#DDE5DF] text-[11px] font-medium outline-none focus:border-[#0F5545]"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 bg-[#0F5545] hover:bg-[#0B3B30] text-white font-black text-[11.5px] rounded-[10px] cursor-pointer shadow-xs active:scale-95 transition-transform"
+              >
+                Simpan Log Tindakan Pohon Ini
+              </button>
+            </form>
+          )}
         </div>
       )}
     </div>

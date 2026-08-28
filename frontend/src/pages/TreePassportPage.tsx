@@ -51,9 +51,9 @@ export const TreePassportPage: React.FC = () => {
   const [trees, setTrees] = useState<TreeData[]>([
     {
       id: 'TR-001',
-      code: 'SAMPLE-JGL-A2-0841',
+      code: 'SAMPLE-TR-A2-0841',
       variety: 'Melon Golden Apollo F1',
-      block: 'Blok A2 (Jonggol)',
+      block: 'Blok A2 (Sentra Kebun Inti)',
       rowAjir: 'Baris 4 • Ajir #17 (Pohon Sampel #1)',
       plantingDate: '2026-07-15',
       ageDays: 43,
@@ -83,9 +83,9 @@ export const TreePassportPage: React.FC = () => {
     },
     {
       id: 'TR-002',
-      code: 'SAMPLE-JGL-B1-0412',
+      code: 'SAMPLE-TR-B1-0412',
       variety: 'Porang Madiun Super',
-      block: 'Blok B1 (Jonggol)',
+      block: 'Blok B1 (Sentra Kebun Inti)',
       rowAjir: 'Baris 2 • Ajir #08 (Pohon Sampel #2)',
       plantingDate: '2026-06-10',
       ageDays: 78,
@@ -114,6 +114,7 @@ export const TreePassportPage: React.FC = () => {
   const [selectedBlockFilter, setSelectedBlockFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showBatchPrintModal, setShowBatchPrintModal] = useState(false);
 
   // SEPARATE & DEDICATED MODALS (NO CONFUSING DUPLICATION)
   const [stickerPrintTree, setStickerPrintTree] = useState<TreeData | null>(null); // Modal 1: Cetak Label Fisik
@@ -237,7 +238,15 @@ export const TreePassportPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="d-flex gap-2">
+        <div className="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setShowBatchPrintModal(true)}
+            className="btn btn-outline-success d-flex align-items-center gap-1.5 fw-bold shadow-xs"
+            style={{ fontSize: '13px' }}
+          >
+            <i className="ri-printer-fill"></i> Cetak Massal Label Ajir (Stiker Fisik)
+          </button>
           {!isExecutiveOrInvestor && (
             <button
               type="button"
@@ -245,7 +254,7 @@ export const TreePassportPage: React.FC = () => {
               className="btn btn-success d-flex align-items-center gap-1.5 fw-bold shadow-sm"
               style={{ fontSize: '13px', backgroundColor: '#0F5545', borderColor: '#0F5545' }}
             >
-              <i className="ri-add-circle-line"></i> Tambah Sampel Pohon
+              <i className="ri-add-circle-line"></i> Terbitkan ID Ajir Baru
             </button>
           )}
         </div>
@@ -398,25 +407,85 @@ export const TreePassportPage: React.FC = () => {
       {/* MODAL 1: KHUSUS CETAK LABEL STIKER AJIR FISIK (PRINT PREVIEW) */}
       {/* ========================================================================= */}
       {stickerPrintTree && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1080 }}>
-          <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '380px' }}>
-            <div className="modal-content rounded-4 border-0 shadow-lg p-4 bg-white text-center">
-              <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                <strong className="text-dark">Stiker Barcode Ajir Kebun</strong>
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 1080 }}>
+          <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: '420px' }}>
+            <div className="modal-content rounded-4 border-0 shadow-lg p-3 bg-light">
+              <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3 bg-white p-2.5 rounded-3">
+                <div>
+                  <strong className="text-dark d-block">Pratinjau Plat Label Ajir Kebun</strong>
+                  <span className="text-muted small" style={{ fontSize: '11px' }}>Ukuran standar stiker outdoor vinyl (70 x 100 mm)</span>
+                </div>
                 <button type="button" onClick={() => setStickerPrintTree(null)} className="btn-close"></button>
               </div>
 
-              {/* Physical Sticker Box */}
-              <div className="p-3 border-2 border-dashed rounded-3 bg-light space-y-2">
-                <span className="text-muted text-uppercase fw-bold d-block" style={{ fontSize: '9px', letterSpacing: '0.5px' }}>
-                  AGROJAYA SMART FARMING
-                </span>
-                <DynamicQRCode value={stickerPrintTree.code} size={130} />
-                <strong className="font-monospace text-success d-block fs-6">{stickerPrintTree.code}</strong>
-                <div className="text-muted" style={{ fontSize: '10.5px' }}>
-                  <strong>{stickerPrintTree.variety}</strong>
-                  <div>{stickerPrintTree.block} ({stickerPrintTree.rowAjir})</div>
-                  <div className="text-success font-monospace">GPS: {stickerPrintTree.gpsCoords}</div>
+              {/* Luxury Physical Sticker Tag */}
+              <div className="bg-white border border-2 border-dark rounded-3 overflow-hidden shadow-sm p-0 position-relative text-dark">
+                {/* Header Strip Dark Emerald */}
+                <div className="bg-dark text-white p-2.5 d-flex justify-content-between align-items-center border-bottom border-warning">
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="bg-success text-white rounded-2 px-1.5 py-0.5 fw-bolder font-monospace" style={{ fontSize: '11px' }}>
+                      AGRO
+                    </div>
+                    <div>
+                      <strong className="d-block text-uppercase text-white" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
+                        AGROJAYA SMART PRECISION
+                      </strong>
+                      <span className="text-warning-emphasis d-block" style={{ fontSize: '8px' }}>
+                        Biological Asset Tracking & Quality Assurance
+                      </span>
+                    </div>
+                  </div>
+                  <span className="badge bg-warning text-dark px-2 py-0.5 fw-bold" style={{ fontSize: '8px' }}>
+                    GAP 0% RESIDU
+                  </span>
+                </div>
+
+                {/* Body with QR Matrix */}
+                <div className="p-3 bg-white">
+                  <div className="d-flex align-items-center gap-3">
+                    {/* QR Code Container */}
+                    <div className="border border-2 border-dark p-1.5 rounded-3 bg-white text-center shadow-xs shrink-0">
+                      <DynamicQRCode value={stickerPrintTree.code} size={100} bordered={false} />
+                      <span className="d-block font-monospace fw-bolder text-dark mt-1" style={{ fontSize: '8px', letterSpacing: '0.5px' }}>
+                        PINDAI QR KTP
+                      </span>
+                    </div>
+
+                    {/* Meta Specifications */}
+                    <div className="flex-1 text-start">
+                      <span className="badge bg-dark text-warning font-monospace px-2 py-0.5 mb-1" style={{ fontSize: '10px' }}>
+                        {stickerPrintTree.code}
+                      </span>
+                      <h6 className="fw-bolder text-dark mb-0 leading-tight" style={{ fontSize: '13px' }}>
+                        {stickerPrintTree.variety}
+                      </h6>
+                      <span className="text-muted d-block" style={{ fontSize: '10px' }}>
+                        {stickerPrintTree.block}
+                      </span>
+                      <span className="text-dark d-block fw-bold" style={{ fontSize: '10px' }}>
+                        {stickerPrintTree.rowAjir}
+                      </span>
+                      <div className="mt-1 pt-1 border-top" style={{ fontSize: '9px' }}>
+                        <span className="text-dark d-block"><strong>Tgl Tanam:</strong> {stickerPrintTree.plantingDate}</span>
+                        <span className="text-success d-block"><strong>Target:</strong> {stickerPrintTree.targetBrix}</span>
+                        <span className="text-muted font-monospace d-block">GPS: {stickerPrintTree.gpsCoords}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Worker & Certification Stamp */}
+                  <div className="mt-2.5 pt-2 border-top border-dashed text-muted d-flex justify-content-between align-items-center" style={{ fontSize: '8.5px' }}>
+                    <span>PJ: <strong className="text-dark">{stickerPrintTree.farmer}</strong></span>
+                    <span>Mandor: <strong className="text-dark">{stickerPrintTree.mandor}</strong></span>
+                    <span className="text-success font-monospace">GAP-EXP-2026</span>
+                  </div>
+                </div>
+
+                {/* Footer Barcode Strip */}
+                <div className="bg-light border-top py-1 px-3 d-flex justify-content-between align-items-center text-muted" style={{ fontSize: '7.5px' }}>
+                  <span>PT SMART FARM NUSANTARA</span>
+                  <span className="font-monospace">|||| | ||||| ||| ||||| ||</span>
+                  <span>TAHAN AIR OUTDOOR</span>
                 </div>
               </div>
 
@@ -424,10 +493,10 @@ export const TreePassportPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="btn btn-success fw-bold flex-fill"
+                  className="btn btn-success fw-bold flex-fill shadow-sm"
                   style={{ backgroundColor: '#0F5545' }}
                 >
-                  <i className="ri-printer-line me-1"></i> Cetak Stiker
+                  <i className="ri-printer-fill me-1"></i> Cetak Plat Label (Stiker)
                 </button>
                 <button type="button" onClick={() => setStickerPrintTree(null)} className="btn btn-outline-secondary">
                   Tutup
@@ -938,7 +1007,7 @@ export const TreePassportPage: React.FC = () => {
                 <div className="row g-2">
                   <div className="col-6">
                     <label className="form-label small fw-bold">Blok Kebun:</label>
-                    <input type="text" defaultValue="Blok A2 (Jonggol 2.0 Ha)" className="form-control form-control-sm" required />
+                    <input type="text" defaultValue="Blok A2 (Sentra Kebun Inti 2.0 Ha)" className="form-control form-control-sm" required />
                   </div>
                   <div className="col-6">
                     <label className="form-label small fw-bold">Nomor Baris / Ajir Sampel:</label>
@@ -964,6 +1033,147 @@ export const TreePassportPage: React.FC = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 4: CETAK MASSAL LABEL BARCODE AJIR (BATCH PRINTING SHEET) */}
+      {/* ========================================================================= */}
+      {showBatchPrintModal && (
+        <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}>
+          <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content rounded-4 border-0 shadow-lg">
+              <div className="modal-header border-0 bg-dark text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center gap-2">
+                  <div className="w-8 h-8 rounded-circle bg-success text-white d-flex align-items-center justify-center fw-bold">
+                    <i className="ri-printer-line"></i>
+                  </div>
+                  <div>
+                    <h5 className="modal-title fw-bold mb-0 text-white" style={{ fontSize: '15px' }}>
+                      Cetak Massal Plat Label Barcode Ajir ({trees.length} Pohon Sampel)
+                    </h5>
+                    <span className="text-success-subtle small" style={{ fontSize: '11px' }}>
+                      Siap cetak stiker outdoor vinyl / label PVC tahan air untuk tiang ajir bedengan
+                    </span>
+                  </div>
+                </div>
+                <div className="d-flex gap-2 align-items-center">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="btn btn-sm btn-success fw-bold px-3 d-flex align-items-center gap-1.5"
+                    style={{ backgroundColor: '#82C341', color: '#0F5545', borderColor: '#82C341' }}
+                  >
+                    <i className="ri-printer-fill"></i> Cetak / Print Dokumen
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowBatchPrintModal(false)}
+                    className="btn-close btn-close-white"
+                  ></button>
+                </div>
+              </div>
+
+              <div className="modal-body p-4 bg-light">
+                <div className="alert alert-info border-0 rounded-3 mb-3 d-flex align-items-center gap-2 small">
+                  <i className="ri-information-fill fs-5 text-info"></i>
+                  <div>
+                    <strong>Petunjuk Teknis Mandor:</strong> Tempelkan stiker ini pada plat akrilik atau tiang bambu ajir pada ketinggian 120 cm dari permukaan tanah agar mudah dipindai menggunakan smartphone oleh petani atau mandor lapangan.
+                  </div>
+                </div>
+
+                {/* Print Sheet Grid */}
+                <div className="row g-3">
+                  {trees.map((tree) => (
+                    <div key={tree.id} className="col-12 col-md-6 col-lg-4">
+                      <div className="bg-white border border-2 border-dark rounded-3 overflow-hidden shadow-sm p-0 position-relative text-dark">
+                        {/* Header Strip Dark Emerald */}
+                        <div className="bg-dark text-white p-2 d-flex justify-content-between align-items-center border-bottom border-warning">
+                          <div className="d-flex align-items-center gap-1.5">
+                            <div className="bg-success text-white rounded-1 px-1.5 py-0.2 fw-bolder font-monospace" style={{ fontSize: '9.5px' }}>
+                              AGRO
+                            </div>
+                            <div>
+                              <strong className="d-block text-uppercase text-white" style={{ fontSize: '9.5px', letterSpacing: '0.4px' }}>
+                                AGROJAYA SMART PRECISION
+                              </strong>
+                              <span className="text-warning-emphasis d-block" style={{ fontSize: '7.5px' }}>
+                                Biological Asset Tracking & GAP
+                              </span>
+                            </div>
+                          </div>
+                          <span className="badge bg-warning text-dark px-1.5 py-0.5 fw-bold" style={{ fontSize: '7.5px' }}>
+                            GAP 0% RESIDU
+                          </span>
+                        </div>
+
+                        {/* Body with QR Matrix */}
+                        <div className="p-2.5 bg-white">
+                          <div className="d-flex align-items-center gap-2.5">
+                            {/* QR Code Container */}
+                            <div className="border border-2 border-dark p-1 rounded-2 bg-white text-center shadow-xs shrink-0">
+                              <DynamicQRCode value={tree.code} size={82} bordered={false} />
+                              <span className="d-block font-monospace fw-bolder text-dark mt-0.5" style={{ fontSize: '7.5px', letterSpacing: '0.3px' }}>
+                                PINDAI SAYA
+                              </span>
+                            </div>
+
+                            {/* Meta Specifications */}
+                            <div className="flex-1 text-start min-w-0">
+                              <span className="badge bg-dark text-warning font-monospace px-1.5 py-0.2 mb-0.5" style={{ fontSize: '9px' }}>
+                                {tree.code}
+                              </span>
+                              <h6 className="fw-bolder text-dark mb-0 leading-tight text-truncate" style={{ fontSize: '11.5px' }}>
+                                {tree.variety}
+                              </h6>
+                              <span className="text-muted d-block text-truncate" style={{ fontSize: '9px' }}>
+                                {tree.block}
+                              </span>
+                              <span className="text-dark d-block fw-bold text-truncate" style={{ fontSize: '9px' }}>
+                                {tree.rowAjir}
+                              </span>
+                              <div className="mt-1 pt-1 border-top" style={{ fontSize: '8px' }}>
+                                <span className="text-dark d-block"><strong>Tanam:</strong> {tree.plantingDate}</span>
+                                <span className="text-success d-block text-truncate"><strong>Target:</strong> {tree.targetBrix}</span>
+                                <span className="text-muted font-monospace d-block text-truncate">GPS: {tree.gpsCoords}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Worker & Certification Stamp */}
+                          <div className="mt-2 pt-1.5 border-top border-dashed text-muted d-flex justify-content-between align-items-center" style={{ fontSize: '7.5px' }}>
+                            <span>PJ: <strong className="text-dark">{tree.farmer}</strong></span>
+                            <span>Mandor: <strong className="text-dark">{tree.mandor}</strong></span>
+                            <span className="text-success font-monospace">GAP-EXP-2026</span>
+                          </div>
+                        </div>
+
+                        {/* Footer Barcode Strip */}
+                        <div className="bg-light border-top py-0.5 px-2.5 d-flex justify-content-between align-items-center text-muted" style={{ fontSize: '7px' }}>
+                          <span>PT SMART FARM NUSANTARA</span>
+                          <span className="font-monospace">|||| | ||||| ||| ||</span>
+                          <span>TAHAN AIR OUTDOOR</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="modal-footer border-0 bg-white py-2 px-4 d-flex justify-content-between">
+                <span className="text-muted small">
+                  Format layout kompatibel dengan kertas stiker A4 (Label Tom & Jerry / Vinyl Outdoor).
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowBatchPrintModal(false)}
+                  className="btn btn-sm btn-secondary fw-bold"
+                >
+                  Tutup
+                </button>
+              </div>
             </div>
           </div>
         </div>

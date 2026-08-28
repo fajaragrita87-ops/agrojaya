@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 interface KalkulatorHppScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const KalkulatorHppScreen: React.FC<KalkulatorHppScreenProps> = ({ onBack }) => {
+export const KalkulatorHppScreen: React.FC<KalkulatorHppScreenProps> = () => {
   const [luasLahan, setLuasLahan] = useState(2.0); // Ha
   const [targetTonPerHa, setTargetTonPerHa] = useState(15.0); // Ton/Ha
   const [hargaJualPerKg, setHargaJualPerKg] = useState(25000); // Rp/Kg Melon Golden F1
@@ -24,18 +24,9 @@ export const KalkulatorHppScreen: React.FC<KalkulatorHppScreenProps> = ({ onBack
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Result Highlight Card */}
       <div className="bg-gradient-to-br from-[#0F5545] to-[#062820] text-white rounded-[18px] p-4 shadow-md border border-[#1FB88B]/30 relative overflow-hidden">

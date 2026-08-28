@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface AlokasiModalScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = ({ onBack }) => {
+export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = () => {
   const modalAllocations = [
     { category: 'Akuisisi & Land Clearing (2.0 Ha)', budget: 'Rp 875.000.000', percent: 35, color: '#0F5545', status: 'Realisasi 100%' },
     { category: 'Greenhouse & Irigasi Presisi Drip', budget: 'Rp 750.000.000', percent: 30, color: '#1FB88B', status: 'Realisasi 100%' },
@@ -19,18 +19,9 @@ export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = ({ onBack }
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Card */}
       <div className="bg-gradient-to-br from-[#0B3B30] to-[#04201A] text-white rounded-[18px] p-4 shadow-md border border-[#14473B] relative overflow-hidden">
@@ -43,7 +34,7 @@ export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = ({ onBack }
               Rp 2.500.000.000
             </h1>
             <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
-              Total Pagu Modal Proyek Kebun Jonggol (100% Terdanai)
+              Total Pagu Modal Sentra Perkebunan (100% Terdanai)
             </p>
           </div>
           <span className="bg-[#C8E86B]/20 border border-[#C8E86B]/40 text-[#C8E86B] text-[9.5px] font-extrabold px-2 py-0.5 rounded-full">

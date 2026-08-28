@@ -73,7 +73,7 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex items-end justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex items-end justify-center overflow-hidden">
       {/* Frosted Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-xs transition-opacity cursor-pointer animate-in fade-in duration-150"
@@ -81,7 +81,7 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
       ></div>
 
       {/* Profile & Settings Card Sheet */}
-      <div className="relative w-full max-h-[92%] bg-[#FAFBF8] text-[#17211E] rounded-t-[24px] shadow-2xl flex flex-col justify-between z-10 animate-in slide-in-from-bottom duration-200 border-t border-[#DDE5DF] overflow-hidden">
+      <div className="relative w-full max-w-[480px] mx-auto max-h-[92vh] bg-[#FAFBF8] text-[#17211E] rounded-t-[24px] shadow-2xl flex flex-col justify-between z-10 animate-in slide-in-from-bottom duration-200 border-t border-[#DDE5DF] overflow-hidden">
         {/* Header Bar */}
         <div className="p-3.5 bg-gradient-to-r from-[#061E18] via-[#0A382E] to-[#0F4E40] text-white flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-2">

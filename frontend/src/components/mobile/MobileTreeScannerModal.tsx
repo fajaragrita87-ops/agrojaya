@@ -51,11 +51,11 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scannedTree, setScannedTree] = useState<ScannedTree | null>(null);
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'ktp' | 'input_log' | 'riwayat_rawat' | 'timelapse' | 'sertifikat'>('ktp');
-  const [selectedGrowthIdx, setSelectedGrowthIdx] = useState<number>(3);
+  const [activeTab, setActiveTab] = useState<'ktp' | 'growth' | 'input_log'>('ktp');
 
   // Form State for Field Worker Maintenance Log
   const [formActionType, setFormActionType] = useState<MaintenanceLog['actionType']>('PEMUPUKAN');
@@ -65,31 +65,29 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
   const [formWorker, setFormWorker] = useState('Kang Asep (Petani)');
   const [formNotes, setFormNotes] = useState('Daun hijau segar, disemprot merata pagi hari.');
 
-  if (!isOpen) return null;
-
   const mockTrees: Record<string, ScannedTree> = {
-    'SAMPLE-JGL-A2-0842': {
-      code: 'SAMPLE-JGL-A2-0842',
+    'SAMPLE-TR-A2-0841': {
+      code: 'SAMPLE-TR-A2-0841',
       variety: 'Melon Golden Apollo F1',
-      block: 'Blok A2 (Jonggol 2.0 Ha)',
-      rowAjir: 'Baris 4 • Ajir #18 (Sampel #1)',
+      block: 'Blok A2 (Kebun Inti 2.0 Ha)',
+      rowAjir: 'Baris 4 • Ajir #17 (Pohon Sampel #1)',
       plantingDate: '15 Juli 2026',
       ageDays: 43,
-      phase: 'Fase 4: Pembesaran Buah',
+      phase: 'Fase 4: Pembesaran Buah & Netting',
       farmer: 'Kang Asep (Regu A)',
       mandor: 'Pak Joko',
       lastTreatment: 'Semprot Mikro MgSO4 & Boron',
-      healthScore: 97.8,
-      targetBrix: 'Brix 14° – 16°',
-      estYieldKg: 2.5,
-      gpsCoords: '-6.46975, 107.05834',
+      healthScore: 98.4,
+      targetBrix: 'Brix 14.5° – 16.0°',
+      estYieldKg: 2.4,
+      gpsCoords: '-6.46972, 107.05831',
       gapCertificateNo: 'GAP-EXP-2026-0982 (0% Residu Kimia)',
       growthStory: [
         { stage: '1. Bibit 10cm', day: 1, date: '15 Jul', heightCm: 12, note: 'Bibit F1 ditanam di bedengan mulsa perak.', icon: 'ri-seedling-line' },
         { stage: '2. Vegetatif', day: 20, date: '04 Agu', heightCm: 68, note: 'Batang sulur merambat ajir, daun tebal.', icon: 'ri-plant-line' },
         { stage: '3. Berbunga', day: 32, date: '16 Agu', heightCm: 142, note: 'Polinasi manual bunga betina ruas 10.', icon: 'ri-contrast-drop-2-line' },
-        { stage: '4. Pembesaran (Aktif)', day: 43, date: '27 Agu', heightCm: 188, note: 'Netting buah rapat, berat 2,5 Kg.', icon: 'ri-focus-3-line' },
-        { stage: '5. Panen Manis', day: 60, date: '14 Sep', heightCm: 190, note: 'Target Brix 15°+ siap panen.', icon: 'ri-gift-line' },
+        { stage: '4. Pembesaran (Aktif)', day: 43, date: '27 Agu', heightCm: 188, note: 'Netting buah rapat, estimasi 2,4 Kg.', icon: 'ri-focus-3-line' },
+        { stage: '5. Panen Manis', day: 60, date: '14 Sep', heightCm: 190, note: 'Target Brix 15°+ siap petik.', icon: 'ri-gift-line' },
       ],
       maintenanceLogs: [
         { id: 'LOG-001', date: '27 Agu 07:15', actionType: 'PENYIRAMAN', actionName: 'Irigasi Drip Pagi', material: 'Nutrisi AB Mix Organik', dose: '2.0 Liter (EC 2.2)', workerName: 'Kang Asep', notes: 'Tanah lembab optimal.' },
@@ -97,11 +95,11 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
         { id: 'LOG-003', date: '24 Agu 08:00', actionType: 'PRUNING', actionName: 'Pruning Cabang Air', material: 'Gunting Kebun Steril', dose: 'Sisa 1 Buah Utama', workerName: 'Pak Joko', notes: 'Pewiwitan tunas air ruas bawah.' },
       ],
     },
-    'SAMPLE-JGL-B1-0412': {
-      code: 'SAMPLE-JGL-B1-0412',
+    'SAMPLE-TR-B1-0412': {
+      code: 'SAMPLE-TR-B1-0412',
       variety: 'Porang Madiun Super',
-      block: 'Blok B1 (Jonggol 2.0 Ha)',
-      rowAjir: 'Baris 2 • Ajir #08 (Sampel #2)',
+      block: 'Blok B1 (Kebun Inti 2.0 Ha)',
+      rowAjir: 'Baris 2 • Ajir #08 (Pohon Sampel #2)',
       plantingDate: '10 Juni 2026',
       ageDays: 78,
       phase: 'Fase 5: Pembentukan Umbi',
@@ -122,11 +120,11 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
         { id: 'LOG-005', date: '26 Agu 09:00', actionType: 'HAMA_PENYAKIT', actionName: 'Penyiangan Gulma & Sanitasi', material: 'Manual Cabut', dose: 'Bedengan 10 Meter', workerName: 'Pak Ujang', notes: 'Gulma dibersihkan.' },
       ],
     },
-    'SAMPLE-JGL-C1-0119': {
-      code: 'SAMPLE-JGL-C1-0119',
+    'SAMPLE-TR-C1-0119': {
+      code: 'SAMPLE-TR-C1-0119',
       variety: 'Cabai Rawit Ori 212',
-      block: 'Blok C1 (Jonggol 2.0 Ha)',
-      rowAjir: 'Baris 5 • Ajir #32 (Sampel #3)',
+      block: 'Blok C1 (Kebun Inti 2.0 Ha)',
+      rowAjir: 'Baris 5 • Ajir #32 (Pohon Sampel #3)',
       plantingDate: '01 Juli 2026',
       ageDays: 57,
       phase: 'Fase 4: Pembungaan & Buah',
@@ -154,50 +152,55 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
     switch (type) {
       case 'PENYIRAMAN':
         setFormActionName('Penyiraman Irigasi Drip');
-        setFormMaterial('Nutrisi AB Mix');
+        setFormMaterial('Nutrisi AB Mix Organik');
         setFormDose('2.0 Liter / pohon');
         break;
       case 'PEMUPUKAN':
-        setFormActionName('Pemupukan Daun Mikro');
+        setFormActionName('Pemupukan Daun Mikro MgSO4');
         setFormMaterial('MgSO4 + Boron');
         setFormDose('2 gr / Liter air');
         break;
       case 'PRUNING':
         setFormActionName('Pruning & Pewiwitan Tunas');
-        setFormMaterial('Gunting Steril');
+        setFormMaterial('Gunting Kebun Steril');
         setFormDose('Sisa 1 Buah Utama');
         break;
       case 'HAMA_PENYAKIT':
         setFormActionName('Pengendalian Hama / Sanitasi');
-        setFormMaterial('Bio-Trichoderma');
+        setFormMaterial('Bio-Trichoderma sp.');
         setFormDose('5 ml / Liter air');
         break;
       case 'PENGUKURAN':
-        setFormActionName('Pengukuran Tinggi & Caliper');
-        setFormMaterial('Meteran & Caliper');
-        setFormDose('Tinggi 188 cm, Diameter 16 cm');
+        setFormActionName('Pengukuran Dimensi Buah');
+        setFormMaterial('Meteran & Caliper Digital');
+        setFormDose('Diameter 14.2 cm');
         break;
       case 'UJI_BRIX':
         setFormActionName('Pengujian Kadar Gula (Brix)');
         setFormMaterial('Refraktometer Digital');
-        setFormDose('Brix 14.5° (Optimal)');
+        setFormDose('Hasil: 14.5° Brix (Optimal)');
         break;
     }
   };
 
   const startCamera = async () => {
     try {
+      setCameraError(null);
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+          video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
         });
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
         setIsCameraActive(true);
+      } else {
+        setCameraError('Kamera tidak didukung pada peramban ini');
+        setIsCameraActive(false);
       }
     } catch {
+      setCameraError('Izin kamera belum aktif. Anda dapat memilih sampel ajir di bawah.');
       setIsCameraActive(false);
     }
   };
@@ -219,6 +222,8 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
     };
   }, [isOpen, scannedTree]);
 
+  if (!isOpen) return null;
+
   const handleClose = () => {
     stopCamera();
     onClose();
@@ -233,8 +238,8 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
     setTimeout(() => {
       setIsScanning(false);
       stopCamera();
-      setScannedTree(mockTrees[treeCode] || mockTrees['SAMPLE-JGL-A2-0842']);
-    }, 600);
+      setScannedTree(mockTrees[treeCode] || mockTrees['SAMPLE-TR-A2-0841']);
+    }, 450);
   };
 
   const handleSaveMobileLog = (e: React.FormEvent) => {
@@ -261,46 +266,52 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
       maintenanceLogs: [newLog, ...scannedTree.maintenanceLogs],
     });
 
-    setActionSuccessMsg(`✅ Berhasil mencatat "${formActionName}" ke KTP Sampel.`);
+    setActionSuccessMsg(`✅ Berhasil mencatat "${formActionName}" ke KTP Tanaman.`);
     setTimeout(() => setActionSuccessMsg(null), 3000);
-    setActiveTab('riwayat_rawat');
+    setActiveTab('growth');
   };
 
   return (
-    <div className="absolute inset-0 bg-black/80 z-50 flex flex-col justify-end p-0 backdrop-blur-xs text-[#17211E] animate-in fade-in duration-150">
-      <div className="bg-[#FAFBF8] w-full rounded-t-[24px] max-h-[94%] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200">
-        {/* Header Bar */}
+    <div className="fixed inset-0 z-[9999] flex flex-col justify-end bg-black/85 backdrop-blur-md p-0 overflow-hidden text-[#11231D] animate-in fade-in duration-150">
+      <div className="relative w-full max-w-[480px] mx-auto bg-[#F6FAF7] rounded-t-[28px] max-h-[94vh] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200 border-t border-[#82C341]/30">
+        
+        {/* Header HUD Bar */}
         <div className="p-3.5 bg-[#061E18] text-white flex items-center justify-between border-b border-[#14473B] flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-[7px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-bold text-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[10px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-black text-base shadow-sm">
               <i className="ri-qr-scan-2-line"></i>
             </div>
             <div>
               <div className="flex items-center gap-1.5 leading-none">
-                <span className="font-extrabold text-[12px] text-white">SCANNER KTP SAMPEL POHON</span>
-                <span className="bg-[#C8E86B]/20 text-[#C8E86B] text-[8px] font-black px-1.5 py-0.2 rounded border border-[#C8E86B]/30">
-                  {isCameraActive ? '📷 KAMERA AKTIF' : 'MONITORING'}
+                <span className="font-black text-[12.5px] text-white">SCANNER PASPOR AJIR</span>
+                <span className="bg-[#C8E86B]/20 text-[#C8E86B] text-[8px] font-black px-1.5 py-0.5 rounded border border-[#C8E86B]/30 tracking-wider">
+                  {isCameraActive ? '🟢 SENSOR OPTIK AKTIF' : 'BIOLOGICAL ASSET'}
                 </span>
               </div>
-              <span className="text-[8.5px] text-[#A3D9C9]">Pindai Ajir & Input Log Perawatan Harian</span>
+              <span className="text-[9px] text-[#A3D9C9] block mt-0.5 font-medium">
+                Pindai Plat QR Bedengan & Input Log Lapangan
+              </span>
             </div>
           </div>
           <button
             type="button"
             onClick={handleClose}
-            className="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-sm cursor-pointer hover:bg-white/20"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-lg cursor-pointer transition-colors"
           >
             &times;
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-3">
-          {/* Scanner Viewfinder Box */}
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-y-auto p-3.5 space-y-3.5">
+          
+          {/* ==================== CAMERA HUD SCANNER VIEW ==================== */}
           {!scannedTree && (
-            <div className="space-y-3">
-              <div className="relative h-52 rounded-[18px] bg-black border border-[#1C8361]/40 flex flex-col items-center justify-center text-white overflow-hidden shadow-inner p-4 text-center">
-                {/* Live Video Element */}
+            <div className="space-y-3 animate-in fade-in duration-150">
+              
+              {/* High-Tech Futuristic HUD Viewfinder */}
+              <div className="relative h-72 rounded-[22px] bg-neutral-950 border-2 border-[#1FB88B]/40 flex flex-col items-center justify-center text-white overflow-hidden shadow-xl p-3 text-center">
+                {/* Live Video */}
                 <video
                   ref={videoRef}
                   autoPlay
@@ -309,489 +320,477 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
                   className={`absolute inset-0 w-full h-full object-cover ${isCameraActive ? 'opacity-100' : 'opacity-0'}`}
                 />
 
-                {/* Scanner Laser & Viewfinder Brackets */}
-                <div className="absolute inset-x-8 top-6 bottom-6 border-2 border-dashed border-[#C8E86B] rounded-[16px] flex items-center justify-center pointer-events-none z-10">
-                  <div className="w-full h-0.5 bg-[#C8E86B] shadow-[0_0_14px_#C8E86B] animate-pulse"></div>
+                {/* HUD Grid Overlay */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+
+                {/* 4 Glowing Corner Brackets */}
+                <div className="absolute top-4 left-4 w-7 h-7 border-t-2 border-l-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 border-t-2 border-r-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+                <div className="absolute bottom-4 left-4 w-7 h-7 border-b-2 border-l-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+                <div className="absolute bottom-4 right-4 w-7 h-7 border-b-2 border-r-2 border-[#C8E86B] drop-shadow-[0_0_8px_#C8E86B] z-10 pointer-events-none"></div>
+
+                {/* Reticle & Sweeping Laser Line */}
+                <div className="w-48 h-48 border border-white/20 rounded-[18px] flex items-center justify-center pointer-events-none relative z-10">
+                  <div className="absolute inset-x-2 top-1/2 h-0.5 bg-gradient-to-r from-transparent via-[#C8E86B] to-transparent shadow-[0_0_16px_#C8E86B] animate-pulse"></div>
+                  <div className="w-2 h-2 rounded-full bg-[#C8E86B] shadow-[0_0_8px_#C8E86B]"></div>
                 </div>
 
+                {/* Top HUD Telemetry Tags */}
+                <div className="absolute top-3 inset-x-4 flex justify-between items-center text-[8.5px] font-mono text-[#C8E86B] z-20 pointer-events-none">
+                  <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
+                    🎯 AUTO-FOCUS
+                  </span>
+                  <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
+                    📍 GPS: -6.46972, 107.05831
+                  </span>
+                </div>
+
+                {/* Placeholder State when Camera isn't streamed */}
                 {!isCameraActive && (
-                  <div className="relative z-10 flex flex-col items-center">
-                    <i className="ri-qr-code-line text-4xl text-[#C8E86B] mb-1"></i>
-                    <strong className="text-[12px] text-white">Arahkan Kamera ke Barcode Ajir Sampel</strong>
-                    <span className="text-[9.5px] text-[#A3D9C9] max-w-[210px] mt-0.5">
-                      Pindai QR pohon sampel untuk input riwayat siram, pupuk, atau pruning.
-                    </span>
-                    <div className="flex gap-2 mt-2.5">
-                      <button
-                        type="button"
-                        onClick={startCamera}
-                        className="px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-full text-[10px] font-bold text-white border border-white/20 cursor-pointer"
-                      >
-                        📷 Buka Kamera Live
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="px-3 py-1.5 bg-[#C8E86B] hover:bg-[#b8d85c] rounded-full text-[10px] font-black text-[#061E18] cursor-pointer shadow-xs"
-                      >
-                        📸 Ambil Foto QR
-                      </button>
+                  <div className="relative z-10 flex flex-col items-center px-4">
+                    <div className="w-12 h-12 rounded-full bg-white/10 border border-[#C8E86B]/30 flex items-center justify-center mb-2 text-[#C8E86B] text-2xl animate-pulse">
+                      <i className="ri-qr-code-line"></i>
                     </div>
+                    <strong className="text-[12px] text-white">Arahkan Kamera ke Barcode Ajir Sampel</strong>
+                    <span className="text-[9.5px] text-[#A3D9C9] max-w-[240px] mt-0.5">
+                      {cameraError || 'Pindai plat barcode di tiang ajir kebun untuk membuka KTP tanaman.'}
+                    </span>
                   </div>
                 )}
 
-                {/* Floating Bottom Capture Trigger when Live */}
-                {isCameraActive && (
-                  <div className="absolute bottom-2.5 inset-x-4 z-20 flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => handleTriggerScan('SAMPLE-JGL-A2-0842')}
-                      className="px-4 py-1.5 rounded-full bg-[#C8E86B] text-[#061E18] text-[11px] font-black shadow-lg cursor-pointer flex items-center gap-1.5 active:scale-95 transition-transform"
-                    >
-                      <i className="ri-qr-scan-line text-sm"></i>
-                      <span>Scan Barcode QR</span>
-                    </button>
-                  </div>
-                )}
+                {/* In-Viewfinder Camera Trigger Button */}
+                <div className="absolute bottom-3.5 inset-x-4 z-20 flex justify-center items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTriggerScan('SAMPLE-TR-A2-0841')}
+                    disabled={isScanning}
+                    className="py-2.5 px-6 rounded-full bg-[#C8E86B] hover:bg-[#b8d85c] text-[#061E18] font-black text-[12px] cursor-pointer shadow-lg active:scale-95 transition-all flex items-center gap-2"
+                  >
+                    <i className="ri-qr-scan-line text-sm"></i>
+                    <span>{isScanning ? 'Membaca QR...' : '📸 Pindai Barcode Ajir'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="py-2.5 px-3.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md text-white font-bold text-[11px] border border-white/30 cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-95"
+                  >
+                    <i className="ri-image-add-line text-sm"></i>
+                    <span>Galeri</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Hidden File Input for Native Camera Intent */}
+              {/* Hidden File Input for Native Camera / Image File */}
               <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 capture="environment"
                 className="hidden"
-                onChange={() => handleTriggerScan('SAMPLE-JGL-A2-0842')}
+                onChange={() => handleTriggerScan('SAMPLE-TR-A2-0841')}
               />
 
-              {/* Simulation Quick Scan Buttons with Real Dynamic QR Codes */}
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0F5545] block">
-                  Simulasi Pindai Barcode Ajir Sampel:
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTriggerScan('SAMPLE-JGL-A2-0842')}
-                    disabled={isScanning}
-                    className="p-2 rounded-[12px] bg-white border border-[#DDE5DF] shadow-xs text-left cursor-pointer hover:border-[#0F5545] transition-all flex items-center gap-2"
-                  >
-                    <DynamicQRCode value="SAMPLE-JGL-A2-0842" size={34} />
-                    <div>
-                      <strong className="text-[11px] text-[#17211E] block leading-tight">Melon Sampel #1</strong>
-                      <span className="text-[8.5px] text-[#5F6A65] font-mono block mt-0.5">A2 #18 (43 HST)</span>
-                    </div>
-                  </button>
+              {/* Verified Sample Plants Quick Selector (Clean Cards) */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center px-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545]">
+                    SAMPEL AJIR TERVERIFIKASI GAP DI LAHAN:
+                  </span>
+                  <span className="text-[9px] font-bold text-[#5F6A65] bg-white px-2 py-0.5 rounded-full border border-[#DDE5DF]">
+                    3 Sampel Aktif
+                  </span>
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleTriggerScan('SAMPLE-JGL-B1-0412')}
-                    disabled={isScanning}
-                    className="p-2 rounded-[12px] bg-white border border-[#DDE5DF] shadow-xs text-left cursor-pointer hover:border-[#0F5545] transition-all flex items-center gap-2"
+                <div className="space-y-2">
+                  {/* Sample 1 */}
+                  <div
+                    onClick={() => handleTriggerScan('SAMPLE-TR-A2-0841')}
+                    className="p-3 rounded-[16px] bg-white border border-[#E2EAE5] hover:border-[#0F5545] cursor-pointer shadow-2xs transition-all flex items-center justify-between gap-3 active:scale-[0.99]"
                   >
-                    <DynamicQRCode value="SAMPLE-JGL-B1-0412" size={34} />
-                    <div>
-                      <strong className="text-[11px] text-[#17211E] block leading-tight">Porang Sampel #2</strong>
-                      <span className="text-[8.5px] text-[#5F6A65] font-mono block mt-0.5">B1 #08 (78 HST)</span>
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-[12px] bg-[#E8F1EA] text-[#0F5545] border border-[#0F5545]/15 flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+                        🍈
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <strong className="text-[12px] font-black text-[#11231D] truncate block">
+                          Melon Golden Apollo F1
+                        </strong>
+                        <span className="text-[9.5px] font-mono text-[#0F5545] font-bold block mt-0.5">
+                          SAMPLE-TR-A2-0841 • <span className="text-[#5F6A65] font-sans">Blok A2 Ajir #17 (43 HST)</span>
+                        </span>
+                      </div>
                     </div>
-                  </button>
+                    <div className="shrink-0 text-right">
+                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#166534] block mb-0.5">
+                        98.4% Sehat
+                      </span>
+                      <span className="text-[10px] font-black text-[#0F5545] flex items-center justify-end gap-0.5">
+                        Buka KTP <i className="ri-arrow-right-s-line"></i>
+                      </span>
+                    </div>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleTriggerScan('SAMPLE-JGL-C1-0119')}
-                    disabled={isScanning}
-                    className="p-2 rounded-[12px] bg-white border border-[#DDE5DF] shadow-xs text-left cursor-pointer hover:border-[#0F5545] transition-all flex items-center gap-2 col-span-2"
+                  {/* Sample 2 */}
+                  <div
+                    onClick={() => handleTriggerScan('SAMPLE-TR-B1-0412')}
+                    className="p-3 rounded-[16px] bg-white border border-[#E2EAE5] hover:border-[#0F5545] cursor-pointer shadow-2xs transition-all flex items-center justify-between gap-3 active:scale-[0.99]"
                   >
-                    <DynamicQRCode value="SAMPLE-JGL-C1-0119" size={34} />
-                    <div>
-                      <strong className="text-[11px] text-[#17211E] block leading-tight">Cabai Rawit Sampel #3</strong>
-                      <span className="text-[8.5px] text-[#5F6A65] font-mono block mt-0.5">Blok C1 #32 • Buah Lebat (57 HST)</span>
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-[12px] bg-[#E8F1EA] text-[#0F5545] border border-[#0F5545]/15 flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+                        🍠
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <strong className="text-[12px] font-black text-[#11231D] truncate block">
+                          Porang Madiun Super
+                        </strong>
+                        <span className="text-[9.5px] font-mono text-[#0F5545] font-bold block mt-0.5">
+                          SAMPLE-TR-B1-0412 • <span className="text-[#5F6A65] font-sans">Blok B1 Ajir #08 (78 HST)</span>
+                        </span>
+                      </div>
                     </div>
-                  </button>
+                    <div className="shrink-0 text-right">
+                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#166534] block mb-0.5">
+                        94.2% Sehat
+                      </span>
+                      <span className="text-[10px] font-black text-[#0F5545] flex items-center justify-end gap-0.5">
+                        Buka KTP <i className="ri-arrow-right-s-line"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Sample 3 */}
+                  <div
+                    onClick={() => handleTriggerScan('SAMPLE-TR-C1-0119')}
+                    className="p-3 rounded-[16px] bg-white border border-[#E2EAE5] hover:border-[#0F5545] cursor-pointer shadow-2xs transition-all flex items-center justify-between gap-3 active:scale-[0.99]"
+                  >
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 rounded-[12px] bg-[#E8F1EA] text-[#0F5545] border border-[#0F5545]/15 flex items-center justify-center text-2xl shrink-0 shadow-2xs">
+                        🌶️
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <strong className="text-[12px] font-black text-[#11231D] truncate block">
+                          Cabai Rawit Ori 212
+                        </strong>
+                        <span className="text-[9.5px] font-mono text-[#0F5545] font-bold block mt-0.5">
+                          SAMPLE-TR-C1-0119 • <span className="text-[#5F6A65] font-sans">Blok C1 Ajir #32 (57 HST)</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#166534] block mb-0.5">
+                        96.0% Sehat
+                      </span>
+                      <span className="text-[10px] font-black text-[#0F5545] flex items-center justify-end gap-0.5">
+                        Buka KTP <i className="ri-arrow-right-s-line"></i>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ==================== DISPLAY KTP POHON SAMPEL ==================== */}
+          {/* ==================== DISPLAY KTP PASPOR DIGITAL ==================== */}
           {scannedTree && (
-            <div className="space-y-2.5 animate-in fade-in duration-200">
+            <div className="space-y-3 animate-in fade-in duration-200">
+              
               {actionSuccessMsg && (
-                <div className="p-2 bg-[#E8F1EA] text-[#0F5545] rounded-[10px] text-[11px] font-extrabold text-center border border-[#0F5545]/20 animate-in fade-in">
+                <div className="p-2.5 bg-[#E8F1EA] text-[#0F5545] rounded-[12px] text-[11px] font-bold text-center border border-[#0F5545]/20 animate-in fade-in">
                   {actionSuccessMsg}
                 </div>
               )}
 
-              {/* 5 Feature Sub-Tabs */}
-              <div className="grid grid-cols-5 gap-1 bg-[#E8F3ED] p-1 rounded-[10px]">
+              {/* 3 Main Tabs */}
+              <div className="grid grid-cols-3 gap-1 bg-[#E8EEEA] p-1 rounded-[14px]">
                 <button
                   type="button"
                   onClick={() => setActiveTab('ktp')}
-                  className={`py-1 text-center rounded-[8px] font-bold text-[8.5px] transition-all ${
+                  className={`py-2 text-[11px] font-black rounded-[11px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
                     activeTab === 'ktp' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
                   }`}
                 >
-                  🪪 KTP
+                  <i className="ri-passport-line"></i>
+                  <span>Paspor KTP</span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('growth')}
+                  className={`py-2 text-[11px] font-black rounded-[11px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    activeTab === 'growth' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
+                  }`}
+                >
+                  <i className="ri-line-chart-line"></i>
+                  <span>Siklus Tumbuh</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setActiveTab('input_log')}
-                  className={`py-1 text-center rounded-[8px] font-bold text-[8.5px] transition-all ${
+                  className={`py-2 text-[11px] font-black rounded-[11px] transition-all cursor-pointer flex items-center justify-center gap-1 ${
                     activeTab === 'input_log' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
                   }`}
                 >
-                  📝 + Log
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('riwayat_rawat')}
-                  className={`py-1 text-center rounded-[8px] font-bold text-[8.5px] transition-all ${
-                    activeTab === 'riwayat_rawat' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
-                  }`}
-                >
-                  📋 Rawat
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('timelapse')}
-                  className={`py-1 text-center rounded-[8px] font-bold text-[8.5px] transition-all ${
-                    activeTab === 'timelapse' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
-                  }`}
-                >
-                  📸 Foto
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('sertifikat')}
-                  className={`py-1 text-center rounded-[8px] font-bold text-[8.5px] transition-all ${
-                    activeTab === 'sertifikat' ? 'bg-[#0F5545] text-white shadow-xs' : 'text-[#5F6A65]'
-                  }`}
-                >
-                  📜 Mutu
+                  <i className="ri-edit-box-line"></i>
+                  <span>Catat Rawat</span>
                 </button>
               </div>
 
-              {/* TAB 1: KTP SAMPEL */}
+              {/* ==================== TAB 1: PASSPORT CARD VIEW ==================== */}
               {activeTab === 'ktp' && (
-                <div className="space-y-2.5 animate-in fade-in">
-                  <div className="rounded-[16px] bg-gradient-to-br from-[#061E18] via-[#0A382E] to-[#0F4E40] text-white p-3.5 shadow-md border border-[#1C8361]/40">
-                    <div className="flex items-center justify-between mb-2 pb-2 border-b border-white/15">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-[7px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-black text-xs">
-                          <i className="ri-leaf-fill"></i>
+                <div className="space-y-3">
+                  {/* Diplomatic Green-Gold Holographic Passport Card */}
+                  <div className="bg-gradient-to-br from-[#061E18] via-[#09352A] to-[#041611] text-white rounded-[22px] p-4 shadow-xl border border-[#1FB88B]/40 relative overflow-hidden space-y-3">
+                    
+                    {/* Header with Title & QR */}
+                    <div className="flex justify-between items-start gap-2 border-b border-white/15 pb-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="bg-[#C8E86B] text-[#061E18] text-[8.5px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
+                            🛡️ PASPOR ASET BIOLOGIS
+                          </span>
+                          <span className="text-[9px] text-[#A7F3D0] font-bold">
+                            ✓ GAP ORGANIK
+                          </span>
                         </div>
-                        <div>
-                          <strong className="text-[12px] text-white block leading-tight">PASPOR POHON SAMPEL</strong>
-                          <span className="text-[8.5px] text-[#C8E86B] font-bold">MONITORING KEBUN</span>
-                        </div>
+                        <h1 className="text-[15.5px] font-black text-white m-0 leading-tight">
+                          {scannedTree.variety}
+                        </h1>
+                        <span className="text-[10.5px] font-mono text-[#C8E86B] font-bold block mt-0.5">
+                          {scannedTree.code}
+                        </span>
+                        <span className="text-[9.5px] text-[#A7F3D0] block mt-0.5">
+                          {scannedTree.block} • {scannedTree.rowAjir}
+                        </span>
                       </div>
-                      <div className="bg-white rounded-[6px] p-0.5 shadow-xs">
-                        <DynamicQRCode value={scannedTree.code} size={46} />
+
+                      {/* Dynamic QR Badge */}
+                      <div className="bg-white p-1 rounded-[12px] shadow-md shrink-0 border border-white/40 text-center">
+                        <DynamicQRCode value={scannedTree.code} size={54} bordered={false} />
+                        <span className="text-[7.5px] font-mono font-black text-[#061E18] block mt-0.5">
+                          PINDAI SAYA
+                        </span>
                       </div>
                     </div>
 
-                    <div className="space-y-1 text-[10.5px]">
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Kode Sampel:</span>
-                        <strong className="text-white font-mono">{scannedTree.code}</strong>
+                    {/* 4 Key KPI Tiles */}
+                    <div className="grid grid-cols-2 gap-2 text-[10.5px]">
+                      <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                        <span className="text-[9px] text-[#A7F3D0] font-semibold block">📅 Umur & Fase:</span>
+                        <strong className="text-[12px] font-black text-[#C8E86B] block mt-0.5">
+                          {scannedTree.ageDays} HST
+                        </strong>
+                        <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                          {scannedTree.phase}
+                        </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Varietas:</span>
-                        <strong className="text-white">{scannedTree.variety}</strong>
+
+                      <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                        <span className="text-[9px] text-[#A7F3D0] font-semibold block">📏 Ukuran & Bobot:</span>
+                        <strong className="text-[12px] font-black text-white block mt-0.5">
+                          Est. {scannedTree.estYieldKg} Kg/Pohon
+                        </strong>
+                        <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                          Tinggi: {scannedTree.growthStory[scannedTree.growthStory.length - 1]?.heightCm || 188} cm
+                        </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Lokasi / Ajir:</span>
-                        <strong className="text-white">{scannedTree.block} ({scannedTree.rowAjir})</strong>
+
+                      <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                        <span className="text-[9px] text-[#A7F3D0] font-semibold block">🍯 Est. Brix / Mutu:</span>
+                        <strong className="text-[12px] font-black text-[#C8E86B] block mt-0.5">
+                          {scannedTree.targetBrix}
+                        </strong>
+                        <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                          Standar Ekspor Grade A
+                        </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Tanggal Tanam:</span>
-                        <strong className="text-white">{scannedTree.plantingDate}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Usia Aktual (HST):</span>
-                        <strong className="text-[#C8E86B]">{scannedTree.ageDays} HST • {scannedTree.phase}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Petani / Mandor:</span>
-                        <strong className="text-white">{scannedTree.farmer} • {scannedTree.mandor}</strong>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#A3D9C9]">Perawatan Terakhir:</span>
-                        <strong className="text-white">{scannedTree.lastTreatment}</strong>
+
+                      <div className="bg-white/10 backdrop-blur-xs p-2.5 rounded-[12px] border border-white/15">
+                        <span className="text-[9px] text-[#A7F3D0] font-semibold block">🩺 Skor Kesehatan:</span>
+                        <strong className="text-[12px] font-black text-[#7AE3B6] block mt-0.5">
+                          {scannedTree.healthScore}% Optimal
+                        </strong>
+                        <span className="text-[8.5px] text-white/80 block truncate mt-0.5">
+                          PJ: {scannedTree.farmer}
+                        </span>
                       </div>
                     </div>
 
-                    {/* 3 Metric Pills */}
-                    <div className="grid grid-cols-3 gap-1.5 mt-2.5 pt-2 border-t border-white/15 text-center text-[9.5px]">
-                      <div className="bg-white/10 p-1.5 rounded-[8px]">
-                        <span className="block text-[#A3D9C9] text-[8px]">Kesehatan AI</span>
-                        <strong className="text-white text-[10.5px]">{scannedTree.healthScore}% Sehat</strong>
+                    {/* Biological Asset Valuation & Certification Footer */}
+                    <div className="pt-2 border-t border-white/15 flex flex-col gap-1 text-[9px] text-[#A7F3D0]">
+                      <div className="flex justify-between items-center">
+                        <span>📍 GPS: <strong className="font-mono text-white">{scannedTree.gpsCoords}</strong></span>
+                        <span className="bg-[#C8E86B]/20 text-[#C8E86B] px-2 py-0.5 rounded font-mono font-bold">
+                          {scannedTree.gapCertificateNo.split(' ')[0]}
+                        </span>
                       </div>
-                      <div className="bg-white/10 p-1.5 rounded-[8px]">
-                        <span className="block text-[#A3D9C9] text-[8px]">Target Brix</span>
-                        <strong className="text-[#C8E86B] text-[10.5px]">{scannedTree.targetBrix}</strong>
-                      </div>
-                      <div className="bg-white/10 p-1.5 rounded-[8px]">
-                        <span className="block text-[#A3D9C9] text-[8px]">Est. Bobot</span>
-                        <strong className="text-white text-[10.5px]">{scannedTree.estYieldKg} Kg</strong>
+                      <div className="bg-black/30 p-2 rounded-[8px] flex justify-between items-center text-white border border-white/10 mt-1">
+                        <span>💰 Valuasi Panen per Pohon:</span>
+                        <strong className="text-[#C8E86B] font-black text-[10.5px]">
+                          {scannedTree.variety.includes('Melon') ? 'Rp 60.000 (ROI +32%)' : scannedTree.variety.includes('Porang') ? 'Rp 70.000 (ROI +35%)' : 'Rp 48.000 (ROI +28%)'}
+                        </strong>
                       </div>
                     </div>
                   </div>
 
-                  {/* Button to Open Quick Log */}
+                  {/* Scan Another Tree Button */}
                   <button
                     type="button"
-                    onClick={() => setActiveTab('input_log')}
-                    className="w-full py-2.5 bg-[#0F5545] text-white font-extrabold text-[11px] rounded-[10px] flex items-center justify-center gap-1.5 cursor-pointer hover:bg-[#0B251E] shadow-sm"
+                    onClick={() => {
+                      setScannedTree(null);
+                      startCamera();
+                    }}
+                    className="w-full py-2.5 bg-[#FAFBF8] hover:bg-[#E8F1EA] text-[#0F5545] font-bold text-[11px] rounded-[14px] border border-[#DDE5DF] flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                   >
-                    <i className="ri-edit-box-line text-base"></i>
-                    <span>+ Catat Tindakan Perawatan Pohon Ini</span>
+                    <i className="ri-qr-scan-2-line"></i>
+                    <span>Pindai Barcode Ajir Lainnya</span>
                   </button>
                 </div>
               )}
 
-              {/* TAB 2: INPUT LOG DROPDOWN PERAWATAN */}
-              {activeTab === 'input_log' && (
-                <form onSubmit={handleSaveMobileLog} className="space-y-2.5 animate-in fade-in">
-                  <div className="bg-white rounded-[16px] p-3 border border-[#DDE5DF] shadow-xs space-y-2">
-                    <strong className="text-[11.5px] text-[#17211E] block">
-                      📝 Pilih Tindakan Perawatan Lapangan:
-                    </strong>
+              {/* ==================== TAB 2: GROWTH TIMELAPSE & AUDIT TRAIL ==================== */}
+              {activeTab === 'growth' && (
+                <div className="space-y-3">
+                  <div className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-2.5">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545] block">
+                      5 TAHAP PERTUMBUHAN TANAMAN:
+                    </span>
 
-                    {/* Dropdown 1: Action Type */}
-                    <div>
-                      <label className="text-[9.5px] font-bold text-[#5F6A65] block mb-0.5">
-                        1. Kategori Tindakan:
-                      </label>
-                      <select
-                        value={formActionType}
-                        onChange={(e) => handleActionTypeSelect(e.target.value as MaintenanceLog['actionType'])}
-                        className="w-full p-2 bg-[#FAFBF8] border border-[#0F5545] rounded-[8px] text-[11px] font-extrabold text-[#0F5545] focus:outline-none"
-                        required
-                      >
-                        <option value="PENYIRAMAN">💧 Penyiraman (Irigasi Drip / Kocor)</option>
-                        <option value="PEMUPUKAN">🧪 Pemupukan (AB Mix / MgSO4 / NPK)</option>
-                        <option value="PRUNING">✂️ Pruning / Wiwit Cabang Air</option>
-                        <option value="HAMA_PENYAKIT">🐛 Sanitasi / Pengendalian Hama</option>
-                        <option value="PENGUKURAN">📏 Pengukuran Tinggi & Caliper</option>
-                        <option value="UJI_BRIX">🍬 Uji Kadar Kemanisan (Brix)</option>
-                      </select>
-                    </div>
-
-                    {/* Input 2: Material / Pupuk */}
-                    <div>
-                      <label className="text-[9.5px] font-bold text-[#5F6A65] block mb-0.5">
-                        2. Bahan / Nutrisi / Pupuk:
-                      </label>
-                      <input
-                        type="text"
-                        value={formMaterial}
-                        onChange={(e) => setFormMaterial(e.target.value)}
-                        placeholder="Contoh: AB Mix Organik / MgSO4"
-                        className="w-full p-1.5 bg-[#FAFBF8] border border-[#DDE5DF] rounded-[8px] text-[11px] text-[#17211E]"
-                        required
-                      />
-                    </div>
-
-                    {/* Input 3: Dosis */}
-                    <div>
-                      <label className="text-[9.5px] font-bold text-[#5F6A65] block mb-0.5">
-                        3. Dosis / Takaran:
-                      </label>
-                      <input
-                        type="text"
-                        value={formDose}
-                        onChange={(e) => setFormDose(e.target.value)}
-                        placeholder="Contoh: 2.0 Liter / pohon"
-                        className="w-full p-1.5 bg-[#FAFBF8] border border-[#DDE5DF] rounded-[8px] text-[11px] text-[#17211E]"
-                        required
-                      />
-                    </div>
-
-                    {/* Input 4: Nama Pekerja */}
-                    <div>
-                      <label className="text-[9.5px] font-bold text-[#5F6A65] block mb-0.5">
-                        4. Nama Pekerja / Mandor:
-                      </label>
-                      <input
-                        type="text"
-                        value={formWorker}
-                        onChange={(e) => setFormWorker(e.target.value)}
-                        className="w-full p-1.5 bg-[#FAFBF8] border border-[#DDE5DF] rounded-[8px] text-[11px] text-[#17211E]"
-                        required
-                      />
-                    </div>
-
-                    {/* Input 5: Catatan Pekerja */}
-                    <div>
-                      <label className="text-[9.5px] font-bold text-[#5F6A65] block mb-0.5">
-                        5. Catatan Pengamatan Lapangan:
-                      </label>
-                      <input
-                        type="text"
-                        value={formNotes}
-                        onChange={(e) => setFormNotes(e.target.value)}
-                        placeholder="Contoh: Daun sehat, sulur kuat"
-                        className="w-full p-1.5 bg-[#FAFBF8] border border-[#DDE5DF] rounded-[8px] text-[11px] text-[#17211E]"
-                      />
+                    <div className="space-y-2">
+                      {scannedTree.growthStory.map((story, idx) => (
+                        <div key={idx} className="flex items-start gap-2.5 text-[11px]">
+                          <div className="w-6 h-6 rounded-full bg-[#E8F1EA] text-[#0F5545] border border-[#0F5545]/20 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            {idx + 1}
+                          </div>
+                          <div className="flex-1 bg-[#F8FAF8] p-2 rounded-[10px] border border-[#E8F0EB]">
+                            <div className="flex justify-between items-center">
+                              <strong className="text-[#11231D]">{story.stage}</strong>
+                              <span className="text-[9.5px] font-bold text-[#15803D]">{story.heightCm} cm</span>
+                            </div>
+                            <span className="text-[9.5px] text-[#5F6A65] block mt-0.5">{story.date} • {story.note}</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <button
-                      type="submit"
-                      className="flex-1 py-2 bg-[#0F5545] text-white font-extrabold text-[11px] rounded-[10px] cursor-pointer hover:bg-[#0B251E] shadow-xs"
-                    >
-                      💾 Simpan Log ke KTP Pohon
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('ktp')}
-                      className="px-3 py-2 border border-[#DDE5DF] text-[#5F6A65] font-bold text-[11px] rounded-[10px]"
-                    >
-                      Batal
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* TAB 3: RIWAYAT PERAWATAN LENGKAP */}
-              {activeTab === 'riwayat_rawat' && (
-                <div className="space-y-2 animate-in fade-in">
-                  <div className="flex justify-between items-center">
-                    <strong className="text-[11.5px] text-[#17211E]">📋 Riwayat Log Perawatan:</strong>
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('input_log')}
-                      className="text-[9.5px] font-bold text-[#0F5545] bg-[#E8F1EA] px-2 py-0.5 rounded"
-                    >
-                      + Tambah Log
-                    </button>
-                  </div>
-
-                  <div className="space-y-1.5 text-[10px]">
-                    {scannedTree.maintenanceLogs.map((log) => (
-                      <div key={log.id} className="p-2 rounded-[10px] bg-white border border-[#DDE5DF] shadow-2xs space-y-0.5">
-                        <div className="flex justify-between items-center">
-                          <strong className="text-[#17211E] text-[11px]">{log.actionName}</strong>
-                          <span className="font-bold text-[#0F5545] text-[9px]">{log.date}</span>
+                  {/* Audit Trail Log Lapangan */}
+                  <div className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-2">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545] block">
+                      RIWAYAT LOG TINDAKAN MANDOR:
+                    </span>
+                    <div className="space-y-1.5">
+                      {scannedTree.maintenanceLogs.map((log) => (
+                        <div key={log.id} className="p-2 rounded-[10px] bg-[#F8FAF8] border border-[#E8F0EB] text-[10px]">
+                          <div className="flex justify-between items-center">
+                            <strong className="text-[#0F5545]">{log.actionName}</strong>
+                            <span className="text-[9px] text-[#5F6A65]">{log.date}</span>
+                          </div>
+                          <span className="text-[#11231D] block mt-0.5">{log.material} ({log.dose})</span>
+                          <span className="text-[#5F6A65] text-[9px] block">Petugas: {log.workerName}</span>
                         </div>
-                        <div className="text-[#5F6A65] text-[9.5px]">
-                          Bahan: <span className="font-bold text-[#17211E]">{log.material}</span> ({log.dose})
-                        </div>
-                        <div className="text-[9px] text-[#5F6A65] flex justify-between">
-                          <span>Oleh: {log.workerName}</span>
-                          <span className="italic">{log.notes}</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* TAB 4: TIME-LAPSE PERTUMBUHAN */}
-              {activeTab === 'timelapse' && (
-                <div className="space-y-2 animate-in fade-in">
-                  <div className="flex justify-between items-center">
-                    <strong className="text-[11.5px] text-[#0B251E]">📸 Log Foto Time-Lapse</strong>
-                    <span className="text-[9px] bg-[#E8F1EA] text-[#0F5545] font-bold px-1.5 py-0.5 rounded">
-                      Tahap ke-{selectedGrowthIdx + 1}
-                    </span>
-                  </div>
+              {/* ==================== TAB 3: CATAT TINDAKAN ==================== */}
+              {activeTab === 'input_log' && (
+                <div className="bg-white rounded-[18px] p-3.5 border border-[#E2EAE5] shadow-xs space-y-3">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#0F5545] block">
+                    FORM CATAT TINDAKAN RAWAT POHON:
+                  </span>
 
-                  <div className="flex gap-1 overflow-x-auto pb-1">
-                    {scannedTree.growthStory.map((stg, i) => (
+                  {/* Action Type Presets */}
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(['PENYIRAMAN', 'PEMUPUKAN', 'PRUNING', 'HAMA_PENYAKIT', 'PENGUKURAN', 'UJI_BRIX'] as const).map((type) => (
                       <button
-                        key={i}
+                        key={type}
                         type="button"
-                        onClick={() => setSelectedGrowthIdx(i)}
-                        className={`px-2 py-1 rounded-[8px] text-[9.5px] whitespace-nowrap font-bold flex-shrink-0 transition-all ${
-                          selectedGrowthIdx === i
-                            ? 'bg-[#0F5545] text-white shadow-xs'
-                            : 'bg-white text-[#5F6A65] border border-[#DDE5DF]'
+                        onClick={() => handleActionTypeSelect(type)}
+                        className={`py-2 px-1 rounded-[10px] text-[10px] font-bold border transition-all cursor-pointer ${
+                          formActionType === type
+                            ? 'bg-[#0F5545] text-white border-[#0F5545] shadow-xs'
+                            : 'bg-[#F8FAF8] text-[#5F6A65] border-[#E8F0EB] hover:border-[#0F5545]'
                         }`}
                       >
-                        {stg.stage}
+                        {type === 'PENYIRAMAN' && '💧 Siram Drip'}
+                        {type === 'PEMUPUKAN' && '🌿 Pemupukan'}
+                        {type === 'PRUNING' && '✂️ Pruning'}
+                        {type === 'HAMA_PENYAKIT' && '🛡️ Hama'}
+                        {type === 'PENGUKURAN' && '📏 Ukur Buah'}
+                        {type === 'UJI_BRIX' && '🍯 Tes Brix'}
                       </button>
                     ))}
                   </div>
 
-                  {scannedTree.growthStory[selectedGrowthIdx] && (
-                    <div className="p-3 rounded-[14px] bg-white border border-[#DDE5DF] shadow-xs space-y-2">
-                      <div className="h-28 rounded-[10px] bg-[#071915] text-white flex flex-col items-center justify-center p-2 text-center relative overflow-hidden">
-                        <i className="ri-camera-fill text-2xl text-[#C8E86B] mb-0.5"></i>
-                        <strong className="text-[11px]">{scannedTree.growthStory[selectedGrowthIdx].stage}</strong>
-                        <span className="text-[8.5px] text-[#A3D9C9]">
-                          Tinggi: {scannedTree.growthStory[selectedGrowthIdx].heightCm} cm • {scannedTree.growthStory[selectedGrowthIdx].date}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-[#5F6A65] bg-[#FAFBF8] p-2 rounded-[8px] border border-[#DDE5DF] m-0">
-                        {scannedTree.growthStory[selectedGrowthIdx].note}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* TAB 5: SERTIFIKAT MUTU & TRACEABILITY (CLEAN & NON-LEBAY) */}
-              {activeTab === 'sertifikat' && (
-                <div className="p-3 rounded-[14px] bg-white border border-[#DDE5DF] shadow-xs space-y-2.5 animate-in fade-in">
-                  <div className="flex justify-between items-start border-b border-[#DDE5DF] pb-1.5">
+                  <form onSubmit={handleSaveMobileLog} className="space-y-2.5 text-[11px]">
                     <div>
-                      <span className="text-[8px] font-bold text-[#5F6A65] uppercase tracking-wider block">
-                        SMART FARM TRACEABILITY
-                      </span>
-                      <strong className="text-[11.5px] text-[#17211E] block">Sertifikat Asal-Usul Mutu</strong>
-                      <span className="text-[8.5px] text-[#5F6A65]">No: CERT/JGL/2026/0982</span>
+                      <label className="text-[10px] font-bold text-[#5F6A65] block mb-0.5">Nama Tindakan:</label>
+                      <input
+                        type="text"
+                        value={formActionName}
+                        onChange={(e) => setFormActionName(e.target.value)}
+                        className="w-full p-2 bg-[#F8FAF8] border border-[#DDE5DF] rounded-[10px] font-bold text-[#11231D]"
+                        required
+                      />
                     </div>
-                    <span className="bg-[#E8F1EA] text-[#0F5545] text-[8px] font-extrabold px-1.5 py-0.5 rounded border border-[#0F5545]/20">
-                      ✓ GAP 0% Residu
-                    </span>
-                  </div>
 
-                  <div className="space-y-1 text-[10px]">
-                    <div className="flex justify-between py-0.5 border-b border-[#FAFBF8]">
-                      <span className="text-[#5F6A65]">Varietas:</span>
-                      <strong className="text-[#17211E]">{scannedTree.variety}</strong>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-[10px] font-bold text-[#5F6A65] block mb-0.5">Bahan / Nutrisi:</label>
+                        <input
+                          type="text"
+                          value={formMaterial}
+                          onChange={(e) => setFormMaterial(e.target.value)}
+                          className="w-full p-2 bg-[#F8FAF8] border border-[#DDE5DF] rounded-[10px]"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-bold text-[#5F6A65] block mb-0.5">Dosis / Ukuran:</label>
+                        <input
+                          type="text"
+                          value={formDose}
+                          onChange={(e) => setFormDose(e.target.value)}
+                          className="w-full p-2 bg-[#F8FAF8] border border-[#DDE5DF] rounded-[10px]"
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="flex justify-between py-0.5 border-b border-[#FAFBF8]">
-                      <span className="text-[#5F6A65]">Asal Lahan:</span>
-                      <strong className="text-[#17211E]">{scannedTree.block} ({scannedTree.rowAjir})</strong>
-                    </div>
-                    <div className="flex justify-between py-0.5 border-b border-[#FAFBF8]">
-                      <span className="text-[#5F6A65]">Usia Panen:</span>
-                      <strong className="text-[#0F5545]">{scannedTree.ageDays} HST</strong>
-                    </div>
-                    <div className="flex justify-between py-0.5 border-b border-[#FAFBF8]">
-                      <span className="text-[#5F6A65]">Kadar Brix / Bobot:</span>
-                      <strong className="text-[#17211E]">{scannedTree.targetBrix} • {scannedTree.estYieldKg} Kg</strong>
-                    </div>
-                    <div className="flex justify-between py-0.5">
-                      <span className="text-[#5F6A65]">Standar Mutu:</span>
-                      <strong className="text-[#17211E]">GAP • Aman Konsumsi</strong>
-                    </div>
-                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => alert(`Sertifikat Mutu Sampel ${scannedTree.code} siap diunduh.`)}
-                    className="w-full py-1.5 bg-[#0F5545] text-white font-bold text-[10px] rounded-[8px] flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    <i className="ri-download-2-line"></i>
-                    <span>Unduh Salinan Dokumen Mutu</span>
-                  </button>
+                    <div>
+                      <label className="text-[10px] font-bold text-[#5F6A65] block mb-0.5">Petugas Pelaksana:</label>
+                      <input
+                        type="text"
+                        value={formWorker}
+                        onChange={(e) => setFormWorker(e.target.value)}
+                        className="w-full p-2 bg-[#F8FAF8] border border-[#DDE5DF] rounded-[10px] font-semibold"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-bold text-[#5F6A65] block mb-0.5">Catatan Tambahan:</label>
+                      <textarea
+                        value={formNotes}
+                        onChange={(e) => setFormNotes(e.target.value)}
+                        rows={2}
+                        className="w-full p-2 bg-[#F8FAF8] border border-[#DDE5DF] rounded-[10px]"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-2.5 bg-[#0F5545] hover:bg-[#0B3B30] text-white font-black text-[12px] rounded-[12px] shadow-sm cursor-pointer transition-all"
+                    >
+                      💾 Simpan Log Tindakan ke KTP Tanaman
+                    </button>
+                  </form>
                 </div>
               )}
-
-              {/* Reset Scan Button */}
-              <button
-                type="button"
-                onClick={() => setScannedTree(null)}
-                className="w-full py-1.5 bg-[#E8F1EA] text-[#0F5545] font-extrabold text-[11px] rounded-[8px] cursor-pointer hover:bg-[#d5e7db]"
-              >
-                🔄 Pindai Pohon Sampel Lainnya
-              </button>
             </div>
           )}
         </div>

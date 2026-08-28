@@ -34,7 +34,7 @@ const frontendDist = path.resolve(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDist));
 
 // Fallback to index.html for SPA client-side routing
-app.get('*', (req: Request, res: Response, next) => {
+app.use((req: Request, res: Response, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }

@@ -1,0 +1,401 @@
+/* ==========================================================================
+   ENVAS MULTIPURPOSE THEME INTEGRATION FOR AGROJAYA INVESTOR LANDING PAGE
+   Consumed from: themeforest-V1rMd6J5-envas-multipurpose-html5-template
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Raleway:wght@400;500;600;700;800;900&display=swap');
+
+.envas-wrapper {
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1e293b;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #ffffff;
+}
+
+.envas-wrapper h1,
+.envas-wrapper h2,
+.envas-wrapper h3,
+.envas-wrapper h4,
+.envas-wrapper h5,
+.envas-wrapper h6,
+.envas-wrapper .envas-heading {
+  font-family: 'Raleway', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Envas Color Palette */
+:root {
+  --envas-green: #059669;
+  --envas-green-hover: #047857;
+  --envas-green-light: #ecfdf5;
+  --envas-blue: #0284c7;
+  --envas-dark: #0f172a;
+  --envas-dark-card: #1e293b;
+  --envas-gray-bg: #f8fafc;
+  --envas-border: #e2e8f0;
+}
+
+.envas-green-t { color: #059669 !important; }
+.envas-blue-t { color: #0284c7 !important; }
+.envas-yellow-t { color: #d97706 !important; }
+.envas-white-t { color: #ffffff !important; }
+
+.envas-green-bg { background-color: #059669 !important; }
+.envas-blue-bg { background-color: #0284c7 !important; }
+.envas-dark-bg { background-color: #0f172a !important; }
+.envas-light-bg { background-color: #f8fafc !important; }
+
+/* Envas Buttons with Characteristic ScaleX Animation */
+.envas-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.envas-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  z-index: -1;
+  opacity: 0;
+}
+
+.envas-btn:hover::before {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.envas-btn-green {
+  background-color: #059669;
+  color: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+}
+.envas-btn-green::before {
+  background-color: #0284c7;
+}
+.envas-btn-green:hover {
+  color: #ffffff;
+  border-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+}
+
+.envas-btn-border {
+  background-color: transparent;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+.envas-btn-border::before {
+  background-color: #059669;
+}
+.envas-btn-border:hover {
+  color: #ffffff;
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+.envas-btn-border-white {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.envas-btn-border-white::before {
+  background-color: #059669;
+}
+.envas-btn-border-white:hover {
+  color: #ffffff;
+  border-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.envas-btn-dark {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+.envas-btn-dark::before {
+  background-color: #059669;
+}
+.envas-btn-dark:hover {
+  color: #ffffff;
+  border-color: #059669;
+  transform: translateY(-2px);
+}
+
+/* Envas Topbar */
+.envas-topbar {
+  background-color: #064e3b;
+  color: #d1fae5;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Envas Full Screen Hero */
+.envas-hero-fullscreen {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+.envas-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(6, 78, 59, 0.85) 50%, rgba(15, 23, 42, 0.95) 100%);
+  z-index: 1;
+}
+
+.envas-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.envas-hero-fullscreen h1 {
+  color: #ffffff !important;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+}
+
+.envas-hero-highlight {
+  color: #4ade80 !important;
+  text-shadow: 0 0 35px rgba(74, 222, 128, 0.65), 0 2px 12px rgba(0, 0, 0, 0.9);
+  font-weight: 900 !important;
+}
+
+.envas-hero-fullscreen p {
+  color: #f8fafc !important;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+}
+
+.envas-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  background-color: rgba(6, 78, 59, 0.95) !important;
+  border: 1px solid #34d399 !important;
+  color: #a7f3d0 !important;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Envas Bento Metric Counters */
+.envas-counter-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 24px 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+.envas-counter-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -10px rgba(5, 150, 105, 0.2);
+  border-color: #86efac;
+}
+
+/* Envas 3-Column Info Box */
+.envas-info-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 100%;
+  position: relative;
+}
+.envas-info-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -10px rgba(5, 150, 105, 0.12);
+  border-color: #a7f3d0;
+}
+.envas-info-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px auto;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: all 0.3s ease;
+}
+.envas-info-box:hover .envas-info-icon {
+  background: #059669;
+  color: #ffffff;
+  transform: rotate(8deg) scale(1.05);
+}
+
+/* Envas Good Plans & Lifecycle Steps */
+.envas-plan-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.envas-plan-step.active {
+  background: #ffffff;
+  border-color: #059669;
+  box-shadow: 0 8px 20px -4px rgba(5, 150, 105, 0.15);
+}
+.envas-step-count {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #059669;
+  color: #ffffff;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.envas-plan-step:not(.active) .envas-step-count {
+  background: #cbd5e1;
+  color: #475569;
+}
+
+/* Envas Project Mosaic Card */
+.envas-mosaic-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: all 0.35s ease;
+}
+.envas-mosaic-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.envas-mosaic-card:hover img {
+  transform: scale(1.08);
+}
+.envas-mosaic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.3) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  color: #ffffff;
+}
+
+/* Envas Parallax CTA */
+.envas-parallax-cta {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #0284c7 100%);
+  color: #ffffff !important;
+  padding: 60px 0;
+  position: relative;
+}
+.envas-parallax-cta h3,
+.envas-parallax-cta p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Envas Rich Footer */
+.envas-footer {
+  background-color: #0b1320 !important;
+  color: #e2e8f0 !important;
+  font-size: 13.5px;
+  border-top: 1px solid #1e293b;
+}
+.envas-footer h4,
+.envas-footer h5 {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+.envas-footer h5::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 32px;
+  height: 2px;
+  background-color: #10b981;
+}
+.envas-footer p {
+  color: #cbd5e1 !important;
+  font-size: 13.5px !important;
+  line-height: 1.7 !important;
+}
+.envas-footer ul li {
+  margin-bottom: 12px;
+  color: #e2e8f0 !important;
+}
+.envas-footer ul li span {
+  color: #e2e8f0 !important;
+}
+.envas-footer ul li a {
+  color: #e2e8f0 !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+.envas-footer ul li a:hover {
+  color: #4ade80 !important;
+  transform: translateX(4px);
+}
+.envas-footer-bottom {
+  color: #cbd5e1 !important;
+  font-size: 13px !important;
+}

@@ -194,14 +194,6 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
         {/* ==================== 5. AI KEBUN ==================== */}
         {activeTab === 'ai' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Konsultasi Agronomi AI</h2>
 
             <div className="h-48 overflow-y-auto space-y-1.5 p-2 bg-[#FAFBF8] rounded-[10px] border border-[#DDE5DF]">
@@ -290,14 +282,15 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
       </div>
       <div
         style={{
-          height: '56px',
-          minHeight: '56px',
+          height: '62px',
+          minHeight: '62px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          paddingBottom: 'env(safe-area-inset-bottom, 2px)',
         }}
-        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)] flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex-shrink-0"
       >
         {/* 1. Menu Modul (Super App 12-Icon Grid) */}
         <button

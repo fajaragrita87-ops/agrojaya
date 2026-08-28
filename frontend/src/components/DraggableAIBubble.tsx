@@ -6,7 +6,7 @@ interface ChatMessage {
   sender: 'ai' | 'user';
   text: string;
   timestamp?: Date;
-  source?: 'gemini' | 'groq' | 'local';
+  source?: 'gemini' | 'groq' | 'backend' | 'local';
 }
 
 export const DraggableAIBubble = () => {
@@ -26,8 +26,8 @@ export const DraggableAIBubble = () => {
 
   // Initial greeting
   useEffect(() => {
-    const greeting = `Halo Bapak/Ibu **${userName || 'Pengguna'}** (${role})! Saya **Jaya**, Asisten Cerdas Agronomi & Akuntabilitas Investasi Smart Farming Jonggol (2.0 Ha).\n\nSaya siap membantu analisis seputar:\n• 🌱 **Kondisi Tanaman & SOP Tanam** (Porang Ekspor, Anggur, Melon, Jagung)\n• 📊 **Progres 8 Tahap Siklus Lahan** & Uji Kesuburan Tanah\n• 💰 **Transparansi OPEX, HPP, & Proyeksi ROI Modal**\n• 📋 **Laporan Audit Terpadu 5-Dimensi & BAP Digital**\n\nAda yang ingin Anda ketahui terkait kebun hari ini?`;
-    setMessages([{ sender: 'ai', text: greeting, timestamp: new Date(), source: 'gemini' }]);
+    const greeting = `Halo Bapak/Ibu **${userName || 'Pengguna'}** (${role})! Saya **Jaya**, AI Senior Agronomist & Konsultan Cerdas Smart Farming AgroJaya (Sentra Kebun Inti 2.0 Ha).\n\nSaya terhubung langsung dengan AI Intelligence untuk menjawab:\n• 🌿 **Konsultasi Tanaman & Agronomi** (Melon Greenhouse, Porang, Cabai, Alpukat)\n• 🧪 **Dosis Pupuk, pH Tanah, & Nutrisi AB Mix**\n• 🛡️ **Pengendalian Hama & Penyakit (PHT)** (Fusarium, Antraknosa, Trips)\n• 💰 **Kewajaran Biaya & Transparansi Anggaran Kebun**\n\nAda yang ingin Anda konsultasikan seputar kebun hari ini?`;
+    setMessages([{ sender: 'ai', text: greeting, timestamp: new Date(), source: 'groq' }]);
   }, [role, userName]);
 
   // Auto scroll
@@ -380,7 +380,7 @@ export const DraggableAIBubble = () => {
               flexShrink: 0,
             }}
           >
-            {['Status panen Porang?', 'Realisasi OPEX & Modal?', 'Kondisi tanah & pupuk?', 'Laporan Audit 5D'].map((q) => (
+            {['🌱 Cara rawat Melon Greenhouse?', '🧪 Formulasi pupuk AB Mix & NPK?', '🛡️ Cara atasi layu Fusarium?', '🍠 Tips naungan & panen Porang?', '💰 Laporan Realisasi Anggaran?'].map((q) => (
               <button
                 key={q}
                 onClick={() => executeSendMessage(q)}

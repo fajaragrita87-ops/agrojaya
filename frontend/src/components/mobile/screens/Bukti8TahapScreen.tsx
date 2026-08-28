@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 interface Bukti8TahapScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const Bukti8TahapScreen: React.FC<Bukti8TahapScreenProps> = ({ onBack }) => {
+export const Bukti8TahapScreen: React.FC<Bukti8TahapScreenProps> = () => {
   const [selectedTahap, setSelectedTahap] = useState<number>(8);
 
   const tahapanList = [
@@ -12,7 +12,7 @@ export const Bukti8TahapScreen: React.FC<Bukti8TahapScreenProps> = ({ onBack }) 
       id: 1,
       name: 'Pembersihan Lahan & Land Clearing',
       date: '12 Mei 2026',
-      gps: '-6.5892, 107.0541 (Jonggol)',
+      gps: '-6.5892, 107.0541 (Kebun Sentra)',
       pic: 'Mandor Sukardi & Tim Traktor',
       status: '100% Selesai',
       desc: 'Pembersihan gulma, alang-alang, dan perataan kontur elevasi tanah 2.0 Ha dengan ekskavator & buldoser.',
@@ -57,7 +57,7 @@ export const Bukti8TahapScreen: React.FC<Bukti8TahapScreenProps> = ({ onBack }) 
       name: 'Pemasangan Mulsa Plastik Hitam Perak',
       date: '14 Jun 2026',
       gps: '-6.5893, 107.0543',
-      pic: 'Petani Terampil Jonggol',
+      pic: 'Petani Terampil Lapangan',
       status: '100% Selesai',
       desc: 'Pemasangan mulsa reflektor cahaya untuk mencegah gulma dan menjaga kelembaban akar.',
       image: '/illustrations/seedling_planting.svg',
@@ -100,18 +100,9 @@ export const Bukti8TahapScreen: React.FC<Bukti8TahapScreenProps> = ({ onBack }) 
 
   return (
     <div
-      className="space-y-3 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-gradient-to-br from-[#064E3B] via-[#047857] to-[#022C22] text-white rounded-[20px] p-4 shadow-lg border border-white/15 relative overflow-hidden">

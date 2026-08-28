@@ -179,22 +179,12 @@ export const MobileInvestorDashboard: React.FC = () => {
         {/* ==================== 1. TAB: PORTOFOLIO ==================== */}
         {activeTab === 'portofolio' && (
           <div className="space-y-3 animate-in fade-in duration-150 pb-4">
-            {/* Back to Menu Hub Button */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu & Modul</span>
-            </button>
-
             {/* Top Greeting & Live Badge */}
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#0F5545] flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#1FB88B] animate-pulse"></span>
-                  Kebun Jonggol 2.0 Ha • Audited
+                  Kebun Inti 2.0 Ha • Audited
                 </span>
                 <h1 className="font-extrabold text-[15px] text-[#0B251E] tracking-tight mt-0.5 mb-0">
                   Ringkasan Portofolio (Dasbor)
@@ -352,16 +342,6 @@ export const MobileInvestorDashboard: React.FC = () => {
         {/* ==================== 2. TAB: OTORISASI MODAL ==================== */}
         {activeTab === 'approval' && (
           <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            {/* Back to Menu Hub Button */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu & Modul</span>
-            </button>
-
             <div>
               <span className="text-[9.5px] font-extrabold text-[#0F5545] uppercase tracking-wider">
                 🛡️ Hak Veto Pengeluaran Modal
@@ -376,7 +356,7 @@ export const MobileInvestorDashboard: React.FC = () => {
                 <div>
                   <span className="bg-[#0B251E] text-white text-[8.5px] px-1.5 py-0.2 rounded-xs font-bold">PO-026</span>
                   <h3 className="font-bold text-[12px] text-[#0B251E] mt-0.5 mb-0">Pupuk Hayati Organik & Drip</h3>
-                  <span className="text-[9.5px] text-[#64746D]">Vendor: PT Agro Mitra • Kebun Jonggol Blok A2</span>
+                  <span className="text-[9.5px] text-[#64746D]">Vendor: PT Agro Mitra • Blok A2</span>
                 </div>
                 <strong className="text-[13px] font-black text-[#0F5545]">Rp 28,5 Jt</strong>
               </div>
@@ -429,16 +409,6 @@ export const MobileInvestorDashboard: React.FC = () => {
         {/* ==================== 4. TAB: ARUS KAS ==================== */}
         {activeTab === 'arus_kas' && (
           <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            {/* Back to Menu Hub Button */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu & Modul</span>
-            </button>
-
             <h2 className="font-extrabold text-[14px] text-[#0B251E] m-0">Arus Kas & Transparansi Modal</h2>
             
             <div className="bg-white rounded-[16px] p-3.5 border border-[#E2EAE5] shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
@@ -461,16 +431,6 @@ export const MobileInvestorDashboard: React.FC = () => {
         {/* ==================== 5. TAB: AI KONSULTAN ==================== */}
         {activeTab === 'ai_konsultan' && (
           <div className="space-y-2 animate-in fade-in duration-150 flex flex-col h-full pb-3">
-            {/* Back to Menu Hub Button */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu & Modul</span>
-            </button>
-
             <h2 className="font-extrabold text-[14px] text-[#0B251E] m-0">Tanya AI Konsultan Portofolio</h2>
             
             <div className="flex flex-wrap gap-1">
@@ -614,14 +574,15 @@ export const MobileInvestorDashboard: React.FC = () => {
       {/* 3. Bottom Navigation Bar: Menu Modul, Scan QR, Notifikasi, Profil */}
       <div
         style={{
-          height: '56px',
-          minHeight: '56px',
+          height: '62px',
+          minHeight: '62px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          paddingBottom: 'env(safe-area-inset-bottom, 2px)',
         }}
-        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)] flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex-shrink-0"
       >
         {/* 1. Menu Modul (Super App 12-Icon Grid) */}
         <button
@@ -703,8 +664,8 @@ export const MobileInvestorDashboard: React.FC = () => {
 
       {/* Modal */}
       {showPOModal && (
-        <div className="absolute inset-0 bg-black/70 z-50 flex items-end justify-center p-0 backdrop-blur-xs">
-          <div className="bg-white w-full rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150">
+        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
+          <div className="bg-white w-full max-w-[480px] mx-auto rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150">
             <div className="flex justify-between items-center mb-1.5">
               <span className="badge bg-[#0B251E] text-[#C8E86B] font-bold px-2 py-0.5 rounded text-[9.5px]">
                 Otorisasi {showPOModal}

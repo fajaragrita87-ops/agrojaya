@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useSmartFarmStore } from '../../../store/smartFarmStore';
 
 interface JadwalTasklistScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = ({ onBack }) => {
+export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = () => {
   const { tasks, addTask, toggleTask } = useSmartFarmStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,18 +33,9 @@ export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = ({ onBa
 
   return (
     <div
-      className="space-y-3 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Banner */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-3.5 shadow-md border border-[#14473B] flex items-center justify-between">

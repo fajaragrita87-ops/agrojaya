@@ -163,14 +163,6 @@ export const MobileManagerDashboard: React.FC = () => {
         {/* ==================== 1. TASKLIST ==================== */}
         {activeTab === 'tasklist' && (
           <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <div className="flex items-center justify-between gap-2 pt-0.5">
               <div className="min-w-0 flex-1">
                 <h1 className="font-extrabold text-[14px] text-[#17211E] tracking-tight m-0">
@@ -228,14 +220,6 @@ export const MobileManagerDashboard: React.FC = () => {
         {/* ==================== 2. AJUKAN PO ==================== */}
         {activeTab === 'po' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Pengajuan Belanja Saprotan (PO)</h2>
             <p className="text-[10px] text-[#5F6A65] m-0">
               Pengajuan akan langsung diteruskan ke Tim Finance untuk verifikasi anggaran.
@@ -338,14 +322,6 @@ export const MobileManagerDashboard: React.FC = () => {
         {/* ==================== 5. AI OPS ==================== */}
         {activeTab === 'ai' && (
           <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu</span>
-            </button>
             <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">AI Asisten Operasional</h2>
             
             <div className="h-44 overflow-y-auto space-y-1.5 p-2 bg-[#FAFBF8] rounded-[10px] border border-[#DDE5DF]">
@@ -444,14 +420,15 @@ export const MobileManagerDashboard: React.FC = () => {
       {/* 3. Sleek Bottom Nav */}
       <div
         style={{
-          height: '56px',
-          minHeight: '56px',
+          height: '62px',
+          minHeight: '62px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          paddingBottom: 'env(safe-area-inset-bottom, 2px)',
         }}
-        className="w-full bg-white border-t border-[#E2EAE5] px-1 shadow-md flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-1 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex-shrink-0"
       >
         {/* 1. Menu Hub Grid */}
         <button

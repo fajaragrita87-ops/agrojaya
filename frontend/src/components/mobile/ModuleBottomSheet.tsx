@@ -50,7 +50,7 @@ export const ModuleBottomSheet: React.FC<ModuleBottomSheetProps> = ({
   ];
 
   return (
-    <div className="absolute inset-0 z-50 flex items-end justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] flex items-end justify-center overflow-hidden">
       {/* 55% Black Backdrop with blur */}
       <div
         className="absolute inset-0 bg-black/55 backdrop-blur-xs transition-opacity cursor-pointer animate-in fade-in duration-150"
@@ -58,7 +58,7 @@ export const ModuleBottomSheet: React.FC<ModuleBottomSheetProps> = ({
       />
 
       {/* Slide-up 220ms White Bottom Sheet (Radius 28px) */}
-      <div className="relative w-full bg-white rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.15)] flex flex-col z-10 animate-in slide-in-from-bottom duration-220 overflow-hidden pb-4">
+      <div className="relative w-full max-w-[480px] mx-auto bg-white rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.15)] flex flex-col z-10 animate-in slide-in-from-bottom duration-220 overflow-hidden pb-4">
         {/* Top Drag Handle */}
         <div className="w-full flex items-center justify-center pt-2.5 pb-1">
           <div className="w-10 h-1 rounded-full bg-[#DDE6DF]" />

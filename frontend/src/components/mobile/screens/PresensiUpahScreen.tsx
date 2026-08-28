@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 interface PresensiUpahScreenProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export const PresensiUpahScreen: React.FC<PresensiUpahScreenProps> = ({ onBack }) => {
+export const PresensiUpahScreen: React.FC<PresensiUpahScreenProps> = () => {
   const [isCheckedIn, setIsCheckedIn] = useState(true);
 
   const workers = [
@@ -16,18 +16,9 @@ export const PresensiUpahScreen: React.FC<PresensiUpahScreenProps> = ({ onBack }
 
   return (
     <div
-      className="space-y-3.5 pb-6 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3.5 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Back Button */}
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex items-center gap-1.5 text-[12px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-      >
-        <i className="ri-arrow-left-line text-sm"></i>
-        <span>Kembali ke Menu & Modul</span>
-      </button>
 
       {/* Header Card */}
       <div className="bg-[#0B3B30] text-white rounded-[18px] p-4 shadow-md border border-[#14473B] space-y-3">
@@ -40,7 +31,7 @@ export const PresensiUpahScreen: React.FC<PresensiUpahScreenProps> = ({ onBack }
               Presensi & Upah Tenaga Kerja
             </h1>
             <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
-              Validasi GPS radius kebun Jonggol (Akurasi 3 meter)
+              Validasi GPS radius sentra kebun (Akurasi 3 meter)
             </p>
           </div>
           <span className="bg-[#C8E86B] text-[#08201A] text-[9.5px] font-black px-2.5 py-0.5 rounded-full">

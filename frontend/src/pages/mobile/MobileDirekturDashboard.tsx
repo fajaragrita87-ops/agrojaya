@@ -166,16 +166,6 @@ export const MobileDirekturDashboard: React.FC = () => {
         {/* ==================== 1. TAB: DASBOR EKSEKUTIF ==================== */}
         {activeTab === 'dasbor' && (
           <div className="space-y-3 animate-in fade-in duration-150 pb-4">
-            {/* Back to Menu Hub Button */}
-            <button
-              type="button"
-              onClick={() => setActiveTab('menu_hub')}
-              className="flex items-center gap-1.5 text-[11.5px] font-bold text-[#0F5545] hover:text-[#0B3B30] cursor-pointer"
-            >
-              <i className="ri-arrow-left-line"></i>
-              <span>Kembali ke Menu & Modul</span>
-            </button>
-
             {/* Top Greeting */}
             <div className="flex items-center justify-between">
               <div>
@@ -502,14 +492,15 @@ export const MobileDirekturDashboard: React.FC = () => {
       {/* 3. Bottom Navigation Bar: Menu Modul, Scan QR, Notifikasi, Profil */}
       <div
         style={{
-          height: '56px',
-          minHeight: '56px',
+          height: '62px',
+          minHeight: '62px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          paddingBottom: 'env(safe-area-inset-bottom, 2px)',
         }}
-        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-2px_12px_rgba(0,0,0,0.04)] flex-shrink-0"
+        className="w-full bg-white border-t border-[#E2EAE5] px-2 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex-shrink-0"
       >
         {/* 1. Menu Modul (Super App 12-Icon Grid) */}
         <button
@@ -591,8 +582,8 @@ export const MobileDirekturDashboard: React.FC = () => {
 
       {/* Modal */}
       {showPOModal && (
-        <div className="absolute inset-0 bg-black/70 z-50 flex items-end justify-center p-0 backdrop-blur-xs">
-          <div className="bg-white w-full rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150">
+        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
+          <div className="bg-white w-full max-w-[480px] mx-auto rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150">
             <div className="flex justify-between items-center mb-1.5">
               <span className="badge bg-[#0B251E] text-[#C8E86B] font-bold px-2 py-0.5 rounded text-[9.5px]">
                 Otorisasi {showPOModal}
