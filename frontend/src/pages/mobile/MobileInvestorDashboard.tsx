@@ -17,6 +17,7 @@ import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKom
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 import { callLiveAI } from '../../services/aiService';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
@@ -46,9 +47,8 @@ export const MobileInvestorDashboard: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
-  const [showPOModal, setShowPOModal] = useState<string | null>(null);
 
-  const { purchaseOrders, authorizePOByInvestor } = useSmartFarmStore();
+  const { purchaseOrders } = useSmartFarmStore();
 
   // AI Chat Messages State for Investor
   const [aiInput, setAiInput] = useState('');
@@ -94,11 +94,6 @@ export const MobileInvestorDashboard: React.FC = () => {
         },
       ]);
     }
-  };
-
-  const handleApprovePO = (poId: string) => {
-    authorizePOByInvestor(poId);
-    setShowPOModal(null);
   };
 
   return (
@@ -294,34 +289,40 @@ export const MobileInvestorDashboard: React.FC = () => {
                   onClick={() => setActiveTab('approval')}
                   className="text-[10.5px] font-bold text-[#0F5545] cursor-pointer"
                 >
-                  Semua (2) &gt;
+                  Semua ({purchaseOrders.length}) &gt;
                 </button>
               </div>
 
-              <div className="p-2.5 rounded-[12px] bg-[#F8FAF8] border border-[#E2EAE5] flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="bg-[#0B2F28] text-white text-[8.5px] font-black px-1.5 py-0.2 rounded-xs">PO-026</span>
-                    <strong className="text-[11.5px] text-[#0B251E]">Pupuk Hayati Organik</strong>
+              {(() => {
+                const pendingInvestorPO = purchaseOrders.find((p) => p.status === 'PENDING_INVESTOR');
+                if (!pendingInvestorPO) {
+                  return (
+                    <div className="p-2.5 rounded-[12px] bg-[#E8F3ED] text-[#0F5545] font-extrabold text-[10.5px] text-center">
+                      ✓ Tidak ada PO menunggu otorisasi Investor
+                    </div>
+                  );
+                }
+                return (
+                  <div className="p-2.5 rounded-[12px] bg-[#F8FAF8] border border-[#E2EAE5] flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="bg-[#0B2F28] text-white text-[8.5px] font-black px-1.5 py-0.2 rounded-xs">{pendingInvestorPO.id}</span>
+                        <strong className="text-[11.5px] text-[#0B251E]">{pendingInvestorPO.title}</strong>
+                      </div>
+                      <span className="text-[10.5px] font-bold text-[#0F5545] block mt-0.5">
+                        Rp {pendingInvestorPO.amount.toLocaleString('id-ID')} <span className="text-[8.5px] text-[#64746D] font-normal">• Disahkan Direktur</span>
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('approval')}
+                      className="px-3 py-1.5 bg-[#0F5545] text-white font-extrabold text-[10.5px] rounded-[8px] cursor-pointer hover:bg-[#0B2F28] shadow-xs"
+                    >
+                      Otorisasi
+                    </button>
                   </div>
-                  <span className="text-[10.5px] font-bold text-[#0F5545] block mt-0.5">
-                    Rp 28.500.000 <span className="text-[8.5px] text-[#64746D] font-normal">• Disahkan Direktur</span>
-                  </span>
-                </div>
-                {purchaseOrders.find((p) => p.id === 'PO-026')?.status === 'APPROVED' ? (
-                  <span className="px-2 py-1 rounded-[8px] bg-[#E8F3ED] text-[#0F5545] font-extrabold text-[9.5px]">
-                    ✅ Disetujui
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setShowPOModal('PO-026')}
-                    className="px-3 py-1.5 bg-[#0F5545] text-white font-extrabold text-[10.5px] rounded-[8px] cursor-pointer hover:bg-[#0B2F28] shadow-xs"
-                  >
-                    Otorisasi
-                  </button>
-                )}
-              </div>
+                );
+              })()}
             </div>
 
             {/* Siklus Lahan 8 Tahap Stepper Card */}
@@ -346,64 +347,7 @@ export const MobileInvestorDashboard: React.FC = () => {
 
         {/* ==================== 2. TAB: OTORISASI MODAL ==================== */}
         {activeTab === 'approval' && (
-          <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <div>
-              <span className="text-[9.5px] font-extrabold text-[#0F5545] uppercase tracking-wider">
-                🛡️ Hak Veto Pengeluaran Modal
-              </span>
-              <h2 className="font-extrabold text-[14px] text-[#0B251E] tracking-tight mt-0.5 mb-0">
-                Persetujuan Pencairan Dana
-              </h2>
-            </div>
-
-            <div className="p-3 bg-white rounded-[16px] border border-[#E2EAE5] shadow-[0_2px_8px_rgba(0,0,0,0.03)] space-y-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="bg-[#0B251E] text-white text-[8.5px] px-1.5 py-0.2 rounded-xs font-bold">PO-026</span>
-                  <h3 className="font-bold text-[12px] text-[#0B251E] mt-0.5 mb-0">Pupuk Hayati Organik & Drip</h3>
-                  <span className="text-[9.5px] text-[#64746D]">Vendor: PT Agro Mitra • Blok A2</span>
-                </div>
-                <strong className="text-[13px] font-black text-[#0F5545]">Rp 28,5 Jt</strong>
-              </div>
-              {purchaseOrders.find((p) => p.id === 'PO-026')?.status === 'APPROVED' ? (
-                <div className="p-2 bg-[#E8F3ED] rounded-[8px] text-[10.5px] font-extrabold text-[#0F5545] text-center">
-                  ✅ Dana Disetujui Investor
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowPOModal('PO-026')}
-                  className="w-full py-2 bg-[#0F5545] text-white font-extrabold text-[11px] rounded-[8px] cursor-pointer hover:bg-[#0B251E] shadow-xs"
-                >
-                  Otorisasi Pencairan Dana
-                </button>
-              )}
-            </div>
-
-            <div className="p-3 bg-white rounded-[16px] border border-[#E2EAE5] shadow-[0_2px_8px_rgba(0,0,0,0.03)] space-y-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="bg-[#0B251E] text-white text-[8.5px] px-1.5 py-0.2 rounded-xs font-bold">PO-027</span>
-                  <h3 className="font-bold text-[12px] text-[#0B251E] mt-0.5 mb-0">Material Greenhouse Baja B3</h3>
-                  <span className="text-[9.5px] text-[#64746D]">Vendor: CV Surya Konstruksi Mandiri</span>
-                </div>
-                <strong className="text-[13px] font-black text-[#0F5545]">Rp 41,2 Jt</strong>
-              </div>
-              {purchaseOrders.find((p) => p.id === 'PO-027')?.status === 'APPROVED' ? (
-                <div className="p-2 bg-[#E8F3ED] rounded-[8px] text-[10.5px] font-extrabold text-[#0F5545] text-center">
-                  ✅ Dana Disetujui Investor
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowPOModal('PO-027')}
-                  className="w-full py-2 bg-[#0F5545] text-white font-extrabold text-[11px] rounded-[8px] cursor-pointer hover:bg-[#0B251E] shadow-xs"
-                >
-                  Otorisasi Pencairan Dana
-                </button>
-              )}
-            </div>
-          </div>
+          <ApprovalListScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 3. TAB: FISIK & GIS ==================== */}
@@ -666,56 +610,6 @@ export const MobileInvestorDashboard: React.FC = () => {
         isOpen={showTreeScanner}
         onClose={() => setShowTreeScanner(false)}
       />
-
-      {/* Modal */}
-      {showPOModal && (
-        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
-          <div
-            style={{
-              maxHeight: '85dvh',
-              overflowY: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
-            }}
-            className="bg-white w-full max-w-[480px] mx-auto rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150"
-          >
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="badge bg-[#0B251E] text-[#C8E86B] font-bold px-2 py-0.5 rounded text-[9.5px]">
-                Otorisasi {showPOModal}
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowPOModal(null)}
-                className="text-[#64746D] hover:text-[#0B251E] text-lg font-bold cursor-pointer"
-              >
-                &times;
-              </button>
-            </div>
-            <h3 className="font-extrabold text-[13px] text-[#0B251E] mb-1">
-              Pengesahan Pencairan Modal {showPOModal}
-            </h3>
-            <p className="text-[11px] text-[#64746D] mb-2.5">
-              Nilai: <strong className="text-[#0F5545]">{showPOModal === 'PO-026' ? 'Rp 28.500.000' : 'Rp 41.200.000'}</strong> (Disahkan Direktur).
-            </p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleApprovePO(showPOModal)}
-                className="flex-1 py-2 bg-[#0F5545] text-white font-extrabold text-[11.5px] rounded-[8px] cursor-pointer hover:bg-[#0B251E]"
-              >
-                Setujui Pencairan Dana
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPOModal(null)}
-                className="px-3 py-2 border border-[#E2EAE5] text-[#64746D] font-bold text-[11.5px] rounded-[8px] cursor-pointer"
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Profile & Settings Modal */}
       <MobileProfileSettingsModal

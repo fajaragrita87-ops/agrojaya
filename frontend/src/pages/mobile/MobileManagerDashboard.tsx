@@ -14,6 +14,7 @@ import { ScanDaunAiScreen } from '../../components/mobile/screens/ScanDaunAiScre
 import { AlokasiModalScreen } from '../../components/mobile/screens/AlokasiModalScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 import { MobileTreeScannerModal } from '../../components/mobile/MobileTreeScannerModal';
+import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 import { callLiveAI } from '../../services/aiService';
 
@@ -41,14 +42,7 @@ export const MobileManagerDashboard: React.FC = () => {
   const [showTreeScanner, setShowTreeScanner] = useState(false);
 
   // Store integration
-  const { tasks, purchaseOrders, createPO, toggleTask } = useSmartFarmStore();
-
-  // New PO State
-  const [poTitle, setPoTitle] = useState('Pupuk Mikro MgSO4 & NPK (10 Sak)');
-  const [poVendor, setPoVendor] = useState('PT Petrokimia Kayaku');
-  const [poAmount, setPoAmount] = useState('4500000');
-  const [poCategory, setPoCategory] = useState<'Saprotan' | 'Bibit' | 'Pupuk' | 'Infrastruktur' | 'Alsintan'>('Pupuk');
-  const [poSuccessMsg, setPoSuccessMsg] = useState<string | null>(null);
+  const { tasks, toggleTask } = useSmartFarmStore();
 
   // AI Chat Messages State for Manager
   const [aiInput, setAiInput] = useState('');
@@ -94,20 +88,6 @@ export const MobileManagerDashboard: React.FC = () => {
         },
       ]);
     }
-  };
-
-  const handleCreatePOSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanAmount = parseInt(poAmount.replace(/[^0-9]/g, '')) || 4500000;
-    createPO({
-      title: poTitle,
-      vendor: poVendor,
-      amount: cleanAmount,
-      category: poCategory,
-      requester: 'Irfan Maulana (Manajer Ops)',
-    });
-    setPoSuccessMsg(`✅ PO "${poTitle}" (Rp ${cleanAmount.toLocaleString('id-ID')}) berhasil diajukan ke Keuangan!`);
-    setTimeout(() => setPoSuccessMsg(null), 4000);
   };
 
   return (
@@ -222,96 +202,9 @@ export const MobileManagerDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* ==================== 2. AJUKAN PO ==================== */}
+        {/* ==================== 2. AJUKAN & TRACKING PO ==================== */}
         {activeTab === 'po' && (
-          <div className="space-y-2 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Pengajuan Belanja Saprotan (PO)</h2>
-            <p className="text-[10px] text-[#5F6A65] m-0">
-              Pengajuan akan langsung diteruskan ke Tim Finance untuk verifikasi anggaran.
-            </p>
-
-            {poSuccessMsg && (
-              <div className="p-2 bg-[#E8F1EA] text-[#0F5545] rounded-[8px] text-[11px] font-bold border border-[#0F5545]/20">
-                {poSuccessMsg}
-              </div>
-            )}
-
-            <form onSubmit={handleCreatePOSubmit} className="p-3 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-2 text-[11px]">
-              <div>
-                <label className="block font-bold text-[#17211E] mb-0.5">Nama Kebutuhan / Barang</label>
-                <input
-                  type="text"
-                  value={poTitle}
-                  onChange={(e) => setPoTitle(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#17211E] mb-0.5">Vendor / Toko Pertanian</label>
-                <input
-                  type="text"
-                  value={poVendor}
-                  onChange={(e) => setPoVendor(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block font-bold text-[#17211E] mb-0.5">Estimasi Biaya (Rp)</label>
-                  <input
-                    type="number"
-                    value={poAmount}
-                    onChange={(e) => setPoAmount(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[11px] font-medium"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-[#17211E] mb-0.5">Kategori</label>
-                  <select
-                    value={poCategory}
-                    onChange={(e) => setPoCategory(e.target.value as any)}
-                    className="w-full px-2 py-1.5 rounded-[6px] border border-[#DDE5DF] text-[10.5px] font-medium bg-white"
-                  >
-                    <option value="Pupuk">Pupuk</option>
-                    <option value="Bibit">Bibit</option>
-                    <option value="Saprotan">Saprotan</option>
-                    <option value="Infrastruktur">Infrastruktur</option>
-                    <option value="Alsintan">Alsintan</option>
-                  </select>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-2 bg-[#0F5545] hover:bg-[#0B3B30] text-white font-bold text-[11.5px] rounded-[8px] cursor-pointer shadow-xs mt-1"
-              >
-                Kirim Pengajuan ke Keuangan
-              </button>
-            </form>
-
-            {/* Riwayat PO dari Store */}
-            <div className="bg-white rounded-[12px] p-3 border border-[#DDE5DF] shadow-2xs space-y-1.5">
-              <span className="font-extrabold text-[11.5px] text-[#17211E] block">Status Pengajuan PO Terkini</span>
-              <div className="space-y-1">
-                {purchaseOrders.slice(0, 4).map((po) => (
-                  <div key={po.id} className="p-2 rounded-[8px] bg-[#F8FAF8] border border-[#DDE5DF] flex justify-between items-center text-[10.5px]">
-                    <div>
-                      <strong className="block text-[#17211E]">{po.id}: {po.title}</strong>
-                      <span className="text-[#0F5545] font-bold">Rp {po.amount.toLocaleString('id-ID')}</span>
-                    </div>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white border border-[#DDE5DF] text-[#0F5545]">
-                      {po.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <ApprovalListScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 3. GUDANG ==================== */}

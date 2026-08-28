@@ -17,6 +17,7 @@ import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKom
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 import { callLiveAI } from '../../services/aiService';
@@ -46,11 +47,10 @@ export const MobileDirekturDashboard: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
-  const [showPOModal, setShowPOModal] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
 
-  const { purchaseOrders, approvePOByDirektur } = useSmartFarmStore();
+  const { purchaseOrders } = useSmartFarmStore();
 
   // AI State
   const [aiInput, setAiInput] = useState('');
@@ -96,11 +96,6 @@ export const MobileDirekturDashboard: React.FC = () => {
         },
       ]);
     }
-  };
-
-  const handleApprovePO = (poId: string) => {
-    approvePOByDirektur(poId);
-    setShowPOModal(null);
   };
 
   const handleSimulateScan = () => {
@@ -281,61 +276,42 @@ export const MobileDirekturDashboard: React.FC = () => {
                   onClick={() => setActiveTab('approval')}
                   className="text-[10.5px] font-bold text-[#0F5545] cursor-pointer"
                 >
-                  Semua &gt;
+                  Semua ({purchaseOrders.length}) &gt;
                 </button>
               </div>
 
-              <div className="p-2.5 rounded-[12px] bg-[#F8FAF8] border border-[#E2EAE5] flex items-center justify-between">
-                <div>
-                  <strong className="text-[11.5px] text-[#0B251E] block">PO-026: Pupuk Hayati Organik</strong>
-                  <span className="text-[10.5px] font-bold text-[#0F5545]">Rp 28.500.000</span>
-                </div>
-                {purchaseOrders.find((p) => p.id === 'PO-026')?.status !== 'PENDING_DIREKTUR' ? (
-                  <span className="px-2 py-1 rounded-[8px] bg-[#E8F3ED] text-[#0F5545] font-extrabold text-[9.5px]">
-                    ✅ Disahkan
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setShowPOModal('PO-026')}
-                    className="px-3 py-1.5 bg-[#0F5545] text-white font-extrabold text-[10.5px] rounded-[8px] cursor-pointer hover:bg-[#0B251E]"
-                  >
-                    Setujui
-                  </button>
-                )}
-              </div>
+              {(() => {
+                const pendingDirekturPO = purchaseOrders.find((p) => p.status === 'PENDING_DIREKTUR');
+                if (!pendingDirekturPO) {
+                  return (
+                    <div className="p-2.5 rounded-[12px] bg-[#E8F3ED] text-[#0F5545] font-extrabold text-[10.5px] text-center">
+                      ✓ Tidak ada PO menunggu persetujuan Direktur
+                    </div>
+                  );
+                }
+                return (
+                  <div className="p-2.5 rounded-[12px] bg-[#F8FAF8] border border-[#E2EAE5] flex items-center justify-between">
+                    <div>
+                      <strong className="text-[11.5px] text-[#0B251E] block">{pendingDirekturPO.id}: {pendingDirekturPO.title}</strong>
+                      <span className="text-[10.5px] font-bold text-[#0F5545]">Rp {pendingDirekturPO.amount.toLocaleString('id-ID')}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('approval')}
+                      className="px-3 py-1.5 bg-[#0F5545] text-white font-extrabold text-[10.5px] rounded-[8px] cursor-pointer hover:bg-[#0B2F28] shadow-xs"
+                    >
+                      Setujui
+                    </button>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         )}
 
         {/* ==================== 2. APPROVAL ==================== */}
         {activeTab === 'approval' && (
-          <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[14px] text-[#0B251E] m-0">Otorisasi Pengadaan Layer 2</h2>
-            <div className="p-3 bg-white rounded-[16px] border border-[#E2EAE5] shadow-[0_2px_8px_rgba(0,0,0,0.03)] space-y-2">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="bg-[#0B251E] text-white text-[8.5px] px-1.5 py-0.2 rounded-xs font-bold">PO-026</span>
-                  <h3 className="font-bold text-[12px] text-[#0B251E] mt-0.5 mb-0">Pupuk Hayati Organik & Drip</h3>
-                  <span className="text-[9.5px] text-[#64746D]">Diajukan Manajer Ops • Diverifikasi Finance</span>
-                </div>
-                <strong className="text-[13px] font-black text-[#0F5545]">Rp 28,5 Jt</strong>
-              </div>
-              {purchaseOrders.find((p) => p.id === 'PO-026')?.status !== 'PENDING_DIREKTUR' ? (
-                <div className="p-2 bg-[#E8F3ED] rounded-[8px] text-[10.5px] font-extrabold text-[#0F5545] text-center">
-                  ✅ Disetujui Direktur Utama
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowPOModal('PO-026')}
-                  className="w-full py-2 bg-[#0F5545] text-white font-extrabold text-[11px] rounded-[8px] cursor-pointer hover:bg-[#0B251E]"
-                >
-                  Sahkan & Teruskan ke Investor
-                </button>
-              )}
-            </div>
-          </div>
+          <ApprovalListScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 3. GIS ==================== */}
@@ -584,56 +560,6 @@ export const MobileDirekturDashboard: React.FC = () => {
         isOpen={showTreeScanner}
         onClose={() => setShowTreeScanner(false)}
       />
-
-      {/* Modal */}
-      {showPOModal && (
-        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
-          <div
-            style={{
-              maxHeight: '85dvh',
-              overflowY: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
-            }}
-            className="bg-white w-full max-w-[480px] mx-auto rounded-t-[20px] p-4 animate-in slide-in-from-bottom duration-150"
-          >
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="badge bg-[#0B251E] text-[#C8E86B] font-bold px-2 py-0.5 rounded text-[9.5px]">
-                Otorisasi {showPOModal}
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowPOModal(null)}
-                className="text-[#64746D] hover:text-[#0B251E] text-lg font-bold cursor-pointer"
-              >
-                &times;
-              </button>
-            </div>
-            <h3 className="font-extrabold text-[13px] text-[#0B251E] mb-1">
-              Pengesahan Belanja Modal {showPOModal}
-            </h3>
-            <p className="text-[11px] text-[#64746D] mb-2.5">
-              Total: <strong className="text-[#0F5545]">{showPOModal === 'PO-026' ? 'Rp 28.500.000' : 'Rp 41.200.000'}</strong> (Disahkan Keuangan).
-            </p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleApprovePO(showPOModal)}
-                className="flex-1 py-2 bg-[#0F5545] text-white font-extrabold text-[11.5px] rounded-[8px] cursor-pointer hover:bg-[#0B251E]"
-              >
-                Setujui Belanja
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPOModal(null)}
-                className="px-3 py-2 border border-[#E2EAE5] text-[#64746D] font-bold text-[11.5px] rounded-[8px] cursor-pointer"
-              >
-                Batal
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Profile & Settings Modal */}
       <MobileProfileSettingsModal

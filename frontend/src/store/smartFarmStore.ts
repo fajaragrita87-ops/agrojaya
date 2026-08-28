@@ -162,6 +162,7 @@ interface SmartFarmState {
   verifyPOByFinance: (poId: string, notes?: string) => void;
   approvePOByDirektur: (poId: string, notes?: string) => void;
   authorizePOByInvestor: (poId: string, notes?: string) => void;
+  rejectPO: (poId: string, notes?: string) => void;
 
   // Tree & Plant Scan Actions
   addTreeLog: (treeIdOrCode: string, log: Omit<TreeLog, 'id'>) => void;
@@ -652,6 +653,19 @@ export const useSmartFarmStore = create<SmartFarmState>()(
                   status: 'APPROVED',
                   investorAuthorizedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
                   notes: notes || po.notes,
+                }
+              : po
+          ),
+        })),
+
+      rejectPO: (poId, notes) =>
+        set((state) => ({
+          purchaseOrders: state.purchaseOrders.map((po) =>
+            po.id === poId
+              ? {
+                  ...po,
+                  status: 'REJECTED',
+                  notes: notes || po.notes || 'Pengajuan ditolak oleh pimpinan',
                 }
               : po
           ),

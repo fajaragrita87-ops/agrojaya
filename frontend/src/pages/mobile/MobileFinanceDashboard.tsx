@@ -13,6 +13,7 @@ import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapSc
 import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
 import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKomoditasScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 import { callLiveAI } from '../../services/aiService';
@@ -38,9 +39,8 @@ type FinanceTab =
 
 export const MobileFinanceDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FinanceTab>('menu_hub');
-  const [showPOModal, setShowPOModal] = useState<string | null>(null);
 
-  const { purchaseOrders, verifyPOByFinance } = useSmartFarmStore();
+  const { purchaseOrders } = useSmartFarmStore();
 
   // AI State
   const [aiInput, setAiInput] = useState('');
@@ -86,11 +86,6 @@ export const MobileFinanceDashboard: React.FC = () => {
         },
       ]);
     }
-  };
-
-  const handleVerifyPO = (poId: string) => {
-    verifyPOByFinance(poId);
-    setShowPOModal(null);
   };
 
   return (
@@ -189,22 +184,34 @@ export const MobileFinanceDashboard: React.FC = () => {
                   onClick={() => setActiveTab('verifikasi')}
                   className="text-[10px] font-bold text-[#0F5545] cursor-pointer"
                 >
-                  Periksa &gt;
+                  Periksa Semua ({purchaseOrders.filter((p) => p.status === 'PENDING_FINANCE').length}) &gt;
                 </button>
               </div>
-              <div className="p-2 rounded-[8px] bg-[#F8FAF8] border border-[#DDE5DF] flex justify-between items-center text-[11px]">
-                <div>
-                  <strong className="block text-[#17211E]">PO-026: Pupuk Hayati</strong>
-                  <span className="text-[#0F5545] font-bold">Rp 28.500.000</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowPOModal('PO-026')}
-                  className="px-2.5 py-1 bg-[#0F5545] text-white rounded-[6px] font-bold text-[10px] cursor-pointer hover:bg-[#0B3B30]"
-                >
-                  Validasi
-                </button>
-              </div>
+              {(() => {
+                const pendingFinancePO = purchaseOrders.find((p) => p.status === 'PENDING_FINANCE');
+                if (!pendingFinancePO) {
+                  return (
+                    <div className="p-2 rounded-[8px] bg-[#E8F1EA] text-[#0F5545] font-bold text-[10.5px] text-center">
+                      ✓ Semua pengajuan PO telah terverifikasi
+                    </div>
+                  );
+                }
+                return (
+                  <div className="p-2 rounded-[8px] bg-[#F8FAF8] border border-[#DDE5DF] flex justify-between items-center text-[11px]">
+                    <div>
+                      <strong className="block text-[#17211E]">{pendingFinancePO.id}: {pendingFinancePO.title}</strong>
+                      <span className="text-[#0F5545] font-bold">Rp {pendingFinancePO.amount.toLocaleString('id-ID')}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('verifikasi')}
+                      className="px-2.5 py-1 bg-[#0F5545] text-white rounded-[6px] font-bold text-[10px] cursor-pointer hover:bg-[#0B3B30]"
+                    >
+                      Validasi
+                    </button>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Riwayat Mutasi Buku Kas */}
@@ -232,39 +239,7 @@ export const MobileFinanceDashboard: React.FC = () => {
 
         {/* ==================== 2. VERIFIKASI PO LAYER 1 ==================== */}
         {activeTab === 'verifikasi' && (
-          <div className="space-y-2.5 animate-in fade-in duration-150 pb-4">
-            <h2 className="font-extrabold text-[13.5px] text-[#17211E] m-0">Verifikasi Faktur & Dokumen PO</h2>
-            <p className="text-[10px] text-[#5F6A65] m-0">Validasi kelayakan anggaran sebelum persetujuan Direktur.</p>
-
-            <div className="space-y-2">
-              {purchaseOrders.map((po) => (
-                <div key={po.id} className="p-3 bg-white rounded-[12px] border border-[#DDE5DF] shadow-2xs space-y-2 text-[11px]">
-                  <div className="flex justify-between items-center">
-                    <span className="bg-[#0B2F28] text-white text-[8.5px] px-1.5 py-0.2 rounded font-bold">{po.id}</span>
-                    <span className="text-[#D68B21] font-bold text-[10px]">{po.status}</span>
-                  </div>
-                  <strong className="text-[12px] block text-[#17211E]">{po.title}</strong>
-                  <div className="text-[10px] text-[#5F6A65]">Diajukan: {po.requester} • Vendor: {po.vendor}</div>
-                  <div className="flex justify-between items-center pt-1.5 border-t border-[#DDE5DF]">
-                    <strong className="text-[#0F5545] text-[13px]">Rp {po.amount.toLocaleString('id-ID')}</strong>
-                    {po.status === 'PENDING_FINANCE' ? (
-                      <button
-                        type="button"
-                        onClick={() => setShowPOModal(po.id)}
-                        className="px-3 py-1.5 bg-[#0F5545] text-white font-bold rounded-[6px] text-[10.5px] cursor-pointer"
-                      >
-                        Periksa & Verifikasi
-                      </button>
-                    ) : (
-                      <span className="text-[9.5px] font-bold text-[#0F5545] bg-[#E8F1EA] px-2 py-0.5 rounded">
-                        ✓ Terverifikasi Finance
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ApprovalListScreen onBack={() => setActiveTab('menu_hub')} />
         )}
 
         {/* ==================== 3. KALKULATOR HPP ==================== */}
@@ -466,42 +441,6 @@ export const MobileFinanceDashboard: React.FC = () => {
           </span>
         </button>
       </div>
-
-      {/* Modal */}
-      {showPOModal && (
-        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
-          <div
-            style={{
-              maxHeight: '85dvh',
-              overflowY: 'auto',
-              WebkitOverflowScrolling: 'touch',
-              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
-            }}
-            className="bg-white w-full max-w-[480px] mx-auto rounded-t-[18px] p-3.5 animate-in slide-in-from-bottom duration-150"
-          >
-            <h3 className="font-extrabold text-[13px] text-[#17211E] mb-1">Verifikasi {showPOModal}</h3>
-            <p className="text-[11px] text-[#5F6A65] mb-2.5">
-              Pagu Anggaran: <strong className="text-[#0F5545]">Rp 30 Jt (Sesuai)</strong>.
-            </p>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleVerifyPO(showPOModal)}
-                className="flex-1 py-2 bg-[#0F5545] text-white font-bold text-[11.5px] rounded-[8px] cursor-pointer"
-              >
-                Validasi & Teruskan
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPOModal(null)}
-                className="px-3 py-2 border border-[#DDE5DF] text-[#5F6A65] font-bold text-[11.5px] rounded-[8px] cursor-pointer"
-              >
-                Batal
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
