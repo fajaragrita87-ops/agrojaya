@@ -124,7 +124,15 @@ export const MobileNotificationsModal: React.FC<MobileNotificationsModalProps> =
         </div>
 
         {/* List of Notifications */}
-        <div className="p-3.5 overflow-y-auto space-y-2 flex-1">
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+          }}
+          className="p-3.5 space-y-2"
+        >
           {notifications.map((item) => (
             <div
               key={item.id}
@@ -156,7 +164,12 @@ export const MobileNotificationsModal: React.FC<MobileNotificationsModalProps> =
         </div>
 
         {/* Footer */}
-        <div className="p-2.5 bg-white border-t border-[#DDE5DF] text-center">
+        <div
+          style={{
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+          }}
+          className="p-3 bg-white border-t border-[#DDE5DF] text-center shrink-0"
+        >
           <span className="text-[10px] text-[#5F6A65]">
             🔔 Notifikasi otomatis diperbarui secara *real-time* dari sensor kebun.
           </span>

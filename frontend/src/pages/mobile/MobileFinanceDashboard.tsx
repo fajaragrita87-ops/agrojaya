@@ -141,7 +141,12 @@ export const MobileFinanceDashboard: React.FC = () => {
       </div>
 
       {/* 2. Scrollable Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]">
+      <div
+        style={{
+          WebkitOverflowScrolling: 'touch',
+        }}
+        className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]"
+      >
         
         {/* ==================== 1. BUKU KAS & ARUS KAS ==================== */}
         {activeTab === 'kas' && (
@@ -465,7 +470,15 @@ export const MobileFinanceDashboard: React.FC = () => {
       {/* Modal */}
       {showPOModal && (
         <div className="fixed inset-0 bg-black/70 z-[9999] flex items-end justify-center p-0 backdrop-blur-xs">
-          <div className="bg-white w-full max-w-[480px] mx-auto rounded-t-[18px] p-3.5 animate-in slide-in-from-bottom duration-150">
+          <div
+            style={{
+              maxHeight: '85dvh',
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+            }}
+            className="bg-white w-full max-w-[480px] mx-auto rounded-t-[18px] p-3.5 animate-in slide-in-from-bottom duration-150"
+          >
             <h3 className="font-extrabold text-[13px] text-[#17211E] mb-1">Verifikasi {showPOModal}</h3>
             <p className="text-[11px] text-[#5F6A65] mb-2.5">
               Pagu Anggaran: <strong className="text-[#0F5545]">Rp 30 Jt (Sesuai)</strong>.

@@ -180,8 +180,12 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
 
   return (
     <div
-      className="space-y-3 pb-12 antialiased text-[#11231D]"
-      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+      className="space-y-3 antialiased text-[#11231D]"
+      style={{
+        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 88px)',
+        WebkitOverflowScrolling: 'touch',
+      }}
     >
       {/* Hidden Canvas for QR Code Frame Analysis */}
       <canvas ref={canvasRef} className="hidden" />

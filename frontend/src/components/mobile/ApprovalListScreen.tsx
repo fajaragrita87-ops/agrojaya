@@ -107,7 +107,16 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
       </div>
 
       {/* 2. Scrollable Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-3.5 space-y-3">
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 84px)',
+        }}
+        className="p-3.5 space-y-3"
+      >
         {actionSuccessNotice && (
           <div className="p-2.5 bg-[#E8F1EA] text-[#0F5545] rounded-[12px] text-[11.5px] font-extrabold text-center border border-[#0F5545]/20 animate-in fade-in">
             {actionSuccessNotice}
@@ -190,14 +199,39 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
       {/* MODAL: DETAIL INSPECTION MODAL */}
       {/* ========================================================================= */}
       {selectedReviewPO && (
-        <div className="absolute inset-0 bg-black/65 backdrop-blur-xs z-50 flex items-end justify-center p-0 animate-in fade-in duration-150">
-          <div className="bg-white w-full max-h-[90%] rounded-t-[28px] p-4 flex flex-col justify-between shadow-2xl animate-in slide-in-from-bottom duration-200">
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 99999,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+          }}
+          className="animate-in fade-in duration-150"
+        >
+          <div
+            style={{
+              maxHeight: '86dvh',
+              height: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              maxWidth: '500px',
+            }}
+            className="bg-white rounded-t-[28px] p-4 shadow-2xl animate-in slide-in-from-bottom duration-200 overflow-hidden"
+          >
             {/* Sheet Top Handle */}
-            <div className="w-full flex items-center justify-center pb-2">
-              <div className="w-10 h-1 rounded-full bg-[#DDE6DF]" />
+            <div className="w-full flex items-center justify-center pb-2 shrink-0">
+              <div className="w-10 h-1.5 rounded-full bg-[#DDE6DF]" />
             </div>
 
-            <div className="flex justify-between items-center border-b border-[#DDE6DF] pb-2 mb-2.5">
+            <div className="flex justify-between items-center border-b border-[#DDE6DF] pb-2.5 mb-2 shrink-0">
               <div>
                 <span className="badge bg-[#0B3B30] text-[#C8E86B] font-bold px-2 py-0.5 rounded text-[9.5px]">
                   Tinjauan Detail {selectedReviewPO.id}
@@ -209,14 +243,22 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
               <button
                 type="button"
                 onClick={() => setSelectedReviewPO(null)}
-                className="w-7 h-7 rounded-full bg-[#FAFBF7] hover:bg-[#E8F1EA] text-[#52615A] flex items-center justify-center text-base"
+                className="w-8 h-8 rounded-full bg-[#FAFBF7] hover:bg-[#E8F1EA] text-[#52615A] flex items-center justify-center text-lg font-bold cursor-pointer transition-colors"
               >
                 &times;
               </button>
             </div>
 
             {/* Scrollable details */}
-            <div className="overflow-y-auto space-y-2.5 text-[11px] flex-1 pr-1">
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                WebkitOverflowScrolling: 'touch',
+              }}
+              className="space-y-2.5 text-[11px] pr-1 py-1"
+            >
               <div className="p-2.5 rounded-[12px] bg-[#F8FAF7] border border-[#DDE6DF] space-y-1">
                 <div className="flex justify-between">
                   <span className="text-[#52615A]">Total Dana Diajukan:</span>
@@ -262,7 +304,12 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-3 border-t border-[#DDE6DF] flex gap-2">
+            <div
+              style={{
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 6px)',
+              }}
+              className="pt-3 border-t border-[#DDE6DF] flex gap-2 shrink-0 bg-white"
+            >
               <button
                 type="button"
                 onClick={() => setConfirmDialog({ action: 'APPROVE', po: selectedReviewPO })}

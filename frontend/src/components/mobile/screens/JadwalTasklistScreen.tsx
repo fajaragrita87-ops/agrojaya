@@ -33,8 +33,12 @@ export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = () => {
 
   return (
     <div
-      className="space-y-3 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
-      style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
+      className="space-y-3 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      style={{
+        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 88px)',
+        WebkitOverflowScrolling: 'touch',
+      }}
     >
 
       {/* Header Banner */}
@@ -150,8 +154,15 @@ export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = () => {
 
       {/* ==================== MODAL BUAT TUGAS BARU ==================== */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-sm rounded-[20px] p-4 shadow-2xl space-y-3 animate-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4 backdrop-blur-xs">
+          <div
+            style={{
+              maxHeight: '88dvh',
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+            }}
+            className="bg-white w-full max-w-sm rounded-[20px] p-4 shadow-2xl space-y-3 animate-in zoom-in-95 duration-150"
+          >
             <div className="flex justify-between items-center border-b border-[#E8F0EB] pb-2">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-full bg-[#0F5545] text-[#C8E86B] flex items-center justify-center font-bold text-sm">

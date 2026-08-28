@@ -419,8 +419,23 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
   };
 
   return (
-    <div className="fixed inset-0 z-[999999] flex flex-col bg-black text-white overflow-hidden font-sans select-none animate-in fade-in duration-200">
-      
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100dvh',
+        zIndex: 999999,
+        backgroundColor: '#000000',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+      className="font-sans select-none animate-in fade-in duration-150"
+    >
       {/* Hidden processing canvas for jsQR continuous analysis */}
       <canvas ref={canvasRef} className="hidden" />
 
@@ -428,164 +443,214 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
       {/* 1. FULL-SCREEN CAMERA SCANNER VIEW (Active when no tree is selected) */}
       {/* ========================================================================= */}
       {!scannedTree && (
-        <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
-          
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+          }}
+        >
           {/* Live Full-Screen Video Background */}
           <video
             ref={videoRef}
             autoPlay
             playsInline
             muted
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-              isCameraActive ? 'opacity-100 scale-100' : 'opacity-0'
-            }`}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 1,
+            }}
+            className={`transition-opacity duration-300 ${isCameraActive ? 'opacity-100' : 'opacity-0'}`}
           />
 
-          {/* Futuristic HUD Grid & Dim Overlays */}
-          <div className="absolute inset-0 bg-black/40 pointer-events-none"></div>
+          {/* Vignette Overlay */}
+          <div
+            style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none' }}
+            className="bg-black/35"
+          />
 
-          {/* TOP HUD BAR */}
-          <div className="relative z-30 pt-4 px-4 pb-2 flex items-center justify-between bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-[12px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-black text-lg shadow-md">
-                <i className="ri-qr-scan-2-line"></i>
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-black text-[13px] text-white tracking-wide">SCANNER PASPOR AJIR</span>
-                  <span className="bg-[#C8E86B]/20 text-[#C8E86B] text-[8.5px] font-black px-2 py-0.5 rounded-full border border-[#C8E86B]/40 animate-pulse">
-                    ⚡ AUTO-SCAN
+          {/* Foreground Scanner UI Layer */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            {/* TOP HUD BAR */}
+            <div
+              style={{
+                paddingTop: 'calc(env(safe-area-inset-top, 0px) + 12px)',
+                paddingBottom: '12px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+              }}
+              className="bg-gradient-to-b from-black/90 via-black/50 to-transparent flex items-center justify-between z-20 shrink-0"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-[12px] bg-[#C8E86B] text-[#061E18] flex items-center justify-center font-black text-lg shadow-md">
+                  <i className="ri-qr-scan-2-line"></i>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5 leading-tight">
+                    <span className="font-black text-[13px] text-white tracking-wide">SCANNER PASPOR AJIR</span>
+                    <span className="bg-[#C8E86B]/20 text-[#C8E86B] text-[8.5px] font-black px-2 py-0.5 rounded-full border border-[#C8E86B]/40 animate-pulse">
+                      ⚡ AUTO-SCAN
+                    </span>
+                  </div>
+                  <span className="text-[9.5px] text-[#A3D9C9] block font-medium mt-0.5">
+                    Arahkan kamera ke QR Code tiang ajir
                   </span>
                 </div>
-                <span className="text-[9.5px] text-[#A3D9C9] block font-medium">
-                  Arahkan kamera ke QR Code tiang ajir
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {hasTorch && (
-                <button
-                  type="button"
-                  onClick={toggleTorch}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-md ${
-                    isTorchOn ? 'bg-[#C8E86B] text-[#061E18]' : 'bg-black/60 text-white border border-white/20'
-                  }`}
-                >
-                  <i className={isTorchOn ? 'ri-flashlight-fill' : 'ri-flashlight-line'}></i>
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={handleClose}
-                className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-xl cursor-pointer transition-colors backdrop-blur-md shadow-md"
-              >
-                &times;
-              </button>
-            </div>
-          </div>
-
-          {/* CENTER SCANNING RETICLE / VIEWFINDER */}
-          <div className="relative z-20 flex-1 flex flex-col items-center justify-center p-4">
-            
-            {/* High-Tech Glowing Box */}
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 border border-white/20 rounded-[28px] flex items-center justify-center shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]">
-              
-              {/* 4 Glowing Corner Brackets */}
-              <div className="absolute -top-1 -left-1 w-9 h-9 border-t-4 border-l-4 border-[#C8E86B] rounded-tl-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
-              <div className="absolute -top-1 -right-1 w-9 h-9 border-t-4 border-r-4 border-[#C8E86B] rounded-tr-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
-              <div className="absolute -bottom-1 -left-1 w-9 h-9 border-b-4 border-l-4 border-[#C8E86B] rounded-bl-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
-              <div className="absolute -bottom-1 -right-1 w-9 h-9 border-b-4 border-r-4 border-[#C8E86B] rounded-br-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
-
-              {/* Sweeping Laser Line Animation */}
-              <div className="absolute inset-x-2 h-0.5 bg-gradient-to-r from-transparent via-[#C8E86B] to-transparent shadow-[0_0_20px_#C8E86B] animate-[bounce_2s_infinite]"></div>
-              
-              {/* Center Dot Target */}
-              <div className="w-2.5 h-2.5 rounded-full bg-[#C8E86B] shadow-[0_0_10px_#C8E86B]"></div>
-
-              {/* Scan Feedback Popup */}
-              {scanFeedback && (
-                <div className="absolute inset-0 bg-[#061E18]/90 rounded-[28px] flex flex-col items-center justify-center p-4 text-center border-2 border-[#C8E86B] animate-in zoom-in-95 duration-150">
-                  <i className="ri-checkbox-circle-fill text-4xl text-[#C8E86B] mb-2 animate-bounce"></i>
-                  <span className="text-[12px] font-black text-white">{scanFeedback}</span>
-                  <span className="text-[10px] text-[#A3D9C9] mt-1">Membuka Paspor Digital...</span>
-                </div>
-              )}
-            </div>
-
-            {/* Instruction Tip */}
-            <div className="mt-4 px-4 py-1.5 rounded-full bg-black/60 border border-white/15 backdrop-blur-md text-[11px] font-bold text-[#C8E86B] flex items-center gap-1.5 shadow-md">
-              <i className="ri-focus-3-line text-[#C8E86B]"></i>
-              <span>Posisikan QR Code di dalam kotak hijau</span>
-            </div>
-
-            {cameraError && (
-              <div className="mt-3 max-w-[280px] p-2 bg-red-950/80 border border-red-500/40 rounded-[12px] text-center text-red-200 text-[10px]">
-                {cameraError}
-              </div>
-            )}
-          </div>
-
-          {/* BOTTOM CONTROLS & QUICK SELECTOR */}
-          <div className="relative z-30 p-4 pb-6 bg-gradient-to-t from-black/95 via-black/80 to-transparent flex flex-col items-center space-y-3">
-            
-            {/* Auto-Scan Status Indicator & Sample Quick Picker */}
-            <div className="w-full flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C8E86B] animate-ping"></span>
-                <span className="text-[11px] font-bold text-[#C8E86B]">Mendeteksi Otomatis...</span>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setShowSampleDrawer(!showSampleDrawer)}
-                className="py-2.5 px-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-[11px] flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all shadow-md"
-              >
-                <i className="ri-list-check-3 text-[#C8E86B]"></i>
-                <span>Sampel Lahan</span>
-              </button>
-            </div>
-
-            {/* Quick Sample Selector Drawer (if expanded) */}
-            {showSampleDrawer && (
-              <div className="p-3 bg-[#061E18]/95 border border-[#14473B] rounded-[20px] backdrop-blur-md space-y-2 animate-in slide-in-from-bottom duration-150">
-                <div className="flex justify-between items-center px-1">
-                  <span className="text-[9.5px] font-black uppercase tracking-wider text-[#C8E86B]">
-                    SAMPEL POHON TERSEDIA DI LAHAN:
-                  </span>
+              <div className="flex items-center gap-2">
+                {hasTorch && (
                   <button
                     type="button"
-                    onClick={() => setShowSampleDrawer(false)}
-                    className="text-[9.5px] text-white/60 hover:text-white"
+                    onClick={toggleTorch}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-md ${
+                      isTorchOn ? 'bg-[#C8E86B] text-[#061E18]' : 'bg-black/60 text-white border border-white/20'
+                    }`}
                   >
-                    Tutup
+                    <i className={isTorchOn ? 'ri-flashlight-fill' : 'ri-flashlight-line'}></i>
                   </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold text-xl cursor-pointer transition-colors backdrop-blur-md shadow-md"
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+
+            {/* CENTER SCANNING RETICLE / VIEWFINDER */}
+            <div className="flex-1 flex flex-col items-center justify-center p-4 z-20">
+              {/* High-Tech Glowing Box */}
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 border border-white/30 rounded-[28px] flex items-center justify-center shadow-[0_0_0_9999px_rgba(0,0,0,0.60)]">
+                {/* 4 Glowing Corner Brackets */}
+                <div className="absolute -top-1 -left-1 w-9 h-9 border-t-4 border-l-4 border-[#C8E86B] rounded-tl-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
+                <div className="absolute -top-1 -right-1 w-9 h-9 border-t-4 border-r-4 border-[#C8E86B] rounded-tr-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
+                <div className="absolute -bottom-1 -left-1 w-9 h-9 border-b-4 border-l-4 border-[#C8E86B] rounded-bl-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
+                <div className="absolute -bottom-1 -right-1 w-9 h-9 border-b-4 border-r-4 border-[#C8E86B] rounded-br-[16px] drop-shadow-[0_0_12px_#C8E86B]"></div>
+
+                {/* Sweeping Laser Line Animation */}
+                <div className="absolute inset-x-2 h-0.5 bg-gradient-to-r from-transparent via-[#C8E86B] to-transparent shadow-[0_0_20px_#C8E86B] animate-[bounce_2s_infinite]"></div>
+
+                {/* Center Dot Target */}
+                <div className="w-2.5 h-2.5 rounded-full bg-[#C8E86B] shadow-[0_0_10px_#C8E86B]"></div>
+
+                {/* Scan Feedback Popup */}
+                {scanFeedback && (
+                  <div className="absolute inset-0 bg-[#061E18]/95 rounded-[28px] flex flex-col items-center justify-center p-4 text-center border-2 border-[#C8E86B] animate-in zoom-in-95 duration-150">
+                    <i className="ri-checkbox-circle-fill text-4xl text-[#C8E86B] mb-2 animate-bounce"></i>
+                    <span className="text-[13px] font-black text-white">{scanFeedback}</span>
+                    <span className="text-[10.5px] text-[#A3D9C9] mt-1">Membuka Paspor Digital...</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Instruction Tip */}
+              <div className="mt-4 px-4 py-1.5 rounded-full bg-black/70 border border-white/20 backdrop-blur-md text-[11px] font-bold text-[#C8E86B] flex items-center gap-1.5 shadow-md">
+                <i className="ri-focus-3-line text-[#C8E86B]"></i>
+                <span>Posisikan QR Code di dalam kotak hijau</span>
+              </div>
+
+              {cameraError && (
+                <div className="mt-3 max-w-[280px] p-2 bg-red-950/80 border border-red-500/40 rounded-[12px] text-center text-red-200 text-[10px]">
+                  {cameraError}
+                </div>
+              )}
+            </div>
+
+            {/* BOTTOM CONTROLS & QUICK SELECTOR */}
+            <div
+              style={{
+                paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+                paddingTop: '12px',
+                paddingLeft: '16px',
+                paddingRight: '16px',
+              }}
+              className="bg-gradient-to-t from-black/95 via-black/70 to-transparent flex flex-col items-center gap-2.5 z-20 shrink-0"
+            >
+              {/* Auto-Scan Status Indicator & Sample Quick Picker */}
+              <div className="w-full flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#C8E86B] animate-ping"></span>
+                  <span className="text-[11px] font-bold text-[#C8E86B]">Mendeteksi Otomatis...</span>
                 </div>
 
-                <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                  {Object.values(mockTrees).map((tree) => (
-                    <div
-                      key={tree.code}
-                      onClick={() => handleDetectedQRCode(tree.code)}
-                      className="p-2.5 rounded-[12px] bg-white/10 hover:bg-white/20 border border-white/10 cursor-pointer flex items-center justify-between gap-2 active:scale-98 transition-all"
+                <button
+                  type="button"
+                  onClick={() => setShowSampleDrawer(!showSampleDrawer)}
+                  className="py-2 px-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold text-[11px] flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all shadow-md"
+                >
+                  <i className="ri-list-check-3 text-[#C8E86B]"></i>
+                  <span>Sampel Lahan</span>
+                </button>
+              </div>
+
+              {/* Quick Sample Selector Drawer (if expanded) */}
+              {showSampleDrawer && (
+                <div className="w-full p-3 bg-[#061E18]/95 border border-[#14473B] rounded-[20px] backdrop-blur-md space-y-2 animate-in slide-in-from-bottom duration-150">
+                  <div className="flex justify-between items-center px-1">
+                    <span className="text-[9.5px] font-black uppercase tracking-wider text-[#C8E86B]">
+                      SAMPEL POHON TERSEDIA DI LAHAN:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowSampleDrawer(false)}
+                      className="text-[9.5px] text-white/60 hover:text-white cursor-pointer"
                     >
-                      <div className="min-w-0 flex-1">
-                        <strong className="text-[11.5px] font-black text-white block truncate">
-                          {tree.variety}
-                        </strong>
-                        <span className="text-[9px] font-mono text-[#C8E86B] block">
-                          {tree.code} • {tree.block}
+                      Tutup
+                    </button>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-44 overflow-y-auto">
+                    {Object.values(mockTrees).map((tree) => (
+                      <div
+                        key={tree.code}
+                        onClick={() => handleDetectedQRCode(tree.code)}
+                        className="p-2.5 rounded-[12px] bg-white/10 hover:bg-white/20 border border-white/10 cursor-pointer flex items-center justify-between gap-2 active:scale-98 transition-all"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <strong className="text-[11.5px] font-black text-white block truncate">
+                            {tree.variety}
+                          </strong>
+                          <span className="text-[9px] font-mono text-[#C8E86B] block">
+                            {tree.code} • {tree.block}
+                          </span>
+                        </div>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#C8E86B]/20 text-[#C8E86B] border border-[#C8E86B]/30 shrink-0">
+                          Buka KTP ➔
                         </span>
                       </div>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#C8E86B]/20 text-[#C8E86B] border border-[#C8E86B]/30 shrink-0">
-                        Buka KTP ➔
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -594,10 +659,33 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
       {/* 2. FULL-SCREEN KTP PASPOR DIGITAL & AUDIT TRAIL VIEW */}
       {/* ========================================================================= */}
       {scannedTree && (
-        <div className="relative w-full h-full flex flex-col bg-[#F6FAF7] text-[#11231D] overflow-hidden">
-          
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#F6FAF7',
+            color: '#11231D',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            zIndex: 50,
+          }}
+        >
           {/* Header Bar */}
-          <div className="p-3.5 bg-[#061E18] text-white flex items-center justify-between border-b border-[#14473B] shrink-0">
+          <div
+            style={{
+              paddingTop: 'calc(env(safe-area-inset-top, 0px) + 10px)',
+              paddingBottom: '10px',
+              paddingLeft: '14px',
+              paddingRight: '14px',
+            }}
+            className="bg-[#061E18] text-white flex items-center justify-between border-b border-[#14473B] shrink-0 shadow-md"
+          >
             <div className="flex items-center gap-2.5">
               <button
                 type="button"
@@ -605,10 +693,11 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
                   setScannedTree(null);
                   startCamera();
                 }}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-sm font-bold cursor-pointer transition-colors"
+                className="px-2.5 py-1.5 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center gap-1.5 font-bold text-[11px] cursor-pointer transition-colors"
                 title="Pindai Ulang"
               >
-                <i className="ri-arrow-left-line"></i>
+                <i className="ri-camera-line text-sm text-[#C8E86B]"></i>
+                <span>Scan Lagi</span>
               </button>
 
               <div>
@@ -618,7 +707,7 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
                     TERVERIFIKASI
                   </span>
                 </div>
-                <span className="text-[9.5px] font-mono text-[#C8E86B] block mt-0.5 font-bold">
+                <span className="text-[10px] font-mono text-[#C8E86B] block mt-0.5 font-bold">
                   {scannedTree.code}
                 </span>
               </div>
@@ -679,7 +768,16 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
           </div>
 
           {/* Scrollable Content Body */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+          <div
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              minHeight: 0,
+              paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 40px)',
+            }}
+            className="p-4 space-y-3.5"
+          >
             
             {/* ==================== TAB 1: PASPOR KTP CARD ==================== */}
             {activeTab === 'ktp' && (

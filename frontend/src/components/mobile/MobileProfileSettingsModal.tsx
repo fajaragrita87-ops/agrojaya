@@ -101,7 +101,15 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
         </div>
 
         {/* Scrollable Body Content */}
-        <div className="p-3.5 overflow-y-auto space-y-3 flex-1">
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+          }}
+          className="p-3.5 space-y-3"
+        >
           {saveSuccessNotice && (
             <div className="p-2 bg-[#E8F1EA] text-[#0F5545] rounded-[10px] text-[11px] font-bold text-center border border-[#0F5545]/20 animate-in fade-in">
               {saveSuccessNotice}
@@ -218,7 +226,12 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
         </div>
 
         {/* Footer Actions */}
-        <div className="p-3 bg-white border-t border-[#DDE5DF] flex gap-2">
+        <div
+          style={{
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
+          }}
+          className="p-3 bg-white border-t border-[#DDE5DF] flex gap-2 shrink-0"
+        >
           <button
             type="button"
             onClick={handleSaveSettings}

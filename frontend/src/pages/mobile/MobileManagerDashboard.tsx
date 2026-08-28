@@ -158,7 +158,12 @@ export const MobileManagerDashboard: React.FC = () => {
       </div>
 
       {/* 2. Scrollable Body */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]">
+      <div
+        style={{
+          WebkitOverflowScrolling: 'touch',
+        }}
+        className="flex-1 min-h-0 overflow-y-auto px-3 py-2.5 space-y-2.5 bg-[#F8FAF8] text-[#17211E]"
+      >
         
         {/* ==================== 1. TASKLIST ==================== */}
         {activeTab === 'tasklist' && (
