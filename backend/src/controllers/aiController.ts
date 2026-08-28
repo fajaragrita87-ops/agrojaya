@@ -83,40 +83,49 @@ export const handleAIChat = async (req: Request, res: Response) => {
       }
     }
 
-    // 2. Groq API Fallback
+    // 2. Groq API Fallback (Active 120B & 27B Models)
     if (groqKey && groqKey.trim().length > 5) {
-      try {
-        const groqEndpoint = 'https://api.groq.com/openai/v1/chat/completions';
-        const groqRes = await fetch(groqEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${groqKey}`,
-          },
-          body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages: [
-              { role: 'system', content: `${SMART_FARMING_SYSTEM_PROMPT}\n[Pengguna: ${userName}, Peran: ${role}]` },
-              ...history.slice(-6).map((msg: any) => ({
-                role: msg.role === 'model' ? 'assistant' : msg.role || 'user',
-                content: msg.content || msg.text || '',
-              })),
-              { role: 'user', content: prompt },
-            ],
-            temperature: 0.6,
-            max_tokens: 380,
-          }),
-        });
+      const activeGroqModels = [
+        'openai/gpt-oss-120b',
+        'qwen/qwen3.8-27b',
+        'openai/gpt-oss-20b',
+        'groq/compound',
+      ];
 
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          const answer = groqData?.choices?.[0]?.message?.content;
-          if (answer) {
-            return res.json({ success: true, answer, source: 'groq' });
+      for (const model of activeGroqModels) {
+        try {
+          const groqEndpoint = 'https://api.groq.com/openai/v1/chat/completions';
+          const groqRes = await fetch(groqEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${groqKey}`,
+            },
+            body: JSON.stringify({
+              model,
+              messages: [
+                { role: 'system', content: `${SMART_FARMING_SYSTEM_PROMPT}\n[Pengguna: ${userName}, Peran: ${role}]` },
+                ...history.slice(-6).map((msg: any) => ({
+                  role: msg.role === 'assistant' || msg.role === 'model' ? 'assistant' : 'user',
+                  content: msg.content || msg.text || '',
+                })),
+                { role: 'user', content: prompt },
+              ],
+              temperature: 0.6,
+              max_tokens: 650,
+            }),
+          });
+
+          if (groqRes.ok) {
+            const groqData = await groqRes.json();
+            const answer = groqData?.choices?.[0]?.message?.content;
+            if (answer) {
+              return res.json({ success: true, answer, source: 'groq' });
+            }
           }
+        } catch (groqErr) {
+          console.warn(`Backend Groq model ${model} failed, trying next:`, groqErr);
         }
-      } catch (groqErr) {
-        console.warn('Backend Groq call failed:', groqErr);
       }
     }
 

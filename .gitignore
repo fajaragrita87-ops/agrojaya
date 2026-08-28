@@ -37,3 +37,11 @@ themeforest*/
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Android APK & Large Archive Outputs (bukan untuk git)
+*.apk
+*.zip
+Smart-Farm-APK/
+**/Smart-Farm-APK/
+**/Smart-Farm-APK*
+android/app/build/

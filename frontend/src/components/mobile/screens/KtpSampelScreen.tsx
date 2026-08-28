@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import jsQR from 'jsqr';
 import { DynamicQRCode } from '../../common/DynamicQRCode';
 import { useSmartFarmStore, type TreeSample, type TreeLog } from '../../../store/smartFarmStore';
 
@@ -10,8 +11,9 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
   const { treeSamples, addTreeLog } = useSmartFarmStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const animFrameIdRef = useRef<number | null>(null);
 
   const [activeMainTab, setActiveMainTab] = useState<'scanner' | 'ktp_view'>('scanner');
   const [selectedTree, setSelectedTree] = useState<TreeSample>(treeSamples[0] || null);
@@ -19,6 +21,7 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
 
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
 
   // Form State for Field Maintenance Log
   const [actionCategory, setActionCategory] = useState<'PENYIRAMAN' | 'PEMUPUKAN' | 'PRUNING' | 'HAMA'>('PEMUPUKAN');
@@ -26,24 +29,98 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
   const [workerName, setWorkerName] = useState('Kang Asep (Regu A)');
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  const handleDetectedCode = useCallback((codeText: string) => {
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate(80);
+      } catch {
+        // ignore
+      }
+    }
+
+    setIsScanning(true);
+    // Find matching sample or fallback
+    const matched = treeSamples.find(
+      (t) => t.code.toLowerCase() === codeText.toLowerCase() || t.id.toLowerCase() === codeText.toLowerCase()
+    );
+
+    const targetTree = matched || treeSamples[0];
+    setSelectedTree(targetTree);
+
+    setTimeout(() => {
+      setIsScanning(false);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+      }
+      setIsCameraActive(false);
+      setActiveMainTab('ktp_view');
+      setKtpSubTab('kpi');
+    }, 400);
+  }, [treeSamples]);
+
+  const tickScanner = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) {
+      animFrameIdRef.current = requestAnimationFrame(tickScanner);
+      return;
+    }
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: 'dontInvert',
+        });
+
+        if (code && code.data && code.data.trim().length > 0) {
+          handleDetectedCode(code.data.trim());
+          return;
+        }
+      }
+    }
+
+    animFrameIdRef.current = requestAnimationFrame(tickScanner);
+  }, [handleDetectedCode]);
+
   const startCamera = async () => {
     try {
+      setCameraError(null);
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+          video: {
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
         });
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+          videoRef.current.setAttribute('playsinline', 'true');
+          videoRef.current.play().catch(() => {});
         }
         setIsCameraActive(true);
+        animFrameIdRef.current = requestAnimationFrame(tickScanner);
       }
     } catch {
       setIsCameraActive(false);
+      setCameraError('Izin kamera belum aktif. Pilih pohon dari daftar sampel di bawah.');
     }
   };
 
   const stopCamera = () => {
+    if (animFrameIdRef.current) {
+      cancelAnimationFrame(animFrameIdRef.current);
+      animFrameIdRef.current = null;
+    }
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
@@ -70,7 +147,7 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
       setSelectedTree(sample);
       setActiveMainTab('ktp_view');
       setKtpSubTab('kpi');
-    }, 400);
+    }, 200);
   };
 
   const handleSaveLog = (e: React.FormEvent) => {
@@ -103,18 +180,11 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
 
   return (
     <div
-      className="space-y-3 pb-12 animate-in fade-in duration-150 antialiased text-[#11231D]"
+      className="space-y-3 pb-12 antialiased text-[#11231D]"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
-      {/* Hidden File Input for Native Camera QR capture */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-        onChange={() => handleScanSample(treeSamples[0])}
-      />
+      {/* Hidden Canvas for QR Code Frame Analysis */}
+      <canvas ref={canvasRef} className="hidden" />
 
       {/* Segmented Main Navigation Tabs */}
       <div className="bg-[#E8F1EA] p-1 rounded-[14px] flex items-center gap-1 shadow-2xs">
@@ -140,12 +210,12 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
               : 'text-[#5F6A65] hover:text-[#0F5545]'
           }`}
         >
-          <i className="ri-id-card-line text-sm"></i>
-          <span>KTP Paspor ({selectedTree ? getCommodityEmoji(selectedTree.variety) : 'Pohon'})</span>
+          <i className="ri-profile-line text-sm"></i>
+          <span>KTP Tanaman</span>
         </button>
       </div>
 
-      {/* ==================== TAB 1: SCANNER QR AJIR ==================== */}
+      {/* ==================== 1. SCANNER VIEW ==================== */}
       {activeMainTab === 'scanner' && (
         <div className="space-y-3 animate-in fade-in duration-150">
           {/* High-Tech Futuristic HUD Viewfinder Box */}
@@ -177,10 +247,10 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
             {/* Top HUD Telemetry Tags */}
             <div className="absolute top-3 inset-x-4 flex justify-between items-center text-[8.5px] font-mono text-[#C8E86B] z-20 pointer-events-none">
               <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
-                🎯 QR TARGET DETECTED
+                🎯 AUTO-SCANNER AKTIF
               </span>
               <span className="bg-black/60 px-2 py-0.5 rounded-full border border-[#C8E86B]/30 backdrop-blur-xs">
-                📍 GPS LOCKED
+                📍 GPS TERKUNCI
               </span>
             </div>
 
@@ -191,29 +261,19 @@ export const KtpSampelScreen: React.FC<KtpSampelScreenProps> = () => {
                 </div>
                 <strong className="text-[12px] text-white">Arahkan Kamera ke Barcode Ajir Sampel</strong>
                 <span className="text-[9.5px] text-[#A3D9C9] max-w-[240px] mt-0.5">
-                  Pindai plat barcode di tiang ajir kebun untuk membuka KTP tanaman.
+                  {cameraError || 'Posisikan QR Code di dalam kotak untuk membuka KTP tanaman secara otomatis.'}
                 </span>
               </div>
             )}
 
-            {/* In-Camera Action Buttons */}
-            <div className="absolute bottom-3.5 inset-x-4 z-20 flex justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleScanSample(selectedTree || treeSamples[0])}
-                className="py-2.5 px-6 rounded-full bg-[#C8E86B] hover:bg-[#b8d85c] text-[#08201A] font-black text-[12px] cursor-pointer shadow-lg active:scale-95 transition-all flex items-center gap-2"
-              >
-                <i className="ri-qr-scan-line text-sm"></i>
-                <span>{isScanning ? 'Membaca QR...' : '📸 Pindai Barcode Ajir'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="py-2.5 px-3.5 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md text-white font-bold text-[11px] border border-white/30 cursor-pointer flex items-center gap-1.5 shadow-xs active:scale-95"
-              >
-                <i className="ri-camera-fill text-sm"></i>
-                <span>Galeri</span>
-              </button>
+            {/* In-Camera Automatic Status Indicator (No manual buttons) */}
+            <div className="absolute bottom-3.5 inset-x-4 z-20 flex justify-center">
+              <div className="px-3.5 py-1.5 rounded-full bg-black/70 border border-[#C8E86B]/40 backdrop-blur-md flex items-center gap-2 shadow-lg">
+                <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-ping"></span>
+                <span className="text-[11px] font-bold text-[#C8E86B]">
+                  {isScanning ? 'Membaca QR...' : 'Mendeteksi Otomatis...'}
+                </span>
+              </div>
             </div>
           </div>
 

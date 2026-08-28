@@ -1,6 +1,8 @@
 # Multi-stage Dockerfile for AgroJaya Full-Stack ERP (Backend API + Frontend SPA + Mobile Web)
 FROM node:22-alpine AS builder
 
+RUN apk add --no-cache openssl libc6-compat
+
 WORKDIR /app
 
 # Build Frontend
@@ -15,10 +17,12 @@ COPY backend/package*.json ./backend/
 RUN cd backend && npm install
 
 COPY backend ./backend
-RUN cd backend && npm run build
+RUN cd backend && npx prisma generate && npm run build
 
 # Final Production Runner
 FROM node:22-alpine AS runner
+
+RUN apk add --no-cache openssl libc6-compat
 
 WORKDIR /app
 
@@ -26,10 +30,10 @@ ENV NODE_ENV=production
 ENV PORT=80
 
 COPY backend/package*.json ./backend/
-RUN cd backend && npm install --omit=dev
+COPY backend/prisma ./backend/prisma
+RUN cd backend && npm install --omit=dev && npx prisma generate
 
 COPY --from=builder /app/backend/dist ./backend/dist
-COPY --from=builder /app/backend/prisma ./backend/prisma
 COPY --from=builder /app/frontend/dist ./frontend/dist
 
 EXPOSE 80

@@ -18,6 +18,13 @@ KEAHLIAN & KARAKTER UTAMA:
    - JANGAN menggunakan frasa klise atau format template berulang seperti "📌 Intinya:" atau "📌 Rekomendasi Tindakan:" di akhir pesan. Sampaikan penjelasan secara mengalir, jelas, dan santun.
    - Jangan mengalihkan pembicaraan ke topik ROI / keuangan kecuali jika pengguna secara spesifik menanyakan tentang modal, biaya, atau investasi.`;
 
+const ACTIVE_GROQ_MODELS = [
+  'openai/gpt-oss-120b',
+  'qwen/qwen3.8-27b',
+  'openai/gpt-oss-20b',
+  'groq/compound',
+];
+
 /**
  * Calls live Groq / Gemini AI directly or via backend proxy.
  */
@@ -36,78 +43,83 @@ export const callLiveAI = async (
     import.meta.env.VITE_GEMINI_API_KEY ||
     (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : null);
 
-  // 1. Prioritize Direct Client Groq API (Ultra-Fast & High Intelligence llama-3.3-70b-versatile)
+  // 1. Prioritize Direct Client Groq API (High Intelligence 120B/27B Models)
   if (groqKey && groqKey.startsWith('gsk_')) {
-    try {
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${groqKey}`,
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [
-            {
-              role: 'system',
-              content: `${SMART_AGRONOMIST_SYSTEM_PROMPT}\n\n[USER CONTEXT: Nama: ${userName} • Peran: ${role}]`,
-            },
-            ...history.slice(-8).map((m) => ({
-              role: m.role === 'model' ? 'assistant' : m.role,
-              content: m.content,
-            })),
-            {
-              role: 'user',
-              content: prompt,
-            },
-          ],
-          temperature: 0.6,
-          max_tokens: 600,
-        }),
-      });
+    for (const model of ACTIVE_GROQ_MODELS) {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${groqKey}`,
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              {
+                role: 'system',
+                content: `${SMART_AGRONOMIST_SYSTEM_PROMPT}\n\n[USER CONTEXT: Nama: ${userName} • Peran: ${role}]`,
+              },
+              ...history.slice(-8).map((m) => ({
+                role: m.role === 'model' ? 'assistant' : m.role,
+                content: m.content,
+              })),
+              {
+                role: 'user',
+                content: prompt,
+              },
+            ],
+            temperature: 0.6,
+            max_tokens: 800,
+          }),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        const text = data?.choices?.[0]?.message?.content;
-        if (text && text.trim().length > 0) {
-          return { text, source: 'groq' };
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.choices?.[0]?.message?.content;
+          if (text && text.trim().length > 0) {
+            return { text, source: 'groq' };
+          }
         }
+      } catch (groqErr) {
+        console.warn(`Groq model ${model} failed, trying next:`, groqErr);
       }
-    } catch (groqErr) {
-      console.warn('Direct Groq API failed, trying Gemini/Backend:', groqErr);
     }
   }
 
-  // 2. Direct Client Gemini API if available
-  if (geminiKey && geminiKey.length > 15) {
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [
-                {
-                  text: `${SMART_AGRONOMIST_SYSTEM_PROMPT}\n\n[Pengguna: ${userName}, Peran: ${role}]\n\nPertanyaan/Konsultasi: ${prompt}`,
-                },
-              ],
-            },
-          ],
-        }),
-      });
+  // 2. Direct Client Gemini API if valid key is provided (starts with AIzaSy)
+  if (geminiKey && geminiKey.startsWith('AIzaSy')) {
+    const geminiModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+    for (const gModel of geminiModels) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${gModel}:generateContent?key=${geminiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [
+                  {
+                    text: `${SMART_AGRONOMIST_SYSTEM_PROMPT}\n\n[Pengguna: ${userName}, Peran: ${role}]\n\nPertanyaan/Konsultasi: ${prompt}`,
+                  },
+                ],
+              },
+            ],
+          }),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text && text.trim().length > 0) {
-          return { text, source: 'gemini' };
+        if (response.ok) {
+          const data = await response.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim().length > 0) {
+            return { text, source: 'gemini' };
+          }
         }
+      } catch (geminiErr) {
+        console.warn(`Direct Gemini ${gModel} failed:`, geminiErr);
       }
-    } catch (geminiErr) {
-      console.warn('Direct Gemini API failed:', geminiErr);
     }
   }
 
@@ -166,8 +178,7 @@ export const diagnoseCropWithAI = async (
     '';
 
   if (groqKey && groqKey.startsWith('gsk_')) {
-    try {
-      const prompt = `Anda adalah AI Vision & Agronomist Scanner untuk perkebunan presisi AgroJaya.
+    const prompt = `Anda adalah AI Vision & Agronomist Scanner untuk perkebunan presisi AgroJaya.
 Analisis kondisi tanaman berikut:
 Komoditas: ${commodityName}
 Kode Ajir Sampel: ${treeCode}
@@ -185,40 +196,43 @@ Berikan output dalam format JSON valid PERSIS seperti ini (tanpa markdown tambah
   "advice": "Rekomendasi agronomi presisi (fertigasi, dosis, jam siram, kelembapan tanah)"
 }`;
 
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${groqKey}`,
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.3,
-          response_format: { type: 'json_object' },
-        }),
-      });
+    for (const model of ['openai/gpt-oss-120b', 'qwen/qwen3.8-27b']) {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${groqKey}`,
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.3,
+            response_format: { type: 'json_object' },
+          }),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        const content = data?.choices?.[0]?.message?.content;
-        if (content) {
-          const parsed = JSON.parse(content);
-          return {
-            plant: parsed.plant || `${commodityName} (${treeCode})`,
-            variety: parsed.variety || `${commodityName} Unggul F1`,
-            healthScoreNum: Number(parsed.healthScoreNum) || 98.0,
-            health: parsed.health || '98.2% Klorofil Prima & Sehat',
-            disease: parsed.disease || '0% Patogen Terdeteksi',
-            brixEst: parsed.brixEst || '14.5° Brix (Grade A)',
-            assetValuation: parsed.assetValuation || 'Est. Rp 60.000 / Pohon',
-            harvestEst: parsed.harvestEst || 'Siap Panen 18 Hari Lagi',
-            advice: parsed.advice || 'Lanjutkan pemupukan berimbang dan pertahankan kelembapan bedengan 65-70%.',
-          };
+        if (response.ok) {
+          const data = await response.json();
+          const content = data?.choices?.[0]?.message?.content;
+          if (content) {
+            const parsed = JSON.parse(content);
+            return {
+              plant: parsed.plant || `${commodityName} (${treeCode})`,
+              variety: parsed.variety || `${commodityName} Unggul F1`,
+              healthScoreNum: Number(parsed.healthScoreNum) || 98.0,
+              health: parsed.health || '98.2% Klorofil Prima & Sehat',
+              disease: parsed.disease || '0% Patogen Terdeteksi',
+              brixEst: parsed.brixEst || '14.5° Brix (Grade A)',
+              assetValuation: parsed.assetValuation || 'Est. Rp 60.000 / Pohon',
+              harvestEst: parsed.harvestEst || 'Siap Panen 18 Hari Lagi',
+              advice: parsed.advice || 'Lanjutkan pemupukan berimbang dan pertahankan kelembapan bedengan 65-70%.',
+            };
+          }
         }
+      } catch (err) {
+        console.warn(`AI Crop Diagnosis error with ${model}:`, err);
       }
-    } catch (err) {
-      console.warn('AI Crop Diagnosis error, using dynamic generator:', err);
     }
   }
 

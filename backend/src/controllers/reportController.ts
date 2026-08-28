@@ -17,7 +17,7 @@ export const get5DReport = async (req: Request, res: Response) => {
     });
 
     // Format 5 Dimensions
-    const report5D = activities.map((act) => {
+    const report5D = activities.map((act: any) => {
       const createdDate = act.createdAt;
       const approvedDate = act.approvedAt;
       const slaMinutes = approvedDate
@@ -76,7 +76,7 @@ export const getFinancialReport = async (req: Request, res: Response) => {
     let totalExpense = 0;
     let totalRevenue = 0;
 
-    financials.forEach((item) => {
+    financials.forEach((item: any) => {
       if (item.type === 'EXPENSE') totalExpense += Number(item.amount);
       if (item.type === 'REVENUE') totalRevenue += Number(item.amount);
     });
