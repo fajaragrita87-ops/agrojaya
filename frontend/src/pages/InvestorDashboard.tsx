@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getInvestorDashboard } from '../services/api';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
+import { LiveFieldFeedHub } from '../components/LiveFieldFeedHub';
 
 export const InvestorDashboard = () => {
   const [auditFilter, setAuditFilter] = useState<string>('ALL');
@@ -265,6 +266,23 @@ export const InvestorDashboard = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* 5. LIVE FIELD FEED TRANSPARANSI INVESTOR (BUKTI FOTO DARI LAPANGAN) */}
+      <div className="card-box p-4 border bg-white rounded-4 shadow-sm">
+        <div className="mb-3">
+          <span className="badge bg-success-subtle text-success border border-success px-3 py-1 rounded-pill uppercase font-weight-bold mb-1.5 d-inline-block" style={{ fontSize: 11 }}>
+            <i className="ri-broadcast-line me-1"></i> UPDATE LANGSUNG DARI KEBUN (LIVE FEED)
+          </span>
+          <h3 className="h6 font-weight-bold text-dark mb-0">Laporan Situasi Lahan & Dokumentasi Foto Lapangan Real-Time</h3>
+          <span className="text-muted font-weight-medium" style={{ fontSize: 12 }}>
+            Pantau foto pembukaan tanah, realisasi pembelian barang PO, bibit, dan aktivitas petani langsung dari smartphone mandor
+          </span>
+        </div>
+        <LiveFieldFeedHub
+          currentUserRole="INVESTOR"
+          currentUserName="H. Surya Pratama (Investor Utama)"
+        />
       </div>
     </div>
   );

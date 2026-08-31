@@ -44,6 +44,8 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
 
   const renderActiveScreen = () => {
     switch (activeScreen) {
+      case 'SUPERADMIN':
+        return <MobileDirekturDashboard />;
       case 'DIREKTUR':
         return <MobileDirekturDashboard />;
       case 'INVESTOR':
@@ -57,17 +59,18 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
       case 'PETANI':
         return <MobilePetaniDashboard />;
       default:
-        return <MobileInvestorDashboard />;
+        return <MobileDirekturDashboard />;
     }
   };
 
   const rolesConfig: { id: RoleType; label: string; icon: string }[] = [
-    { id: 'DIREKTUR', label: 'Direktur Utama', icon: '👑' },
+    { id: 'SUPERADMIN', label: 'Super Admin', icon: '👑' },
+    { id: 'DIREKTUR', label: 'Direktur Utama', icon: '👔' },
     { id: 'INVESTOR', label: 'Investor', icon: '💼' },
     { id: 'FINANCE', label: 'Finance', icon: '💵' },
-    { id: 'MANAGER', label: 'Manajer Ops', icon: '👔' },
+    { id: 'MANAGER', label: 'Manajer Ops', icon: '🚜' },
     { id: 'KEPALA_KEBUN', label: 'Kepala Kebun', icon: '🤠' },
-    { id: 'PETANI', label: 'Petani Lapangan', icon: '🚜' },
+    { id: 'PETANI', label: 'Petani Lapangan', icon: '🌾' },
   ];
 
   // 1. IF ON REAL MOBILE / CAPACITOR / SCREEN <= 768px: RENDER FULL NATIVE SCREEN DIRECTLY

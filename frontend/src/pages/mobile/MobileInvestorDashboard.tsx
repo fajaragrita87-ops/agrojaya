@@ -17,6 +17,7 @@ import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKom
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
 import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 import { callLiveAI } from '../../services/aiService';
 
@@ -25,6 +26,7 @@ import { useSmartFarmStore } from '../../store/smartFarmStore';
 export const MobileInvestorDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     | 'menu_hub'
+    | 'live_feed'
     | 'portofolio'
     | 'approval'
     | 'fisik_gis'
@@ -457,6 +459,11 @@ export const MobileInvestorDashboard: React.FC = () => {
               else if (viewId === 'ktp_pohon') setShowTreeScanner(true);
             }}
           />
+        )}
+
+        {/* ==================== 5B. TAB: LIVE FEED KEBUN (PENGGANTI WA) ==================== */}
+        {activeTab === 'live_feed' && (
+          <LiveFeedKebunScreen onBack={() => setActiveTab('menu_hub')} userRole="INVESTOR" />
         )}
 
         {/* ==================== 6. TAB: ALOKASI MODAL ==================== */}

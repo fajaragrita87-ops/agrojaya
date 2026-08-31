@@ -24,9 +24,6 @@ export const ManagerDashboard: React.FC = () => {
           <h2 className="page-header-title font-weight-bold text-dark mb-0" style={{ fontSize: 20 }}>
             Dasbor Operasional — {userName}
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            Pengawasan target produksi panen, kesiapan bahan baku gudang, logistik hasil kebun, dan tenaga kerja
-          </p>
         </div>
 
         <div className="d-flex align-items-center gap-2">

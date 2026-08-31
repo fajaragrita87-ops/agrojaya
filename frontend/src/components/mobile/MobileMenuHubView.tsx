@@ -21,6 +21,14 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
   // 1. FITUR UTAMA & EKSEKUTIF (Deep Forest Emerald Glass)
   const mainFeatures: RoleModuleItem[] = [
     {
+      id: 'live_feed',
+      title: 'Feed Lapangan (WA)',
+      tileType: 'live_feed',
+      gradientStyle: 'bg-gradient-to-br from-[#065F46] via-[#047857] to-[#15803D]',
+      statusDot: { text: 'Feed Live', dotColor: 'bg-[#C8E86B]' },
+      roles: ['INVESTOR', 'DIREKTUR', 'FINANCE', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],
+    },
+    {
       id: 'dasbor',
       title: 'Dasbor',
       tileType: 'dasbor',
@@ -104,7 +112,7 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
     },
     {
       id: 'scan_daun',
-      title: 'Scan Tumbuhan AI',
+      title: 'Scan Daun & Buah',
       tileType: 'scan_daun',
       gradientStyle: 'bg-gradient-to-br from-[#059669] via-[#047857] to-[#365314]',
       roles: ['INVESTOR', 'DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'PETANI'],

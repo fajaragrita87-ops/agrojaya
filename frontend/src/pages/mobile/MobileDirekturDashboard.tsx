@@ -17,6 +17,7 @@ import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKom
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
 import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
@@ -25,6 +26,7 @@ import { callLiveAI } from '../../services/aiService';
 export const MobileDirekturDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     | 'menu_hub'
+    | 'live_feed'
     | 'dasbor'
     | 'approval'
     | 'gis'
@@ -387,7 +389,8 @@ export const MobileDirekturDashboard: React.FC = () => {
         {activeTab === 'menu_hub' && (
           <MobileMenuHubView
             onSelectView={(viewId) => {
-              if (viewId === 'dasbor') setActiveTab('dasbor');
+              if (viewId === 'live_feed') setActiveTab('live_feed');
+              else if (viewId === 'dasbor') setActiveTab('dasbor');
               else if (viewId === 'approval_po') setActiveTab('approval');
               else if (viewId === 'tanya_ai') setActiveTab('ai');
               else if (viewId === 'peta_gis') setActiveTab('gis');
@@ -407,6 +410,11 @@ export const MobileDirekturDashboard: React.FC = () => {
               else if (viewId === 'ktp_pohon') setShowTreeScanner(true);
             }}
           />
+        )}
+
+        {/* ==================== 6B. TAB: LIVE FEED KEBUN (PENGGANTI WA) ==================== */}
+        {activeTab === 'live_feed' && (
+          <LiveFeedKebunScreen onBack={() => setActiveTab('menu_hub')} userRole="DIREKTUR" />
         )}
 
         {/* ==================== 7. TAB: ALOKASI MODAL ==================== */}

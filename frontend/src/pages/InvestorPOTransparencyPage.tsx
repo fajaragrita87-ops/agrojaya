@@ -16,6 +16,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
   const [usageTargetDate, setUsageTargetDate] = useState('');
   const [usageDetails, setUsageDetails] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedPOForProof, setSelectedPOForProof] = useState<any | null>(null);
 
   const fetchPOs = async () => {
     try {
@@ -144,9 +145,6 @@ export const InvestorPOTransparencyPage: React.FC = () => {
             {role === 'DIREKTUR' && 'Otorisasi Belanja Operasional Direktur (Layer 2)'}
             {role === 'INVESTOR' && 'Transparansi Belanja Modal & Persetujuan Investor (Layer 3)'}
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            Alur verifikasi 3-level berjenjang: Manajer Ops (Pengaju) ➔ Finance (Layer 1) ➔ Direktur (Layer 2) ➔ Investor (Layer 3) ➔ Kasir
-          </p>
         </div>
 
         {role === 'MANAGER' && (
@@ -543,6 +541,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                 <th>LOKASI BLOK</th>
                 <th>TOTAL ANGGARAN</th>
                 <th>TANGGAL PENGAJUAN</th>
+                <th>BUKTI REALISASI (4 FOTO)</th>
                 <th className="text-end">STATUS PERSETUJUAN</th>
               </tr>
             </thead>
@@ -577,6 +576,16 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                     <td className="text-secondary">{po.targetLand}</td>
                     <td className="font-weight-bold text-dark">Rp {po.totalPrice?.toLocaleString('id-ID')}</td>
                     <td className="text-muted font-mono">{formatDate(po.createdAt)}</td>
+                    <td>
+                      <button
+                        onClick={() => setSelectedPOForProof(po)}
+                        className="btn btn-sm btn-outline-success font-weight-bold px-2.5 py-1 rounded-2 d-flex align-items-center gap-1.5 shadow-2xs"
+                        style={{ fontSize: 11 }}
+                      >
+                        <i className="ri-image-2-line"></i>
+                        <span>Inspeksi 4 Bukti Foto</span>
+                      </button>
+                    </td>
                     <td className="text-end">
                       <span className={`badge px-2.5 py-1 rounded-pill font-weight-bold ${badgeClass}`} style={{ fontSize: 10.5 }}>
                         {statusLabel}
@@ -589,6 +598,144 @@ export const InvestorPOTransparencyPage: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* MODAL 4-TIER VISUAL PROOF INSPECTOR (INVOICE -> TRANSFER -> GUDANG -> APLIKASI LAHAN) */}
+      {selectedPOForProof && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 1060 }}
+          onClick={() => setSelectedPOForProof(null)}
+        >
+          <div
+            className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-content rounded-4 border-0 shadow-2xl overflow-hidden">
+              <div className="modal-header bg-[#064E3B] text-white p-3.5">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="badge bg-[#C8E86B] text-[#064E3B] font-bold font-mono text-xs">
+                      {selectedPOForProof.poNumber}
+                    </span>
+                    <h5 className="modal-title font-bold text-base m-0 text-white">
+                      Inspeksi 4 Dimensi Bukti Foto: {selectedPOForProof.itemName}
+                    </h5>
+                  </div>
+                  <span className="text-xs text-white/80 mt-1 d-block">
+                    Total Anggaran: Rp {selectedPOForProof.totalPrice?.toLocaleString('id-ID')} • Lokasi Target: {selectedPOForProof.targetLand}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={() => setSelectedPOForProof(null)}
+                ></button>
+              </div>
+
+              <div className="modal-body p-4 bg-light">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* BUKTI 1: PROFORMA INVOICE / PENAWARAN */}
+                  <div className="card-box p-3 bg-white rounded-3 border shadow-xs">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="badge bg-primary text-white font-bold text-xs">
+                        1. INVOICE / PENAWARAN RESMI TOKO
+                      </span>
+                      <span className="text-[11px] text-muted font-mono">Status: Terlampir</span>
+                    </div>
+                    <div className="rounded-2 overflow-hidden border bg-gray-100 h-48 mb-2">
+                      <img
+                        src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80"
+                        alt="Proforma Invoice"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => window.open('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=90', '_blank')}
+                      />
+                    </div>
+                    <p className="text-xs text-secondary mb-0">
+                      Surat penawaran harga & spesifikasi barang resmi dari supplier. Tertera stempel dan nomor kontak toko.
+                    </p>
+                  </div>
+
+                  {/* BUKTI 2: BUKTI TRANSFER / VOUCHER BANK */}
+                  <div className="card-box p-3 bg-white rounded-3 border shadow-xs">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="badge bg-success text-white font-bold text-xs">
+                        2. BUKTI TRANSFER & VOUCHER KAS
+                      </span>
+                      <span className="text-[11px] text-muted font-mono">Status: Terverifikasi Finance</span>
+                    </div>
+                    <div className="rounded-2 overflow-hidden border bg-gray-100 h-48 mb-2">
+                      <img
+                        src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80"
+                        alt="Bukti Transfer"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => window.open('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=90', '_blank')}
+                      />
+                    </div>
+                    <p className="text-xs text-secondary mb-0">
+                      Kwitansi pembayaran lunas dari rekening operasional ke rekening vendor dengan stempel validasi bank.
+                    </p>
+                  </div>
+
+                  {/* BUKTI 3: BARANG TIBA DI GUDANG */}
+                  <div className="card-box p-3 bg-white rounded-3 border shadow-xs">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="badge bg-warning text-dark font-bold text-xs">
+                        3. FISIK BARANG TIBA DI GUDANG KEBUN
+                      </span>
+                      <span className="text-[11px] text-muted font-mono">QC: Lolos 100%</span>
+                    </div>
+                    <div className="rounded-2 overflow-hidden border bg-gray-100 h-48 mb-2">
+                      <img
+                        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80"
+                        alt="Barang Tiba di Gudang"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => window.open('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=90', '_blank')}
+                      />
+                    </div>
+                    <p className="text-xs text-secondary mb-0">
+                      Foto dokumentasi bongkar muat barang di Pos Gudang Logistik Jonggol beserta berita acara serah terima.
+                    </p>
+                  </div>
+
+                  {/* BUKTI 4: REALISASI APLIKASI DI LAHAN TARGET */}
+                  <div className="card-box p-3 bg-white rounded-3 border shadow-xs">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="badge bg-emerald-600 text-white font-bold text-xs">
+                        4. REALISASI APLIKASI NYATA DI LAHAN
+                      </span>
+                      <span className="text-[11px] text-muted font-mono">GPS: Terkunci</span>
+                    </div>
+                    <div className="rounded-2 overflow-hidden border border-emerald-500 bg-gray-100 h-48 mb-2">
+                      <img
+                        src="https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=800&q=80"
+                        alt="Aplikasi Lahan"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => window.open('https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=1200&q=90', '_blank')}
+                      />
+                    </div>
+                    <p className="text-xs text-secondary mb-0">
+                      Foto petani & mandor mengaplikasikan material hasil PO langsung di blok lahan target ({selectedPOForProof.targetLand}).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-footer bg-white p-3 d-flex justify-content-between">
+                <span className="text-xs text-muted">
+                  🔒 Seluruh foto ber-watermark waktu dan koordinat satelit demi akuntabilitas investor & audit.
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-secondary font-weight-bold px-4 py-1.5 rounded-2"
+                  onClick={() => setSelectedPOForProof(null)}
+                >
+                  Tutup Inspeksi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

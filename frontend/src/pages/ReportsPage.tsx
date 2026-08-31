@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { get5DReport } from '../services/api';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 import { useRole } from '../context/RoleContext';
 
 export const ReportsPage: React.FC = () => {
+  const { purchaseOrders, tasks } = useSmartFarmStore();
   const [reportData, setReportData] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -54,18 +55,32 @@ export const ReportsPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    get5DReport()
-      .then((res) => {
-        if (res.data && res.data.length > 0) {
-          setReportData(res.data);
-        } else {
-          setReportData(fallback5DData);
-        }
-      })
-      .catch(() => {
-        setReportData(fallback5DData);
-      });
-  }, []);
+    const liveDynamicReports = [
+      ...tasks.filter((t) => t.completed).map((t) => ({
+        id: `REP-TSK-${t.id}`,
+        category: 'OPS',
+        timeSla: { timestamp: t.completedAt || t.createdAt || '2026-08-30T08:00:00Z', durationMinutes: 180 },
+        location: { siteName: t.target, soilType: 'Tanah Olah Siap Tanam' },
+        personnel: { executorName: t.assignedTo, supervisorName: 'Pak Joko Sukardi (Kepala Kebun)' },
+        physicalOutput: `${t.title} (${t.category})`,
+        financial: { opexEstimateRp: 450000, opexDisbursedRp: 450000 },
+        output: { status: 'SELESAI (BAP TERBIT)', bapDocUrl: `#bap-task-${t.id}` },
+      })),
+      ...purchaseOrders.filter((p) => p.status === 'APPROVED').map((p) => ({
+        id: `REP-${p.id}`,
+        category: 'FINANCE',
+        timeSla: { timestamp: p.date, durationMinutes: 240 },
+        location: { siteName: p.targetLand || 'Gudang Utama Jonggol', soilType: 'Penyimpanan & Distribusi' },
+        personnel: { executorName: p.requester, supervisorName: 'Direktur & Investor' },
+        physicalOutput: `Pengadaan: ${p.title} (${p.vendor})`,
+        financial: { opexEstimateRp: p.amount, opexDisbursedRp: p.amount },
+        output: { status: 'SELESAI (DANA CAIR)', bapDocUrl: `#bap-po-${p.id}` },
+      })),
+      ...fallback5DData,
+    ];
+
+    setReportData(liveDynamicReports);
+  }, [purchaseOrders, tasks]);
 
   const handleExportCSV = () => {
     alert(`Mengunduh Laporan Terverifikasi Audit (PDF/Excel) untuk Peran: ${role}...`);
@@ -87,18 +102,13 @@ export const ReportsPage: React.FC = () => {
       {/* Header Banner - Role Contextual */}
       <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
-          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+          <h2 className="page-header-title font-weight-bold text-dark mb-0" style={{ fontSize: 20 }}>
             {isKepalaKebun
               ? 'Laporan Operasional Lapangan & Berita Acara (BAP)'
               : role === 'INVESTOR'
               ? 'Laporan Akuntabilitas & Transparansi 5-Dimensi Investor'
               : 'Laporan Terpadu 5-Dimensi Auditor Kebun'}
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            {isKepalaKebun
-              ? 'Pemantauan durasi kerja SLA, pengawasan blok kebun, personel pelaksana, dan Berita Acara Pekerjaan (BAP)'
-              : 'Rekap siklus penuh operasional hulu-ke-hilir (Waktu/SLA, Lokasi, SDM, Biaya OPEX, & Output BAP)'}
-          </p>
         </div>
 
         <button
@@ -234,65 +244,95 @@ export const ReportsPage: React.FC = () => {
           <table className="table table-hover align-middle mb-0" style={{ fontSize: 12.5 }}>
             <thead className="table-light">
               <tr style={{ fontSize: 11.5 }}>
-                <th style={{ minWidth: 130 }}>1. WAKTU & SLA</th>
-                <th style={{ minWidth: 180 }}>2. LOKASI BLOK</th>
-                <th style={{ minWidth: 160 }}>3. SDM / PELAKSANA</th>
-                <th style={{ minWidth: 140 }}>
+                <th style={{ minWidth: 120 }}>1. WAKTU & SLA</th>
+                <th style={{ minWidth: 170 }}>2. LOKASI BLOK</th>
+                <th style={{ minWidth: 150 }}>3. SDM / PELAKSANA</th>
+                <th style={{ minWidth: 130 }}>
                   {isKepalaKebun ? '4. HASIL KERJA FISIK' : '4. OPEX / DANA CAIR'}
                 </th>
+                <th style={{ minWidth: 140 }}>BUKTI FOTO DOKUMENTASI</th>
                 <th style={{ minWidth: 140 }} className="text-end">5. STATUS & BAP</th>
               </tr>
             </thead>
             <tbody>
-              {filteredReports.map((row) => (
-                <tr key={row.id}>
-                  <td>
-                    <strong className="d-block text-dark font-mono" style={{ fontSize: 11.5 }}>{row.id}</strong>
-                    <span className="text-muted" style={{ fontSize: 11 }}>
-                      {new Date(row.timeSla?.timestamp || Date.now()).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
-                    </span>
-                    <span className="badge bg-light text-dark border d-block w-fit mt-1" style={{ fontSize: 10 }}>
-                      ⏱️ {row.timeSla?.durationMinutes} Menit
-                    </span>
-                  </td>
-                  <td>
-                    <strong className="d-block text-dark font-weight-bold" style={{ fontSize: 12.5 }}>{row.location?.siteName}</strong>
-                    <span className="text-secondary" style={{ fontSize: 11 }}>Tanah: {row.location?.soilType}</span>
-                  </td>
-                  <td>
-                    <strong className="d-block text-dark" style={{ fontSize: 12.5 }}>{row.personnel?.executorName}</strong>
-                    <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>SPV: {row.personnel?.supervisorName}</span>
-                  </td>
-                  <td>
-                    {isKepalaKebun ? (
-                      <span className="text-dark font-weight-medium" style={{ fontSize: 12 }}>
-                        🌱 {row.physicalOutput || 'Pekerjaan Selesai'}
+              {filteredReports.map((row, idx) => {
+                const proofPhotos = [
+                  'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
+                  'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80',
+                  'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80',
+                  'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=800&q=80',
+                ];
+                const currentPhoto = proofPhotos[idx % proofPhotos.length];
+
+                return (
+                  <tr key={row.id}>
+                    <td>
+                      <strong className="d-block text-dark font-mono" style={{ fontSize: 11.5 }}>{row.id}</strong>
+                      <span className="text-muted" style={{ fontSize: 11 }}>
+                        {new Date(row.timeSla?.timestamp || Date.now()).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
-                    ) : (
-                      <>
-                        <span className="d-block text-muted" style={{ fontSize: 10.5 }}>Realisasi OPEX:</span>
-                        <strong className="text-success font-mono font-weight-bold" style={{ fontSize: 13 }}>
-                          Rp {(row.financial?.opexDisbursedRp || 0).toLocaleString('id-ID')}
-                        </strong>
-                      </>
-                    )}
-                  </td>
-                  <td className="text-end">
-                    <span className="badge bg-success-subtle text-success border border-success mb-1 d-inline-block font-weight-bold" style={{ fontSize: 10.5 }}>
-                      {row.output?.status}
-                    </span>
-                    <br />
-                    <button
-                      onClick={() => alert(`Membuka Berita Acara Pekerjaan (BAP) Digital: ${row.id}`)}
-                      className="btn btn-sm btn-outline-primary font-weight-bold px-2 py-0.5 rounded-2 d-inline-flex align-items-center gap-1"
-                      style={{ fontSize: 10.5 }}
-                    >
-                      <i className="ri-file-pdf-line text-danger"></i>
-                      <span>Unduh BAP</span>
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                      <span className="badge bg-light text-dark border d-block w-fit mt-1" style={{ fontSize: 10 }}>
+                        ⏱️ {row.timeSla?.durationMinutes} Menit
+                      </span>
+                    </td>
+                    <td>
+                      <strong className="d-block text-dark font-weight-bold" style={{ fontSize: 12.5 }}>{row.location?.siteName}</strong>
+                      <span className="text-secondary" style={{ fontSize: 11 }}>Tanah: {row.location?.soilType}</span>
+                    </td>
+                    <td>
+                      <strong className="d-block text-dark" style={{ fontSize: 12.5 }}>{row.personnel?.executorName}</strong>
+                      <span className="text-muted font-weight-medium" style={{ fontSize: 11 }}>SPV: {row.personnel?.supervisorName}</span>
+                    </td>
+                    <td>
+                      {isKepalaKebun ? (
+                        <span className="text-dark font-weight-medium" style={{ fontSize: 12 }}>
+                          🌱 {row.physicalOutput || 'Pekerjaan Selesai'}
+                        </span>
+                      ) : (
+                        <>
+                          <span className="d-block text-muted" style={{ fontSize: 10.5 }}>Realisasi OPEX:</span>
+                          <strong className="text-success font-mono font-weight-bold" style={{ fontSize: 13 }}>
+                            Rp {(row.financial?.opexDisbursedRp || 0).toLocaleString('id-ID')}
+                          </strong>
+                        </>
+                      )}
+                    </td>
+                    <td>
+                      <div
+                        className="d-flex align-items-center gap-2 cursor-pointer group"
+                        onClick={() => window.open(currentPhoto, '_blank')}
+                      >
+                        <img
+                          src={currentPhoto}
+                          alt="Bukti Foto"
+                          className="rounded-2 border"
+                          style={{ width: 44, height: 44, objectFit: 'cover' }}
+                        />
+                        <div>
+                          <span className="d-block font-weight-bold text-success" style={{ fontSize: 11 }}>
+                            <i className="ri-image-line me-1"></i> Foto Sah
+                          </span>
+                          <span className="text-muted font-mono" style={{ fontSize: 9.5 }}>GPS: -6.4697, 107.0583</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="text-end">
+                      <span className="badge bg-success-subtle text-success border border-success mb-1 d-inline-block font-weight-bold" style={{ fontSize: 10.5 }}>
+                        {row.output?.status}
+                      </span>
+                      <br />
+                      <button
+                        onClick={() => alert(`Membuka Berita Acara Pekerjaan (BAP) Digital: ${row.id}`)}
+                        className="btn btn-sm btn-outline-primary font-weight-bold px-2 py-0.5 rounded-2 d-inline-flex align-items-center gap-1"
+                        style={{ fontSize: 10.5 }}
+                      >
+                        <i className="ri-file-pdf-line text-danger"></i>
+                        <span>Unduh BAP</span>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

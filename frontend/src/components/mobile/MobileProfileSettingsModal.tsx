@@ -18,6 +18,13 @@ export const MobileProfileSettingsModal: React.FC<MobileProfileSettingsModalProp
   if (!isOpen) return null;
 
   const roleDetails: Record<RoleType, { name: string; email: string; phone: string; badge: string; avatarColor: string }> = {
+    SUPERADMIN: {
+      name: 'Super Admin Master',
+      email: 'superadmin@agrojaya.com',
+      phone: '+62 811-9999-0000',
+      badge: 'Super Admin (Master Gerbang)',
+      avatarColor: 'bg-amber-600',
+    },
     DIREKTUR: {
       name: 'Budi Santoso, S.P., M.M.',
       email: 'direksi@agrojaya.co.id',

@@ -33,6 +33,7 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
   const [newNotes, setNewNotes] = useState('');
 
   const roleNameMap: Record<RoleType, string> = {
+    SUPERADMIN: 'Super Admin Master (Gerbang Utama)',
     DIREKTUR: 'Budi Santoso (Direktur Utama)',
     INVESTOR: 'Hendrawan Kusuma (Investor Utama)',
     FINANCE: 'Siti Rahmawati (Manajer Keuangan)',

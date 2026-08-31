@@ -8,11 +8,19 @@ import { KtpSampelScreen } from '../../components/mobile/screens/KtpSampelScreen
 import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapScreen';
 import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganPanenScreen';
 import { ScanDaunAiScreen } from '../../components/mobile/screens/ScanDaunAiScreen';
+import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
+import { AlokasiModalScreen } from '../../components/mobile/screens/AlokasiModalScreen';
+import { KalkulatorHppScreen } from '../../components/mobile/screens/KalkulatorHppScreen';
+import { LaporanAuditScreen } from '../../components/mobile/screens/LaporanAuditScreen';
+import { StokGudangScreen } from '../../components/mobile/screens/StokGudangScreen';
+import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
+import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 
 type PetaniTab =
   | 'menu_hub'
+  | 'live_feed'
   | 'tugas'
   | 'sop'
   | 'scan_ktp'
@@ -20,7 +28,13 @@ type PetaniTab =
   | 'scan_daun'
   | 'absen'
   | 'siklus_lahan'
-  | 'timbangan';
+  | 'timbangan'
+  | 'alokasi_modal'
+  | 'kalkulator'
+  | 'laporan_audit'
+  | 'gudang'
+  | 'peta_gis'
+  | 'kelola_user';
 
 export const MobilePetaniDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<PetaniTab>('menu_hub');
@@ -485,6 +499,9 @@ export const MobilePetaniDashboard: React.FC = () => {
         )}
 
         {/* ==================== SCREEN MODUL TAMBAHAN PETANI / MANDOR ==================== */}
+        {activeTab === 'live_feed' && (
+          <LiveFeedKebunScreen onBack={() => setActiveTab('menu_hub')} userRole="PETANI" />
+        )}
         {activeTab === 'ktp_sampel' && (
           <KtpSampelScreen onBack={() => setActiveTab('menu_hub')} />
         )}
@@ -494,19 +511,45 @@ export const MobilePetaniDashboard: React.FC = () => {
         {activeTab === 'timbangan' && (
           <TimbanganPanenScreen onBack={() => setActiveTab('menu_hub')} />
         )}
+        {activeTab === 'alokasi_modal' && (
+          <AlokasiModalScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'kalkulator' && (
+          <KalkulatorHppScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'laporan_audit' && (
+          <LaporanAuditScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'gudang' && (
+          <StokGudangScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'peta_gis' && (
+          <PetaGisMobileScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
+        {activeTab === 'kelola_user' && (
+          <KelolaUserScreen onBack={() => setActiveTab('menu_hub')} />
+        )}
 
         {/* ==================== 6. MENU HUB (CARD GRID SUPER APP) ==================== */}
         {activeTab === 'menu_hub' && (
           <MobileMenuHubView
             onSelectView={(viewId) => {
-              if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
+              if (viewId === 'live_feed') setActiveTab('live_feed');
+              else if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
               else if (viewId === 'scan_daun') setActiveTab('scan_daun');
               else if (viewId === 'presensi_sdm') setActiveTab('absen');
               else if (viewId === 'jadwal_tugas') setActiveTab('tugas');
               else if (viewId === 'master_komoditas') setActiveTab('sop');
               else if (viewId === 'siklus_lahan') setActiveTab('siklus_lahan');
               else if (viewId === 'timbangan') setActiveTab('timbangan');
+              else if (viewId === 'alokasi_modal' || viewId === 'buku_kas') setActiveTab('alokasi_modal');
+              else if (viewId === 'kalkulator') setActiveTab('kalkulator');
+              else if (viewId === 'laporan_audit') setActiveTab('laporan_audit');
+              else if (viewId === 'gudang') setActiveTab('gudang');
+              else if (viewId === 'peta_gis') setActiveTab('peta_gis');
+              else if (viewId === 'kelola_user') setActiveTab('kelola_user');
               else if (viewId === 'ktp_pohon') setShowTreeScanner(true);
+              else if (viewId === 'dasbor') setActiveTab('tugas');
             }}
           />
         )}

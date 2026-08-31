@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 
 interface TaskItem {
   id: string;
@@ -333,6 +334,18 @@ export const DailyTasklistCalendar = () => {
     };
 
     setTasks([newTask, ...tasks]);
+
+    // Sinkronisasi otomatis ke Zustand Central Store agar muncul di Mobile Petani & Mandor
+    useSmartFarmStore.getState().addTask({
+      title: formTitle,
+      target: formLocation,
+      assignedTo: formPic,
+      time: formTimeSla,
+      category: formCategory === 'Greenhouse' || formCategory === 'Irigasi' ? 'Irigasi' : 'Agronomi',
+      role: 'PETANI',
+      notes: formSop,
+    });
+
     setIsCreateModalOpen(false);
     setSelectedDay(formDayIndex);
     alert(`✅ Penugasan Baru "${formTitle}" Berhasil Diterbitkan dan Terkirim Otomatis ke Mobile Petani/Mandor!`);

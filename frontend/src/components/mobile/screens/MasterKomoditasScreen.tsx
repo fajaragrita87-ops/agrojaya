@@ -63,9 +63,6 @@ export const MasterKomoditasScreen: React.FC<MasterKomoditasScreenProps> = () =>
           <h1 className="text-[17px] font-black tracking-tight mt-0.5 m-0 text-white">
             Master Komoditas & SOP
           </h1>
-          <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
-            Spesifikasi benih unggul, siklus tanam, & protokol agronomi
-          </p>
         </div>
         <div className="w-10 h-10 rounded-[12px] bg-white/10 flex items-center justify-center text-xl text-[#C8E86B]">
           <i className="ri-seedling-fill"></i>

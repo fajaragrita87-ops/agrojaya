@@ -33,9 +33,6 @@ export const KelolaUserScreen: React.FC<KelolaUserScreenProps> = () => {
           <h1 className="text-[17px] font-black tracking-tight mt-0.5 m-0 text-white">
             Manajemen Pengguna & RBAC
           </h1>
-          <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
-            Daftar peran, otorisasi, & pembatasan modul enterprise
-          </p>
         </div>
         <div className="w-10 h-10 rounded-[12px] bg-white/10 flex items-center justify-center text-xl text-[#C8E86B]">
           <i className="ri-user-settings-fill"></i>

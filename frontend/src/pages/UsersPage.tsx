@@ -59,12 +59,9 @@ export const UsersPage: React.FC = () => {
       {/* Header Banner */}
       <div className="card-box p-4 rounded-4 bg-white border shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
-          <h2 className="page-header-title font-weight-bold text-dark mb-1" style={{ fontSize: 20 }}>
+          <h2 className="page-header-title font-weight-bold text-dark mb-0" style={{ fontSize: 20 }}>
             Manajemen Tenaga Kerja & Pengguna Sistem
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            Kelola data staf manajemen, mandor kepala kebun, hak akses RBAC, dan efisiensi tenaga kerja
-          </p>
         </div>
 
         {canManageUsers && (

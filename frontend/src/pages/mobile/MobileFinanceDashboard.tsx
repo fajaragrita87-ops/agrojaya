@@ -13,6 +13,7 @@ import { Bukti8TahapScreen } from '../../components/mobile/screens/Bukti8TahapSc
 import { PetaGisMobileScreen } from '../../components/mobile/screens/PetaGisMobileScreen';
 import { MasterKomoditasScreen } from '../../components/mobile/screens/MasterKomoditasScreen';
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
+import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
 import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
 
 import { useSmartFarmStore } from '../../store/smartFarmStore';
@@ -20,6 +21,7 @@ import { callLiveAI } from '../../services/aiService';
 
 type FinanceTab =
   | 'menu_hub'
+  | 'live_feed'
   | 'kas'
   | 'verifikasi'
   | 'hpp'
@@ -324,12 +326,16 @@ export const MobileFinanceDashboard: React.FC = () => {
         {activeTab === 'jadwal_tugas' && (
           <JadwalTasklistScreen onBack={() => setActiveTab('menu_hub')} />
         )}
+        {activeTab === 'live_feed' && (
+          <LiveFeedKebunScreen onBack={() => setActiveTab('menu_hub')} userRole="FINANCE" />
+        )}
 
         {/* ==================== 6. MENU HUB SUPER APP ==================== */}
         {activeTab === 'menu_hub' && (
           <MobileMenuHubView
             onSelectView={(viewId) => {
-              if (viewId === 'buku_kas' || viewId === 'dasbor') setActiveTab('kas');
+              if (viewId === 'live_feed') setActiveTab('live_feed');
+              else if (viewId === 'buku_kas' || viewId === 'dasbor') setActiveTab('kas');
               else if (viewId === 'approval_po') setActiveTab('verifikasi');
               else if (viewId === 'kalkulator') setActiveTab('hpp');
               else if (viewId === 'presensi_sdm') setActiveTab('payroll');

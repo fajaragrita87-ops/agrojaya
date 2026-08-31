@@ -19,7 +19,17 @@ async function main() {
   await prisma.land.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Users (All 6 Roles with Standard AgroJaya Credentials)
+  // 2. Users (All 7 Roles with Standard AgroJaya Credentials & Super Admin Master Gerbang)
+  const superadmin = await prisma.user.create({
+    data: {
+      name: 'Super Admin AgroJaya (Master Gerbang)',
+      email: 'superadmin@agrojaya.com',
+      passwordHash: '$2a$10$abcdefghijklmnopqrstuv', // 123456
+      role: 'SUPERADMIN',
+      phone: '0811-9999-0000',
+    },
+  });
+
   const direktur = await prisma.user.create({
     data: {
       name: 'Ir. H. Ahmad Wijaya',
@@ -80,7 +90,7 @@ async function main() {
     },
   });
 
-  console.log('✅ 6 Core Roles Seeded (DIREKTUR, INVESTOR, FINANCE, MANAGER, KEPALA_KEBUN, PETANI)');
+  console.log('✅ 7 Roles Seeded (SUPERADMIN, DIREKTUR, INVESTOR, FINANCE, MANAGER, KEPALA_KEBUN, PETANI)');
 
   // 3. Lands (Jonggol, Bogor)
   const landA1 = await prisma.land.create({

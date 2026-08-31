@@ -13,11 +13,13 @@ import { StokGudangScreen } from '../../components/mobile/screens/StokGudangScre
 import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganPanenScreen';
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
+import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
 import { callLiveAI } from '../../services/aiService';
 
 export const MobileKepalaKebunDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     | 'menu_hub'
+    | 'live_feed'
     | 'scan'
     | 'tanah'
     | 'sop'
@@ -241,7 +243,8 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
         {activeTab === 'menu_hub' && (
           <MobileMenuHubView
             onSelectView={(viewId) => {
-              if (viewId === 'dasbor' || viewId === 'scan_daun') setActiveTab('scan_daun');
+              if (viewId === 'live_feed') setActiveTab('live_feed');
+              else if (viewId === 'dasbor' || viewId === 'scan_daun') setActiveTab('scan_daun');
               else if (viewId === 'peta_gis') setActiveTab('peta_gis');
               else if (viewId === 'ktp_sampel') setActiveTab('ktp_sampel');
               else if (viewId === 'siklus_lahan') setActiveTab('siklus_lahan');
@@ -257,6 +260,9 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
         )}
 
         {/* ==================== 7. SCREENS ==================== */}
+        {activeTab === 'live_feed' && (
+          <LiveFeedKebunScreen onBack={() => setActiveTab('menu_hub')} userRole="KEPALA_KEBUN" />
+        )}
         {activeTab === 'peta_gis' && (
           <PetaGisMobileScreen onBack={() => setActiveTab('menu_hub')} />
         )}

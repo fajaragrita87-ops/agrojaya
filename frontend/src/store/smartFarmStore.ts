@@ -39,6 +39,58 @@ export interface PurchaseOrder {
   direkturApprovedAt?: string;
   investorAuthorizedAt?: string;
   notes?: string;
+  targetLand?: string;
+  // 4-Tier Visual Proof Photos:
+  proformaPhoto?: string;       // Foto Invoice/Penawaran Toko Asli
+  paymentProofPhoto?: string;   // Foto Bukti Transfer Bank / Voucher Kas
+  goodsReceivedPhoto?: string;  // Foto Barang Fisik Tiba di Gudang Kebun
+  fieldApplicationPhoto?: string; // Foto Realisasi Pengaplikasian Nyata di Lahan
+}
+
+// 2B. LIVE FIELD FEED MODEL (WhatsApp Group Replacement)
+export type FieldReportCategory =
+  | 'PEMBUKAAN_LAHAN'
+  | 'OLAH_TANAH'
+  | 'PENANAMAN'
+  | 'PEMUPUKAN'
+  | 'PROTEKSI_HAMA'
+  | 'PENGAIRAN'
+  | 'PANEN'
+  | 'KENDALA_CUACA'
+  | 'LOGISTIK_PO';
+
+export interface FieldReportComment {
+  id: string;
+  authorName: string;
+  authorRole: 'SUPERADMIN' | 'DIREKTUR' | 'FINANCE' | 'INVESTOR' | 'KEPALA_KEBUN' | 'MANDOR' | 'MANAGER' | 'PETANI' | string;
+  authorAvatar?: string;
+  text: string;
+  timestamp: string;
+}
+
+export interface FieldReportPost {
+  id: string;
+  authorName: string;
+  authorRole: 'SUPERADMIN' | 'PETANI' | 'MANDOR' | 'KEPALA_KEBUN' | 'MANAGER' | 'DIREKTUR' | 'FINANCE' | string;
+  authorAvatar?: string;
+  category: FieldReportCategory;
+  categoryLabel: string;
+  blockTarget: string;
+  timestamp: string;
+  caption: string;
+  photoUrls: string[];
+  beforeAfter?: {
+    beforePhoto: string;
+    beforeLabel: string;
+    afterPhoto: string;
+    afterLabel: string;
+  };
+  gpsLocation: string;
+  coordinates?: { lat: number; lng: number };
+  likesCount: number;
+  isLiked?: boolean;
+  relatedPoId?: string;
+  comments: FieldReportComment[];
 }
 
 // 3. TREE SAMPLE PASSPORT MODEL
@@ -146,16 +198,26 @@ interface SmartFarmState {
   // Collections
   tasks: FarmTask[];
   purchaseOrders: PurchaseOrder[];
+  fieldPosts: FieldReportPost[];
   treeSamples: TreeSample[];
   plantScans: PlantScanRecord[];
   inventory: InventoryItem[];
   weighbridgeSlips: WeighbridgeSlip[];
   attendanceRecords: AttendanceRecord[];
+  lifecycleStagePhotos: Record<number, string>;
+
+  // Lifecycle Stage Actions
+  updateLifecycleStagePhoto: (stepNumber: number, photoUrl: string, updatedBy?: string, caption?: string) => void;
 
   // Task Actions
   addTask: (task: Omit<FarmTask, 'id' | 'createdAt' | 'completed'>) => void;
   toggleTask: (taskId: string, photoProof?: string, notes?: string) => void;
   deleteTask: (taskId: string) => void;
+
+  // Live Field Feed Actions (WhatsApp Group Replacement)
+  addFieldReportPost: (post: Omit<FieldReportPost, 'id' | 'timestamp' | 'comments' | 'likesCount' | 'isLiked'>) => void;
+  addPostComment: (postId: string, comment: Omit<FieldReportComment, 'id' | 'timestamp'>) => void;
+  likePost: (postId: string) => void;
 
   // PO Actions
   createPO: (po: Omit<PurchaseOrder, 'id' | 'date' | 'status'>) => void;
@@ -163,6 +225,7 @@ interface SmartFarmState {
   approvePOByDirektur: (poId: string, notes?: string) => void;
   authorizePOByInvestor: (poId: string, notes?: string) => void;
   rejectPO: (poId: string, notes?: string) => void;
+  updatePOPhotos: (poId: string, photos: Partial<Pick<PurchaseOrder, 'proformaPhoto' | 'paymentProofPhoto' | 'goodsReceivedPhoto' | 'fieldApplicationPhoto'>>) => void;
 
   // Tree & Plant Scan Actions
   addTreeLog: (treeIdOrCode: string, log: Omit<TreeLog, 'id'>) => void;
@@ -256,6 +319,12 @@ const initialPOs: PurchaseOrder[] = [
     financeVerifiedAt: '24 Agu 10:15',
     direkturApprovedAt: '24 Agu 14:00',
     investorAuthorizedAt: '25 Agu 08:30',
+    targetLand: 'Blok A2 (Greenhouse Sentra Melon)',
+    notes: 'Kebutuhan tanam siklus 2, benih sertifikasi resmi tahan Gemini virus.',
+    proformaPhoto: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
+    paymentProofPhoto: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80',
+    goodsReceivedPhoto: 'https://images.unsplash.com/photo-1592417817098-8f3d69106093?auto=format&fit=crop&w=800&q=80',
+    fieldApplicationPhoto: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PO-026',
@@ -269,6 +338,12 @@ const initialPOs: PurchaseOrder[] = [
     invoiceNumber: 'INV-ATM-2026-092',
     financeVerifiedAt: '26 Agu 11:30',
     direkturApprovedAt: '27 Agu 09:15',
+    targetLand: 'Blok B1 (Kebun Porang Super Jonggol)',
+    notes: 'Dosis pencegahan busuk batang fase awal musim hujan.',
+    proformaPhoto: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
+    paymentProofPhoto: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=80',
+    goodsReceivedPhoto: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
+    fieldApplicationPhoto: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PO-027',
@@ -281,6 +356,12 @@ const initialPOs: PurchaseOrder[] = [
     requester: 'Irfan Maulana (Manajer Ops)',
     invoiceNumber: 'INV-TAT-4410',
     financeVerifiedAt: '27 Agu 10:00',
+    targetLand: 'Blok A1 - A2 (Greenhouse Irigasi)',
+    notes: 'Penggantian manifold drip nozzle blok barat yang tersumbat kapur.',
+    proformaPhoto: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
+    paymentProofPhoto: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
+    goodsReceivedPhoto: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+    fieldApplicationPhoto: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PO-028',
@@ -291,6 +372,149 @@ const initialPOs: PurchaseOrder[] = [
     date: '27 Agu 2026',
     status: 'PENDING_FINANCE',
     requester: 'Pak Joko Sukardi (Kepala Kebun)',
+    targetLand: 'Blok C1 (Persiapan Lahan Cabai Rawit)',
+    notes: 'Penutupan bedengan tanah baru setelah tebar kapur dolomit & pupuk kandang.',
+    proformaPhoto: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80',
+    goodsReceivedPhoto: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=800&q=80',
+  },
+];
+
+const initialFieldPosts: FieldReportPost[] = [
+  {
+    id: 'POST-001',
+    authorName: 'Pak Joko Sukardi',
+    authorRole: 'KEPALA_KEBUN',
+    authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+    category: 'PEMBUKAAN_LAHAN',
+    categoryLabel: 'Pembukaan & Land Clearing Lahan',
+    blockTarget: 'Blok A Sentra Jonggol (2.0 Ha)',
+    timestamp: 'Hari ini, 08:30 WIB',
+    caption: 'Laporan Perkembangan Fisik Pembukaan Lahan: Pembersihan ilalang, perataan kontur terasering, dan pembuatan parit drainase keliling kedalaman 40cm telah tuntas 100%. Lahan kini bersih dan siap masuk tahap pembajakan rotavator!',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=900&q=80',
+    ],
+    beforeAfter: {
+      beforePhoto: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+      beforeLabel: 'Kondisi Awal (Semak Belukar)',
+      afterPhoto: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80',
+      afterLabel: 'Setelah Land Clearing 100%',
+    },
+    gpsLocation: 'Kebun Jonggol Inti (-6.4697, 107.0583)',
+    coordinates: { lat: -6.4697, lng: 107.0583 },
+    likesCount: 14,
+    isLiked: true,
+    comments: [
+      {
+        id: 'C-01',
+        authorName: 'Dr. Hendra Gunawan',
+        authorRole: 'DIREKTUR',
+        authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
+        text: 'Kerja bagus Pak Joko & tim! Pastikan parit pembuangan air mengarah langsung ke kolam retensi barat ya agar tidak ada erosi tanah subur saat hujan lebat.',
+        timestamp: '09:05 WIB',
+      },
+      {
+        id: 'C-02',
+        authorName: 'Pak Joko Sukardi',
+        authorRole: 'KEPALA_KEBUN',
+        authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+        text: 'Siap Pak Direktur! Kemiringan parit sudah 2% menuju kolam retensi, debit air gravitasi sangat aman.',
+        timestamp: '09:12 WIB',
+      },
+      {
+        id: 'C-03',
+        authorName: 'Bambang Soediro',
+        authorRole: 'INVESTOR',
+        authorAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
+        text: 'Sangat rapi pembukaannya. Senang melihat progres fisik yang nyata di aplikasi. Teruskan semangatnya!',
+        timestamp: '09:40 WIB',
+      },
+    ],
+  },
+  {
+    id: 'POST-002',
+    authorName: 'Irfan Maulana',
+    authorRole: 'MANDOR',
+    authorAvatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&q=80',
+    category: 'LOGISTIK_PO',
+    categoryLabel: 'Realisasi Belanja PO & Aplikasi Lahan',
+    blockTarget: 'Gudang Kebun & Blok B1 Porang',
+    timestamp: 'Kemarin, 14:15 WIB',
+    caption: 'Update Realisasi PO-026: 100 Liter Bio-Trichoderma Organik dari PT Agro Tani Makmur telah tiba di gudang dan lolos QC. Sebanyak 40 Liter sudah langsung diaplikasikan Kang Asep ke media polybag Blok B1 untuk sterilisasi tanah!',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=900&q=80',
+    ],
+    relatedPoId: 'PO-026',
+    gpsLocation: 'Gudang Logistik Kebun Jonggol (-6.4699, 107.0581)',
+    coordinates: { lat: -6.4699, lng: 107.0581 },
+    likesCount: 8,
+    isLiked: false,
+    comments: [
+      {
+        id: 'C-04',
+        authorName: 'Siti Rahmawati (Finance)',
+        authorRole: 'FINANCE',
+        text: 'Kwitansi fisik dan surat jalan nomor SJ-ATM-9921 sudah kami cocokkan dengan voucher bank. Status PO terverifikasi lunas.',
+        timestamp: '15:00 WIB',
+      },
+    ],
+  },
+  {
+    id: 'POST-003',
+    authorName: 'Kang Asep Sunandar',
+    authorRole: 'PETANI',
+    authorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
+    category: 'PENANAMAN',
+    categoryLabel: 'Penanaman & Paspor Pohon QR',
+    blockTarget: 'Greenhouse Blok A2 (Baris 4)',
+    timestamp: 'Kemarin, 10:20 WIB',
+    caption: 'Penanaman 200 bibit Melon Golden Apollo F1 di ajir #1 sampai #50 telah selesai. Label QR Code Paspor Pohon sudah digantung pada tiap ajir perwakilan. Kondisi bibit segar 100% tanpa layu.',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1592417817098-8f3d69106093?auto=format&fit=crop&w=900&q=80',
+    ],
+    gpsLocation: 'Greenhouse Blok A2 (-6.4695, 107.0586)',
+    coordinates: { lat: -6.4695, lng: 107.0586 },
+    likesCount: 19,
+    isLiked: true,
+    comments: [
+      {
+        id: 'C-05',
+        authorName: 'Pak Joko Sukardi',
+        authorRole: 'KEPALA_KEBUN',
+        text: 'Bagus Kang Asep. Sore nanti aktifkan drip nutrisi EC 1.8 selama 15 menit ya untuk adaptasi akar bibit baru.',
+        timestamp: '11:00 WIB',
+      },
+    ],
+  },
+  {
+    id: 'POST-004',
+    authorName: 'Pak Joko Sukardi',
+    authorRole: 'KEPALA_KEBUN',
+    authorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
+    category: 'PANEN',
+    categoryLabel: 'Uji Kemanisan (Brix) & Timbangan Panen',
+    blockTarget: 'Blok A2 (Melon Golden Harvest Trial)',
+    timestamp: '25 Agu 2026, 16:00 WIB',
+    caption: 'Hasil uji petik sampel acak 5 buah Melon Golden Apollo: Rata-rata kadar gula 14.8° Brix (Standar Super Premium >13° Brix) dengan bobot 2.15 Kg/buah. Siap masuk panen raya minggu depan dan kirim ke offtaker supermarket!',
+    photoUrls: [
+      'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=900&q=80',
+    ],
+    gpsLocation: 'Pos Timbangan Kebun Jonggol (-6.4698, 107.0582)',
+    coordinates: { lat: -6.4698, lng: 107.0582 },
+    likesCount: 27,
+    isLiked: true,
+    comments: [
+      {
+        id: 'C-06',
+        authorName: 'Bambang Soediro',
+        authorRole: 'INVESTOR',
+        text: 'Brix 14.8 luar biasa! Sesuai dengan estimasi HPP & proyeksi margin profit di awal proposal. Sukses untuk panen rayanya.',
+        timestamp: '25 Agu 17:30 WIB',
+      },
+    ],
   },
 ];
 
@@ -557,16 +781,76 @@ const initialAttendance: AttendanceRecord[] = [
   { id: 'ATT-4', workerName: 'Irfan Maulana, S.P.', role: 'Manajer Ops', date: '27 Agu 2026', timeIn: '07:10 WIB', gpsLocation: 'Kantor Operasional Kebun', status: 'HADIR' },
 ];
 
+export const initialStagePhotos: Record<number, string> = {
+  1: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80',
+  2: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1000&q=80',
+  3: 'https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?auto=format&fit=crop&w=1000&q=80',
+  4: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1000&q=80',
+  5: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80',
+  6: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1000&q=80',
+  7: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=1000&q=80',
+  8: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
+};
+
 export const useSmartFarmStore = create<SmartFarmState>()(
   persist(
     (set) => ({
       tasks: initialTasks,
       purchaseOrders: initialPOs,
+      fieldPosts: initialFieldPosts,
       treeSamples: initialTreeSamples,
       plantScans: initialPlantScans,
       inventory: initialInventory,
       weighbridgeSlips: initialWeighbridge,
       attendanceRecords: initialAttendance,
+      lifecycleStagePhotos: initialStagePhotos,
+
+      // LIFECYCLE STAGE PHOTO ACTION
+      updateLifecycleStagePhoto: (stepNumber, photoUrl, updatedBy, caption) =>
+        set((state) => {
+          const updatedPhotos = { ...state.lifecycleStagePhotos, [stepNumber]: photoUrl };
+          
+          // Auto create a live post in field feed as well
+          const stageNames: Record<number, string> = {
+            1: 'Pembersihan Lahan & Land Clearing',
+            2: 'Pengolahan Tanah & Bajak Rotavator',
+            3: 'Aplikasi Kapur Dolomit & Pembenah pH',
+            4: 'Pembuatan Bedengan & Parit Drainase',
+            5: 'Pemasangan Mulsa Plastik Hitam Perak',
+            6: 'Instalasi Pipa Irigasi Tetes Presisi',
+            7: 'Penanaman Bibit Unggul Golden Melon F1',
+            8: 'Perawatan Harian & Telemetri IoT',
+          };
+
+          const newPost: FieldReportPost = {
+            id: `POST-STAGE-${Date.now()}`,
+            authorName: updatedBy || 'Petani / Mandor Lapangan',
+            authorRole: 'PETANI',
+            category: 'PEMBUKAAN_LAHAN',
+            categoryLabel: `Tahap ${stepNumber}: ${stageNames[stepNumber] || 'Pengolahan Lahan'}`,
+            blockTarget: 'Blok A (Sentra Kebun Inti)',
+            timestamp: 'Baru saja',
+            caption: caption || `Update foto bukti fisik terbaru untuk Tahap ${stepNumber} (${stageNames[stepNumber] || 'Pengolahan Lahan'}).`,
+            photoUrls: [photoUrl],
+            gpsLocation: 'Kebun Sentra Jonggol (-6.5892, 107.0541)',
+            coordinates: { lat: -6.5892, lng: 107.0541 },
+            likesCount: 0,
+            isLiked: false,
+            comments: [],
+          };
+
+          // Dispatch event for instant UI listeners
+          if (typeof window !== 'undefined') {
+            setTimeout(() => {
+              window.dispatchEvent(new CustomEvent('agrojaya-stage-photo-updated', { detail: { stepNumber, photoUrl } }));
+            }, 50);
+          }
+
+          return {
+            lifecycleStagePhotos: updatedPhotos,
+            fieldPosts: [newPost, ...state.fieldPosts],
+          };
+        }),
 
       // TASK ACTIONS
       addTask: (taskData) =>
@@ -604,7 +888,56 @@ export const useSmartFarmStore = create<SmartFarmState>()(
           tasks: state.tasks.filter((t) => t.id !== taskId),
         })),
 
-      // PO ACTIONS (4-Tier Verification)
+      // LIVE FIELD FEED ACTIONS (WhatsApp Group Replacement)
+      addFieldReportPost: (postData) =>
+        set((state) => {
+          const newPost: FieldReportPost = {
+            ...postData,
+            id: `POST-${String(Date.now()).slice(-4)}`,
+            timestamp: 'Baru saja',
+            likesCount: 0,
+            isLiked: false,
+            comments: [],
+          };
+          return { fieldPosts: [newPost, ...state.fieldPosts] };
+        }),
+
+      addPostComment: (postId, commentData) =>
+        set((state) => ({
+          fieldPosts: state.fieldPosts.map((post) => {
+            if (post.id === postId) {
+              const now = new Date();
+              const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+              const newComment: FieldReportComment = {
+                ...commentData,
+                id: `C-${Date.now()}`,
+                timestamp: `Hari ini ${timeStr}`,
+              };
+              return {
+                ...post,
+                comments: [...post.comments, newComment],
+              };
+            }
+            return post;
+          }),
+        })),
+
+      likePost: (postId) =>
+        set((state) => ({
+          fieldPosts: state.fieldPosts.map((post) => {
+            if (post.id === postId) {
+              const isCurrentlyLiked = !!post.isLiked;
+              return {
+                ...post,
+                isLiked: !isCurrentlyLiked,
+                likesCount: isCurrentlyLiked ? Math.max(0, post.likesCount - 1) : post.likesCount + 1,
+              };
+            }
+            return post;
+          }),
+        })),
+
+      // PO ACTIONS (4-Tier Verification & 4-Tier Photo Proof)
       createPO: (poData) =>
         set((state) => {
           const newPO: PurchaseOrder = {
@@ -666,6 +999,18 @@ export const useSmartFarmStore = create<SmartFarmState>()(
                   ...po,
                   status: 'REJECTED',
                   notes: notes || po.notes || 'Pengajuan ditolak oleh pimpinan',
+                }
+              : po
+          ),
+        })),
+
+      updatePOPhotos: (poId, photos) =>
+        set((state) => ({
+          purchaseOrders: state.purchaseOrders.map((po) =>
+            po.id === poId
+              ? {
+                  ...po,
+                  ...photos,
                 }
               : po
           ),
@@ -757,6 +1102,7 @@ export const useSmartFarmStore = create<SmartFarmState>()(
         set({
           tasks: initialTasks,
           purchaseOrders: initialPOs,
+          fieldPosts: initialFieldPosts,
           treeSamples: initialTreeSamples,
           plantScans: initialPlantScans,
           inventory: initialInventory,

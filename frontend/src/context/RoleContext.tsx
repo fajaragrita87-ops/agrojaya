@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type RoleType = 'DIREKTUR' | 'INVESTOR' | 'FINANCE' | 'MANAGER' | 'KEPALA_KEBUN' | 'PETANI';
+export type RoleType = 'SUPERADMIN' | 'DIREKTUR' | 'INVESTOR' | 'FINANCE' | 'MANAGER' | 'KEPALA_KEBUN' | 'PETANI';
 
 export const getDefaultPathForRole = (r: RoleType): string => {
   switch (r) {
+    case 'SUPERADMIN':
+      return '/dashboard/direktur';
     case 'INVESTOR':
       return '/dashboard/investor';
     case 'FINANCE':
@@ -41,6 +43,8 @@ interface RoleContextType {
 
 export const getUserNameForRole = (r: RoleType): string => {
   switch (r) {
+    case 'SUPERADMIN':
+      return 'Super Admin Master';
     case 'INVESTOR':
       return 'Investor Utama';
     case 'DIREKTUR':
@@ -58,6 +62,8 @@ export const getUserNameForRole = (r: RoleType): string => {
 
 export const getUserTitleForRole = (r: RoleType): string => {
   switch (r) {
+    case 'SUPERADMIN':
+      return 'Super Admin (Akses Penuh Master Gerbang)';
     case 'INVESTOR':
       return 'Investor Utama Proyek Smart Farming';
     case 'DIREKTUR':
@@ -74,10 +80,10 @@ export const getUserTitleForRole = (r: RoleType): string => {
 };
 
 const RoleContext = createContext<RoleContextType>({
-  role: 'DIREKTUR',
+  role: 'SUPERADMIN',
   setRole: () => {},
-  userName: 'Bapak Lucky',
-  userTitle: 'Bapak Lucky (Direktur Utama Smart Farming)',
+  userName: 'Super Admin Master',
+  userTitle: 'Super Admin (Akses Penuh Master Gerbang)',
   isReadOnly: false,
   canApprove: true,
   canCreatePO: true,
@@ -95,7 +101,7 @@ const RoleContext = createContext<RoleContextType>({
 export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [role, setRoleState] = useState<RoleType>(() => {
     const saved = localStorage.getItem('agrojaya_active_role');
-    return (saved as RoleType) || 'DIREKTUR';
+    return (saved as RoleType) || 'SUPERADMIN';
   });
 
   const setRole = (newRole: RoleType) => {
@@ -107,24 +113,24 @@ export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const userTitle = getUserTitleForRole(role);
 
   const isReadOnly = role === 'INVESTOR';
-  // PO 3-Layer Workflow Permissions:
+  // PO 3-Layer Workflow Permissions (SUPERADMIN has master pass for all layers):
   // Step 1: Manager Operasional creates PO
-  const canCreatePO = role === 'MANAGER' || role === 'DIREKTUR' || role === 'KEPALA_KEBUN';
+  const canCreatePO = role === 'SUPERADMIN' || role === 'MANAGER' || role === 'DIREKTUR' || role === 'KEPALA_KEBUN';
   // Step 2: Layer 1 - Finance verifies budget & feasibility
-  const canVerifyFinancePO = role === 'FINANCE' || role === 'DIREKTUR';
+  const canVerifyFinancePO = role === 'SUPERADMIN' || role === 'FINANCE' || role === 'DIREKTUR';
   // Step 3: Layer 2 - Direktur authorizes corporate expenditure
-  const canApproveDirekturPO = role === 'DIREKTUR';
+  const canApproveDirekturPO = role === 'SUPERADMIN' || role === 'DIREKTUR';
   // Step 4: Layer 3 - Investor approves capital transparency
-  const canApproveInvestorPO = role === 'INVESTOR';
+  const canApproveInvestorPO = role === 'SUPERADMIN' || role === 'INVESTOR';
   // Step 5: Finance disburses funds to vendor/manager
-  const canDisburseFinancePO = role === 'FINANCE' || role === 'DIREKTUR';
+  const canDisburseFinancePO = role === 'SUPERADMIN' || role === 'FINANCE' || role === 'DIREKTUR';
 
-  const canApprove = role === 'DIREKTUR';
-  const canEdit = role !== 'INVESTOR';
-  const canManageUsers = role === 'DIREKTUR' || role === 'MANAGER';
-  const canManageFinancials = role === 'DIREKTUR' || role === 'FINANCE' || role === 'MANAGER';
-  const canManageMasterData = role === 'DIREKTUR' || role === 'MANAGER';
-  const canManageLands = role === 'DIREKTUR' || role === 'MANAGER' || role === 'KEPALA_KEBUN';
+  const canApprove = role === 'SUPERADMIN' || role === 'DIREKTUR';
+  const canEdit = role === 'SUPERADMIN' || role !== 'INVESTOR';
+  const canManageUsers = role === 'SUPERADMIN' || role === 'DIREKTUR' || role === 'MANAGER';
+  const canManageFinancials = role === 'SUPERADMIN' || role === 'DIREKTUR' || role === 'FINANCE' || role === 'MANAGER';
+  const canManageMasterData = role === 'SUPERADMIN' || role === 'DIREKTUR' || role === 'MANAGER';
+  const canManageLands = role === 'SUPERADMIN' || role === 'DIREKTUR' || role === 'MANAGER' || role === 'KEPALA_KEBUN';
 
   return (
     <RoleContext.Provider

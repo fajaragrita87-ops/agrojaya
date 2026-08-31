@@ -122,10 +122,14 @@ export const Topbar = () => {
       <div className="d-flex align-items-center gap-2">
         <div className="d-flex align-items-center gap-2 bg-light border px-2.5 py-1 rounded-3">
           <div
-            className="rounded-circle bg-success text-white d-flex align-items-center justify-center font-weight-bold"
+            className={`rounded-circle d-flex align-items-center justify-center font-weight-bold ${
+              role === 'SUPERADMIN' ? 'bg-dark text-warning border border-warning' : 'bg-success text-white'
+            }`}
             style={{ width: 26, height: 26, fontSize: 12 }}
           >
-            {role === 'DIREKTUR'
+            {role === 'SUPERADMIN'
+              ? '👑'
+              : role === 'DIREKTUR'
               ? 'AW'
               : role === 'INVESTOR'
               ? 'HK'
@@ -139,7 +143,9 @@ export const Topbar = () => {
           </div>
           <div style={{ lineHeight: 1.1 }}>
             <strong className="text-dark d-block" style={{ fontSize: 11.5 }}>
-              {role === 'DIREKTUR'
+              {role === 'SUPERADMIN'
+                ? 'Super Admin Master'
+                : role === 'DIREKTUR'
                 ? 'Ir. H. Ahmad Wijaya'
                 : role === 'INVESTOR'
                 ? 'Hendra Kusuma, B.Sc.'
@@ -151,8 +157,15 @@ export const Topbar = () => {
                 ? 'Rahmat Hidayat'
                 : 'Joko Susilo'}
             </strong>
-            <span className="badge bg-success-subtle text-success border border-success-subtle" style={{ fontSize: 9 }}>
-              {role}
+            <span
+              className={`badge ${
+                role === 'SUPERADMIN'
+                  ? 'bg-warning text-dark font-weight-bold'
+                  : 'bg-success-subtle text-success border border-success-subtle'
+              }`}
+              style={{ fontSize: 9 }}
+            >
+              {role === 'SUPERADMIN' ? '👑 SUPER ADMIN' : role}
             </span>
           </div>
         </div>

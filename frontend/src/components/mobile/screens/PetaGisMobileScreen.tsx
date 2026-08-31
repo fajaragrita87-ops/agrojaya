@@ -142,9 +142,6 @@ export const PetaGisMobileScreen: React.FC<PetaGisMobileScreenProps> = () => {
           <h1 className="text-[17px] font-black tracking-tight mt-0.5 m-0 text-white">
             GIS Sentra Kebun Terpadu (2.0 Ha)
           </h1>
-          <p className="text-[11px] text-[#A3D9C9] m-0 mt-0.5">
-            GPS: -6.4697, 107.0544 • Sensor Tanah Terverifikasi
-          </p>
         </div>
         <div className="w-9 h-9 rounded-[10px] bg-white/10 flex items-center justify-center text-lg text-[#C8E86B]">
           <i className="ri-map-pin-2-fill"></i>

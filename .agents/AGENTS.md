@@ -28,3 +28,9 @@ Berdasarkan instruksi Bapak hari ini, saya telah mempelajari dan merumuskan atur
   1. **Kesiapan & Progress Pengolahan Tanah (Siklus Penuh):** Pembuktian fisik kesiapan lahan dari awal banget (pembersihan & penggarapan tanah), penanaman bibit unggul, perawatan harian, estimasi & realisasi panen, hingga strategi rotasi/pergantian tanaman.
   2. **Perjalanan & Kinerja Keuangan:** Transparansi alokasi dana investasi, pertumbuhan valuasi proyek, ROI %, perbandingan *Budget vs Actual*, *Burn Rate*, dan jurnal arus kas otomatis.
 - **Prinsip Narasi UI/Landing Page:** Seluruh narasi, antarmuka, dan Landing Page harus berfokus penuh untuk **memberikan keyakinan penuh (*Trust & Transparency*) kepada Investor**, menampilkan progres nyata di lapangan dan keamanan modal yang diinvestasikan.
+
+### 4. Eksekusi Murni Sesuai Perintah & Larangan Menambah Konten Tanpa Izin (Wajib & Mutlak)
+1. **Tidak Boleh Menambahkan Konten di Luar Perintah:** Agen DILARANG KERAS menambahkan konten baik gambar maupun tulisan di luar yang diperintahkan oleh pengguna.
+2. **Eksekusi Presisi Sesuai Permintaan:** Jika pengguna memerintahkan membuat sesuatu, agen HANYA CUKUP menjalankan perintah eksekusinya saja tepat sesuai permintaan.
+3. **Jangan Menambah Konten Tanpa Perintah:** DILARANG menambahkan konten apapun (banner, ornamen, tombol tambahan, teks petunjuk, dsb.) jika tidak secara eksplisit diperintahkan oleh pengguna.
+4. **Dilarang Keras Berasumsi:** Agen DILARANG berasumsi terhadap apa yang diinginkan di luar instruksi tertulis pengguna. Selalu patuhi batas perintah secara presisi.

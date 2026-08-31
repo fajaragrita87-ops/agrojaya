@@ -20,7 +20,8 @@ export interface ServiceIconTileProps {
     | 'master_komoditas'
     | 'jadwal_tugas'
     | 'presensi_sdm'
-    | 'kelola_user';
+    | 'kelola_user'
+    | 'live_feed';
   gradientStyle?: string;
   shadowColor?: string;
   glowColor?: string;
@@ -249,6 +250,16 @@ export const ServiceIconTile: React.FC<ServiceIconTileProps> = ({
           </svg>
         );
 
+      // 18. LIVE FEED (Camera & Feed Dispatcher)
+      case 'live_feed':
+        return (
+          <svg viewBox="0 0 36 36" className="w-[28px] h-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+            <path d="M6 10 C6 8.5 7.5 7 9 7 H13 L15 4 H21 L23 7 H27 C28.5 7 30 8.5 30 10 V26 C30 27.5 28.5 29 27 29 H9 C7.5 29 6 27.5 6 26 Z" fill="rgba(255,255,255,0.2)" stroke="#FFFFFF" strokeWidth="2.2" />
+            <circle cx="18" cy="18" r="6" stroke="#FFFFFF" strokeWidth="2.2" fill="#C8E86B" />
+            <circle cx="26" cy="11" r="1.5" fill="#FFFFFF" />
+          </svg>
+        );
+
       default:
         return (
           <svg viewBox="0 0 36 36" className="w-[28px] h-[28px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
@@ -289,7 +300,7 @@ export const ServiceIconTile: React.FC<ServiceIconTileProps> = ({
       </div>
 
       {/* Label Text */}
-      <span className="text-[11.5px] font-bold text-[#0F241E] mt-1.5 leading-tight text-center tracking-tight line-clamp-1 group-hover:text-[#047857]">
+      <span className="text-[11px] font-bold text-[#0F241E] mt-1.5 leading-tight text-center tracking-tight line-clamp-2 max-w-[76px] group-hover:text-[#047857]">
         {title}
       </span>
 

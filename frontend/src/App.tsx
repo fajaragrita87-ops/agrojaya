@@ -20,6 +20,7 @@ import { InventoryPage } from './pages/InventoryPage';
 import { PlantationLifecyclePage } from './pages/PlantationLifecyclePage';
 import { TreePassportPage } from './pages/TreePassportPage';
 import { AiSmartFarmingPage } from './pages/AiSmartFarmingPage';
+import { LiveFieldFeedPage } from './pages/LiveFieldFeedPage';
 import { LoginPage } from './pages/LoginPage';
 import { MobilePreviewWrapper } from './pages/mobile/MobilePreviewWrapper';
 import { MobileInvestorDashboard } from './pages/mobile/MobileInvestorDashboard';
@@ -34,7 +35,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
   const { role } = useRole();
 
-  if (!allowedRoles.includes(role)) {
+  if (role !== 'SUPERADMIN' && !allowedRoles.includes(role)) {
     return <Navigate to={getDefaultPathForRole(role)} replace />;
   }
 
@@ -227,6 +228,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'INVESTOR', 'FINANCE', 'PETANI']}>
               <AiSmartFarmingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/live-feed"
+          element={
+            <ProtectedRoute allowedRoles={['DIREKTUR', 'MANAGER', 'KEPALA_KEBUN', 'INVESTOR', 'FINANCE', 'PETANI']}>
+              <LiveFieldFeedPage />
             </ProtectedRoute>
           }
         />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { DynamicQRCode } from '../common/DynamicQRCode';
+import { useSmartFarmStore } from '../../store/smartFarmStore';
 
 export interface GrowthStage {
   stage: string;
@@ -227,7 +228,51 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
 
     setTimeout(() => {
       setScanFeedback(null);
-      const tree = mockTrees[cleanCode] || createDynamicTree(cleanCode);
+      const liveTree = useSmartFarmStore.getState().treeSamples.find(
+        (t) => t.code.toLowerCase() === cleanCode.toLowerCase() || t.id.toLowerCase() === cleanCode.toLowerCase()
+      );
+      
+      let tree: ScannedTree;
+      if (liveTree) {
+        tree = {
+          code: liveTree.code,
+          variety: liveTree.variety,
+          block: liveTree.block,
+          rowAjir: liveTree.locationDetail,
+          plantingDate: liveTree.plantingDate,
+          ageDays: parseInt(liveTree.ageHst) || 45,
+          phase: liveTree.phase,
+          farmer: liveTree.farmer,
+          mandor: 'Mandor Utama',
+          lastTreatment: liveTree.recentLogs[0]?.detail || 'Perawatan Teratur',
+          healthScore: parseFloat(liveTree.healthScore) || 98.0,
+          targetBrix: liveTree.targetBrix,
+          estYieldKg: parseFloat(liveTree.estWeight) || 2.5,
+          gpsCoords: liveTree.gpsCoords,
+          gapCertificateNo: liveTree.certNo,
+          growthStory: liveTree.growthStory.map((gs, i) => ({
+            stage: gs.stage,
+            day: (i + 1) * 15,
+            date: gs.date,
+            heightCm: parseInt(gs.height) || 120,
+            note: gs.status,
+            icon: 'ri-plant-line',
+          })),
+          maintenanceLogs: liveTree.recentLogs.map((rl, rIdx) => ({
+            id: rl.id || `LOG-${rIdx}-${Date.now()}`,
+            date: rl.time,
+            actionType: (rl.action === 'HAMA' ? 'HAMA_PENYAKIT' : rl.action) as any,
+            actionName: rl.action,
+            material: rl.detail.split(':')[1]?.split('(')[0]?.trim() || rl.detail,
+            dose: rl.detail.includes('(') ? rl.detail.split('(')[1]?.split(')')[0] : 'Sesuai SOP',
+            workerName: rl.pic,
+            notes: rl.detail,
+          })),
+        };
+      } else {
+        tree = mockTrees[cleanCode] || createDynamicTree(cleanCode);
+      }
+
       setScannedTree(tree);
       setActiveTab('ktp');
       setActionSuccessMsg(`✅ Berhasil membuka Paspor Ajir: ${tree.code}`);
@@ -413,7 +458,23 @@ export const MobileTreeScannerModal: React.FC<MobileTreeScannerModalProps> = ({ 
       maintenanceLogs: [newLog, ...scannedTree.maintenanceLogs],
     });
 
-    setActionSuccessMsg(`✅ Berhasil mencatat "${formActionName}" ke KTP Tanaman.`);
+    const storeActionMap: Record<MaintenanceLog['actionType'], 'PENYIRAMAN' | 'PEMUPUKAN' | 'PRUNING' | 'HAMA'> = {
+      PENYIRAMAN: 'PENYIRAMAN',
+      PEMUPUKAN: 'PEMUPUKAN',
+      PRUNING: 'PRUNING',
+      HAMA_PENYAKIT: 'HAMA',
+      PENGUKURAN: 'PRUNING',
+      UJI_BRIX: 'PEMUPUKAN',
+    };
+
+    useSmartFarmStore.getState().addTreeLog(scannedTree.code, {
+      time: dateStr,
+      action: storeActionMap[formActionType] || 'PEMUPUKAN',
+      detail: `${formActionName}: ${formMaterial} (${formDose}) - ${formNotes}`,
+      pic: formWorker,
+    });
+
+    setActionSuccessMsg(`✅ Berhasil mencatat "${formActionName}" ke KTP Tanaman & tersinkron ke web.`);
     setTimeout(() => setActionSuccessMsg(null), 3000);
     setActiveTab('growth');
   };

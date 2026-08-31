@@ -65,9 +65,6 @@ export const KepalaKebunDashboard: React.FC = () => {
           <h2 className="page-header-title font-weight-bold text-dark mb-0" style={{ fontSize: 20 }}>
             Dasbor Supervisi Lapangan — {userName}
           </h2>
-          <p className="text-secondary mb-0 font-weight-medium" style={{ fontSize: 13 }}>
-            Monitoring kondisi fisik blok kebun, verifikasi laporan harian petani, dan jadwal pemupukan Jonggol
-          </p>
         </div>
 
         <div className="d-flex align-items-center gap-2">

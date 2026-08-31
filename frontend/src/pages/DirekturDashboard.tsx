@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getDirekturDashboard } from '../services/api';
 import { useRole } from '../context/RoleContext';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
+import { LiveFieldFeedHub } from '../components/LiveFieldFeedHub';
 
 export const DirekturDashboard = () => {
   useRole();
@@ -260,6 +261,14 @@ export const DirekturDashboard = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* 5. LIVE FIELD FEED & FOTO SITUASI KEBUN (PENGGANTI GRUP WA) */}
+      <div className="card-box p-4 border bg-white rounded-4 shadow-sm">
+        <LiveFieldFeedHub
+          currentUserRole="DIREKTUR"
+          currentUserName="Dr. Hendra Gunawan (Direktur Utama)"
+        />
       </div>
     </div>
   );

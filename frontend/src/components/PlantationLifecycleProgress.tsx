@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRole } from '../context/RoleContext';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 
 export interface LifecycleStep {
   stepNumber: number;
@@ -171,6 +172,7 @@ export const INITIAL_LIFECYCLE_STEPS: LifecycleStep[] = [
 
 export const PlantationLifecycleProgress: React.FC = () => {
   const { role } = useRole();
+  const { lifecycleStagePhotos } = useSmartFarmStore();
   const [steps, setSteps] = useState<LifecycleStep[]>(() => {
     try {
       const saved = localStorage.getItem('agrojaya_lifecycle_steps');
@@ -208,16 +210,21 @@ export const PlantationLifecycleProgress: React.FC = () => {
       }
     };
     window.addEventListener('agrojaya-lifecycle-updated', handleSync);
+    window.addEventListener('agrojaya-stage-photo-updated', handleSync);
     window.addEventListener('storage', handleSync);
     return () => {
       window.removeEventListener('agrojaya-lifecycle-updated', handleSync);
+      window.removeEventListener('agrojaya-stage-photo-updated', handleSync);
       window.removeEventListener('storage', handleSync);
     };
   }, []);
 
   const activeStep = steps[selectedStepIndex] || steps[0];
-  // Always enforce the exact relevant photo corresponding to the active step number
-  const activePhoto = STEP_PHOTOS[activeStep.stepNumber];
+  // Dynamic high-res photo from central store (or fallback to STEP_PHOTOS)
+  const activePhoto =
+    lifecycleStagePhotos?.[activeStep.stepNumber] ||
+    STEP_PHOTOS[activeStep.stepNumber] ||
+    activeStep.photoUrl;
 
   const [editPercent, setEditPercent] = useState<number>(activeStep.progressPercent);
   const [editStatus, setEditStatus] = useState<'SELESAI' | 'SEDANG BERJALAN' | 'TAHAP BERIKUTNYA'>(activeStep.status);

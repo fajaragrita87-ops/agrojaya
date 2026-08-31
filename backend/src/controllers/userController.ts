@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const mockUsers = [
+  { id: 'usr-0', name: 'Super Admin AgroJaya (Master Gerbang)', email: 'superadmin@agrojaya.com', role: 'SUPERADMIN', phone: '0811-9999-0000', createdAt: new Date() },
   { id: 'usr-1', name: 'Ir. H. Ahmad Wijaya', email: 'direktur@agrojaya.com', role: 'DIREKTUR', phone: '0811-7000-111', createdAt: new Date() },
   { id: 'usr-2', name: 'Hendra Kusuma, B.Sc.', email: 'investor@agrojaya.com', role: 'INVESTOR', phone: '0815-7000-555', createdAt: new Date() },
   { id: 'usr-3', name: 'Ratna Dewi, S.E., Ak.', email: 'finance@agrojaya.com', role: 'FINANCE', phone: '0812-9876-5432', createdAt: new Date() },

@@ -18,6 +18,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
   if (!isOpen) return null;
 
   const roleNameMap: Record<RoleType, { name: string; title: string; avatarBg: string }> = {
+    SUPERADMIN: { name: 'Super Admin Master', title: 'Master Controller & Gerbang Utama', avatarBg: 'bg-amber-600' },
     DIREKTUR: { name: 'Direktur Utama', title: 'Executive Management', avatarBg: 'bg-emerald-600' },
     INVESTOR: { name: 'Investor Utama', title: 'Portofolio & Akuntabilitas Modal', avatarBg: 'bg-[#0B251E]' },
     FINANCE: { name: 'Manajer Keuangan', title: 'Financial Controller & Kas', avatarBg: 'bg-teal-700' },

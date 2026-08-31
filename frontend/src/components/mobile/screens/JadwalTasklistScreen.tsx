@@ -50,9 +50,6 @@ export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = () => {
           <h1 className="text-[16px] font-black tracking-tight mt-0.5 m-0 text-white">
             Jadwal & Tasklist Kebun
           </h1>
-          <p className="text-[10.5px] text-[#A3D9C9] m-0 mt-0.5">
-            Instruksi kerja harian mandor & sinkronisasi live
-          </p>
         </div>
         <button
           type="button"

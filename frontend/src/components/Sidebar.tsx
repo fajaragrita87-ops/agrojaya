@@ -16,6 +16,7 @@ export const Sidebar = () => {
   // Concise, single-line professional menus for each functional module per role
   const navItems: NavItem[] = [
     // --- PETANI MENU ---
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['PETANI'], badge: 'Live' },
     { label: 'Tugas Harian', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['PETANI'] },
     { label: 'Presensi Harian', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['PETANI'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['PETANI'] },
@@ -24,6 +25,7 @@ export const Sidebar = () => {
 
     // --- KEPALA KEBUN MENU ---
     { label: 'Dasbor Supervisi', path: '/dashboard/kepala-kebun', icon: 'ri-dashboard-line', roles: ['KEPALA_KEBUN'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['KEPALA_KEBUN'], badge: 'Live' },
     { label: 'Jadwal & Tasklist', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['KEPALA_KEBUN'] },
     { label: 'Peta Satelit GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['KEPALA_KEBUN'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['KEPALA_KEBUN'] },
@@ -35,6 +37,7 @@ export const Sidebar = () => {
 
     // --- MANAGER OPERASIONAL MENU ---
     { label: 'Dasbor Operasional', path: '/dashboard/manager', icon: 'ri-dashboard-3-line', roles: ['MANAGER'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['MANAGER'], badge: 'Live' },
     { label: 'Peta Satelit GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['MANAGER'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['MANAGER'] },
     { label: 'Siklus Lahan & BAP', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['MANAGER'] },
@@ -51,6 +54,7 @@ export const Sidebar = () => {
 
     // --- DIREKTUR MENU (FULL ACCESS) ---
     { label: 'Dasbor Strategis', path: '/dashboard/direktur', icon: 'ri-dashboard-3-line', roles: ['DIREKTUR'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['DIREKTUR'], badge: 'Live' },
     { label: 'Peta Satelit GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['DIREKTUR'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['DIREKTUR'] },
     { label: 'Siklus Lahan & BAP', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['DIREKTUR'] },
@@ -68,6 +72,7 @@ export const Sidebar = () => {
 
     // --- FINANCE (MANAJER KEUANGAN) MENU ---
     { label: 'Keuangan & Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['FINANCE'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['FINANCE'], badge: 'Live' },
     { label: 'Verifikasi PO', path: '/po-transparency', icon: 'ri-file-shield-line', roles: ['FINANCE'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['FINANCE'] },
     { label: 'Jadwal Tasklist', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['FINANCE'] },
@@ -80,6 +85,7 @@ export const Sidebar = () => {
 
     // --- INVESTOR MENU ---
     { label: 'Dasbor Valuasi & ROI', path: '/dashboard/investor', icon: 'ri-funds-line', roles: ['INVESTOR'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['INVESTOR'], badge: 'Live' },
     { label: 'Peta Satelit GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['INVESTOR'] },
     { label: 'Siklus Lahan & BAP', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['INVESTOR'] },
     { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['INVESTOR'] },
@@ -91,7 +97,26 @@ export const Sidebar = () => {
     { label: 'Timbangan Panen', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['INVESTOR'] },
     { label: 'Kalkulator HPP', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['INVESTOR'] },
     { label: 'Smart Farming AI', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['INVESTOR'] },
-    { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['INVESTOR'] },
+    // --- SUPERADMIN MENU (MASTER GERBANG UTAMA) ---
+    { label: 'Dasbor Strategis Direktur', path: '/dashboard/direktur', icon: 'ri-dashboard-3-line', roles: ['SUPERADMIN'] },
+    { label: 'Dasbor Valuasi Investor', path: '/dashboard/investor', icon: 'ri-funds-line', roles: ['SUPERADMIN'] },
+    { label: 'Dasbor Manager Ops', path: '/dashboard/manager', icon: 'ri-dashboard-line', roles: ['SUPERADMIN'] },
+    { label: 'Dasbor Kepala Kebun', path: '/dashboard/kepala-kebun', icon: 'ri-compass-3-line', roles: ['SUPERADMIN'] },
+    { label: 'Feed Lapangan (WA)', path: '/live-feed', icon: 'ri-broadcast-line', roles: ['SUPERADMIN'], badge: 'Live' },
+    { label: 'Peta Satelit GIS', path: '/lands', icon: 'ri-map-pin-2-line', roles: ['SUPERADMIN'] },
+    { label: 'KTP Sampel Pohon', path: '/tree-passports', icon: 'ri-qr-code-line', roles: ['SUPERADMIN'] },
+    { label: 'Siklus Lahan & BAP', path: '/plantation-lifecycle', icon: 'ri-plant-line', roles: ['SUPERADMIN'] },
+    { label: 'Inventaris Gudang', path: '/inventory', icon: 'ri-archive-line', roles: ['SUPERADMIN'] },
+    { label: 'Otorisasi & Audit PO', path: '/po-transparency', icon: 'ri-file-shield-line', roles: ['SUPERADMIN'] },
+    { label: 'Master Komoditas & SOP', path: '/crops', icon: 'ri-seedling-line', roles: ['SUPERADMIN'] },
+    { label: 'Jadwal Tasklist', path: '/tasks', icon: 'ri-calendar-event-line', roles: ['SUPERADMIN'] },
+    { label: 'Manajemen User & Akses', path: '/users', icon: 'ri-user-settings-line', roles: ['SUPERADMIN'] },
+    { label: 'Presensi & Upah SDM', path: '/payroll', icon: 'ri-calendar-check-line', roles: ['SUPERADMIN'] },
+    { label: 'Keuangan & Buku Kas', path: '/financials', icon: 'ri-wallet-3-line', roles: ['SUPERADMIN'] },
+    { label: 'Timbangan Panen', path: '/weighbridge', icon: 'ri-scales-3-line', roles: ['SUPERADMIN'] },
+    { label: 'Kalkulator HPP', path: '/hpp-calculator', icon: 'ri-calculator-line', roles: ['SUPERADMIN'] },
+    { label: 'Smart Farming AI', path: '/ai-smart-farming', icon: 'ri-robot-2-line', roles: ['SUPERADMIN'] },
+    { label: 'Laporan Audit 5D', path: '/reports', icon: 'ri-file-chart-line', roles: ['SUPERADMIN'] },
   ];
 
   // Filter items permitted for active role
