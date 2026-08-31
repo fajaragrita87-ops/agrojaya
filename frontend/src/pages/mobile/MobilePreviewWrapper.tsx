@@ -8,6 +8,7 @@ import { MobilePetaniDashboard } from './MobilePetaniDashboard';
 import { Link } from 'react-router-dom';
 import { useRole, type RoleType } from '../../context/RoleContext';
 import { Capacitor } from '@capacitor/core';
+import { GlobalRealtimeNotificationBanner } from '../../components/GlobalRealtimeNotificationBanner';
 
 interface MobilePreviewWrapperProps {
   isNative?: boolean;
@@ -80,6 +81,7 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
         className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] bg-[#F4F7F5] text-[#17211E] overflow-hidden flex flex-col select-none"
         style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
       >
+        <GlobalRealtimeNotificationBanner />
         {renderActiveScreen()}
       </div>
     );
@@ -91,6 +93,7 @@ export const MobilePreviewWrapper: React.FC<MobilePreviewWrapperProps> = ({ isNa
       className="min-h-screen w-full bg-[#0A1412] text-white flex flex-col items-center justify-start py-4 px-3"
       style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
     >
+      <GlobalRealtimeNotificationBanner />
       {/* Top Header & Role Switcher Bar */}
       <div className="w-full max-w-[840px] bg-[#0E2822] border border-[#1C8361]/40 rounded-[18px] p-3.5 mb-4 shadow-xl flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3">

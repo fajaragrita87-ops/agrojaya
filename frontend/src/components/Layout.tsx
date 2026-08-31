@@ -2,6 +2,7 @@ import React from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { DraggableAIBubble } from './DraggableAIBubble';
+import { GlobalRealtimeNotificationBanner } from './GlobalRealtimeNotificationBanner';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,9 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-vh-100 bg-light active-light-mode w-100 overflow-x-hidden">
+      {/* Realtime Notification Banner */}
+      <GlobalRealtimeNotificationBanner />
+
       {/* Corpox Sidebar (280px width) */}
       <Sidebar />
 

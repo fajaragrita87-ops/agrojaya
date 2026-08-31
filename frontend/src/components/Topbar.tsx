@@ -2,13 +2,18 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '../context/RoleContext';
 import { getBmkgWeather } from '../services/api';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 
 export const Topbar = () => {
   const { role } = useRole();
   const navigate = useNavigate();
+  const { notifications, markNotificationRead, clearAllNotifications } = useSmartFarmStore();
   const [bmkgWeather, setBmkgWeather] = useState<any>(null);
   const [globalSearch, setGlobalSearch] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const searchableModules = [
     { title: 'Peta Satelit GIS Blok Jonggol', path: '/lands', category: 'Lahan & GIS', icon: 'ri-map-pin-2-line' },
@@ -118,8 +123,116 @@ export const Topbar = () => {
         </div>
       </div>
 
-      {/* Right Controls: Active Authenticated User Badge + Logout */}
+      {/* Right Controls: Notification Bell + Active Authenticated User Badge + Mobile Mode + Logout */}
       <div className="d-flex align-items-center gap-2">
+        {/* Real-time Notification Bell */}
+        <div className="position-relative">
+          <button
+            type="button"
+            onClick={() => setShowNotifDropdown(!showNotifDropdown)}
+            className="btn btn-sm btn-light border rounded-circle p-0 d-flex align-items-center justify-center position-relative cursor-pointer hover-bg-light shadow-xs"
+            style={{ width: 36, height: 36 }}
+            title="Notifikasi & Peringatan Sistem Real-time"
+          >
+            <i className="ri-notification-3-line text-dark" style={{ fontSize: 16 }}></i>
+            {unreadCount > 0 && (
+              <span
+                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white"
+                style={{ fontSize: 9, padding: '3px 5px' }}
+              >
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {/* Real-time Notifications Dropdown */}
+          {showNotifDropdown && (
+            <div
+              className="position-absolute end-0 top-100 mt-2 bg-white border rounded-4 shadow-xl p-0 z-50 overflow-hidden"
+              style={{ width: 340, maxWidth: '90vw' }}
+            >
+              {/* Header */}
+              <div className="p-3 bg-[#0B3B30] text-white d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center gap-1.5">
+                  <i className="ri-notification-badge-fill text-warning"></i>
+                  <strong style={{ fontSize: 13 }}>Pemberitahuan Sistem</strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => clearAllNotifications()}
+                  className="btn btn-link text-white-50 text-decoration-none p-0"
+                  style={{ fontSize: 10.5 }}
+                >
+                  Bersihkan
+                </button>
+              </div>
+
+              {/* List */}
+              <div style={{ maxHeight: 320, overflowY: 'auto' }} className="p-2 space-y-1">
+                {notifications.length > 0 ? (
+                  notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      onClick={() => {
+                        markNotificationRead(n.id);
+                        setShowNotifDropdown(false);
+                        if (n.actionUrl) navigate(n.actionUrl);
+                      }}
+                      className={`p-2.5 rounded-3 d-flex gap-2.5 cursor-pointer transition ${
+                        n.read ? 'bg-white hover-bg-light' : 'bg-success-subtle border-start border-success border-3'
+                      }`}
+                    >
+                      <div
+                        className="rounded-circle bg-success text-white d-flex align-items-center justify-center shrink-0 mt-0.5"
+                        style={{ width: 26, height: 26, fontSize: 13 }}
+                      >
+                        <i
+                          className={
+                            n.type === 'PO_CREATED'
+                              ? 'ri-shopping-cart-line'
+                              : n.type === 'PO_VERIFIED'
+                              ? 'ri-shield-check-line'
+                              : n.type === 'PO_APPROVED'
+                              ? 'ri-star-line'
+                              : n.type === 'PO_DISBURSED'
+                              ? 'ri-money-dollar-circle-line'
+                              : 'ri-camera-line'
+                          }
+                        ></i>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="d-flex align-items-center justify-content-between gap-1 mb-0.5">
+                          <strong className="text-dark truncate d-block" style={{ fontSize: 11.5 }}>
+                            {n.title}
+                          </strong>
+                          <span className="text-muted shrink-0" style={{ fontSize: 9 }}>
+                            {n.timestamp}
+                          </span>
+                        </div>
+                        <p className="text-secondary mb-0 line-clamp-2" style={{ fontSize: 10.5, lineHeight: 1.3 }}>
+                          {n.message}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4 text-muted" style={{ fontSize: 12 }}>
+                    <i className="ri-checkbox-circle-line d-block text-success mb-1" style={{ fontSize: 24 }}></i>
+                    Semua notifikasi telah dibaca
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="p-2 bg-light border-top text-center">
+                <span className="text-muted font-weight-medium" style={{ fontSize: 10.5 }}>
+                  🔔 Tersinkronisasi Otomatis Real-time
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="d-flex align-items-center gap-2 bg-light border px-2.5 py-1 rounded-3">
           <div
             className={`rounded-circle d-flex align-items-center justify-center font-weight-bold ${

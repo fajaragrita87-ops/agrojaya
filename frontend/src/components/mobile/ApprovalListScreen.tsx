@@ -346,10 +346,10 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
       </div>
 
       {/* ========================================================================= */}
-      {/* MODAL: DETAIL INSPECTION & APPROVAL SHEET */}
+      {/* MODAL: DETAIL PO REVIEW (SLIDE-OVER / CENTER SHEET) */}
       {/* ========================================================================= */}
       {selectedReviewPO && (
-        <div className="fixed inset-0 z-[99999] flex items-end justify-center overflow-hidden">
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3.5 overflow-y-auto">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-xs transition-opacity cursor-pointer animate-in fade-in duration-150"
@@ -564,20 +564,20 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
       {/* MODAL: CREATE NEW PO FORM */}
       {/* ========================================================================= */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-[99999] flex items-end justify-center overflow-hidden">
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3.5 overflow-y-auto">
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-xs transition-opacity cursor-pointer"
+            className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity cursor-pointer animate-in fade-in duration-150"
             onClick={() => setShowCreateModal(false)}
           ></div>
 
           <div
             style={{
-              maxHeight: '90dvh',
+              maxHeight: '88dvh',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
             }}
-            className="relative w-full max-w-[480px] mx-auto bg-[#FAFBF8] text-[#17211E] rounded-t-[24px] shadow-2xl z-10 border-t border-[#DDE5DF] overflow-hidden"
+            className="relative w-full max-w-[480px] mx-auto bg-[#FAFBF8] text-[#17211E] rounded-[24px] shadow-2xl z-10 border border-[#DDE5DF] overflow-hidden my-auto animate-in zoom-in-95 duration-150"
           >
             {/* Header */}
             <div className="p-3.5 bg-gradient-to-r from-[#061E18] via-[#0A382E] to-[#0F4E40] text-white flex items-center justify-between shrink-0 shadow-xs">
@@ -691,12 +691,7 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
               </div>
 
               {/* Submit Buttons */}
-              <div
-                style={{
-                  paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
-                }}
-                className="pt-2 flex gap-2"
-              >
+              <div className="pt-2 pb-1 flex gap-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
@@ -706,7 +701,7 @@ export const ApprovalListScreen: React.FC<ApprovalListScreenProps> = ({ onBack }
                 </button>
                 <button
                   type="submit"
-                  className="flex-[2] py-2.5 bg-[#0F5545] text-white font-black rounded-[10px] cursor-pointer hover:bg-[#0B3B30] shadow-xs flex items-center justify-center gap-1.5"
+                  className="flex-[2] py-2.5 bg-[#0F5545] text-white font-black rounded-[10px] cursor-pointer hover:bg-[#0B3B30] shadow-xs flex items-center justify-center gap-1.5 active:scale-98 transition-transform"
                 >
                   <i className="ri-send-plane-fill text-[#C8E86B]"></i>
                   <span>Kirimkan Pengajuan</span>

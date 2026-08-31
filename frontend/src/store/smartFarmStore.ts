@@ -193,6 +193,20 @@ export interface AttendanceRecord {
   status: 'HADIR' | 'IZIN' | 'SAKIT';
 }
 
+// 8. NOTIFICATION MODEL
+export interface AppNotification {
+  id: string;
+  type: 'PO_CREATED' | 'PO_VERIFIED' | 'PO_APPROVED' | 'PO_DISBURSED' | 'PHOTO_REPORT' | 'TASK_COMPLETED';
+  title: string;
+  message: string;
+  targetRole?: 'SUPERADMIN' | 'DIREKTUR' | 'FINANCE' | 'INVESTOR' | 'MANAGER' | 'KEPALA_KEBUN' | 'PETANI' | 'ALL';
+  timestamp: string;
+  read: boolean;
+  actionUrl?: string;
+  badgeLabel?: string;
+  data?: any;
+}
+
 // STORE INTERFACE
 interface SmartFarmState {
   // Collections
@@ -205,6 +219,14 @@ interface SmartFarmState {
   weighbridgeSlips: WeighbridgeSlip[];
   attendanceRecords: AttendanceRecord[];
   lifecycleStagePhotos: Record<number, string>;
+  notifications: AppNotification[];
+  activeToast: AppNotification | null;
+
+  // Notification Actions
+  addNotification: (notif: Omit<AppNotification, 'id' | 'timestamp' | 'read'>) => void;
+  dismissToast: () => void;
+  markNotificationRead: (id: string) => void;
+  clearAllNotifications: () => void;
 
   // Lifecycle Stage Actions
   updateLifecycleStagePhoto: (stepNumber: number, photoUrl: string, updatedBy?: string, caption?: string) => void;
@@ -792,6 +814,31 @@ export const initialStagePhotos: Record<number, string> = {
   8: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80',
 };
 
+const initialNotifications: AppNotification[] = [
+  {
+    id: 'NOTIF-001',
+    type: 'PO_CREATED',
+    title: 'Pengajuan PO Menunggu Otorisasi',
+    message: 'PO-026 (Pupuk Hayati Cair 100L) telah diajukan dan menunggu Otorisasi Investor.',
+    targetRole: 'ALL',
+    badgeLabel: 'PO BARU',
+    timestamp: 'Baru saja',
+    read: false,
+    actionUrl: '/po-transparency',
+  },
+  {
+    id: 'NOTIF-002',
+    type: 'PHOTO_REPORT',
+    title: 'Dokumentasi Lapangan Terbit',
+    message: 'Mandor Joko mengirim foto situasi pengairan drip di Blok A2 Sentra Melon.',
+    targetRole: 'ALL',
+    badgeLabel: 'LIVE FEED',
+    timestamp: '15 menit yang lalu',
+    read: false,
+    actionUrl: '/live-feed',
+  },
+];
+
 export const useSmartFarmStore = create<SmartFarmState>()(
   persist(
     (set) => ({
@@ -804,6 +851,36 @@ export const useSmartFarmStore = create<SmartFarmState>()(
       weighbridgeSlips: initialWeighbridge,
       attendanceRecords: initialAttendance,
       lifecycleStagePhotos: initialStagePhotos,
+      notifications: initialNotifications,
+      activeToast: null,
+
+      // NOTIFICATION ACTIONS
+      addNotification: (notifData) =>
+        set((state) => {
+          const newNotif: AppNotification = {
+            ...notifData,
+            id: `NOTIF-${Date.now()}`,
+            timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+            read: false,
+          };
+          return {
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
+        }),
+
+      dismissToast: () => set({ activeToast: null }),
+
+      markNotificationRead: (id) =>
+        set((state) => ({
+          notifications: state.notifications.map((n) => (n.id === id ? { ...n, read: true } : n)),
+        })),
+
+      clearAllNotifications: () =>
+        set({
+          notifications: [],
+          activeToast: null,
+        }),
 
       // LIFECYCLE STAGE PHOTO ACTION
       updateLifecycleStagePhoto: (stepNumber, photoUrl, updatedBy, caption) =>
@@ -839,6 +916,18 @@ export const useSmartFarmStore = create<SmartFarmState>()(
             comments: [],
           };
 
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PHOTO_REPORT',
+            title: `📸 Foto Tahap ${stepNumber} Diperbarui`,
+            message: `${updatedBy || 'Mandor'} mengunggah bukti fisik: ${stageNames[stepNumber]}`,
+            targetRole: 'ALL',
+            badgeLabel: '8 TAHAP LAHAN',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/lifecycle',
+          };
+
           // Dispatch event for instant UI listeners
           if (typeof window !== 'undefined') {
             setTimeout(() => {
@@ -849,6 +938,8 @@ export const useSmartFarmStore = create<SmartFarmState>()(
           return {
             lifecycleStagePhotos: updatedPhotos,
             fieldPosts: [newPost, ...state.fieldPosts],
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
           };
         }),
 
@@ -861,15 +952,31 @@ export const useSmartFarmStore = create<SmartFarmState>()(
             completed: false,
             createdAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
           };
-          return { tasks: [newTask, ...state.tasks] };
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'TASK_COMPLETED',
+            title: '📋 Tugas Kebun Baru Diterbitkan',
+            message: `Tugas "${newTask.title}" untuk ${newTask.assignedTo} di ${newTask.target}`,
+            targetRole: 'PETANI',
+            badgeLabel: 'TUGAS HARIAN',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/tasks',
+          };
+          return {
+            tasks: [newTask, ...state.tasks],
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
         }),
 
       toggleTask: (taskId, photoProof, notes) =>
-        set((state) => ({
-          tasks: state.tasks.map((t) => {
+        set((state) => {
+          let updatedTask: FarmTask | undefined;
+          const updatedTasks = state.tasks.map((t) => {
             if (t.id === taskId) {
               const willComplete = !t.completed;
-              return {
+              updatedTask = {
                 ...t,
                 completed: willComplete,
                 photoProof: photoProof || t.photoProof,
@@ -878,10 +985,36 @@ export const useSmartFarmStore = create<SmartFarmState>()(
                   ? new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
                   : undefined,
               };
+              return updatedTask;
             }
             return t;
-          }),
-        })),
+          });
+
+          let newNotif = state.activeToast;
+          let notifList = state.notifications;
+
+          if (updatedTask && updatedTask.completed) {
+            const taskNotif: AppNotification = {
+              id: `NOTIF-${Date.now()}`,
+              type: 'TASK_COMPLETED',
+              title: '✅ Tugas Lapangan Selesai (BAP Terbit)',
+              message: `Tugas "${updatedTask.title}" diselesaikan oleh ${updatedTask.assignedTo}`,
+              targetRole: 'ALL',
+              badgeLabel: 'BAP SELESAI',
+              timestamp: 'Baru saja',
+              read: false,
+              actionUrl: '/reports',
+            };
+            newNotif = taskNotif;
+            notifList = [taskNotif, ...state.notifications];
+          }
+
+          return {
+            tasks: updatedTasks,
+            notifications: notifList,
+            activeToast: newNotif,
+          };
+        }),
 
       deleteTask: (taskId) =>
         set((state) => ({
@@ -899,7 +1032,22 @@ export const useSmartFarmStore = create<SmartFarmState>()(
             isLiked: false,
             comments: [],
           };
-          return { fieldPosts: [newPost, ...state.fieldPosts] };
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PHOTO_REPORT',
+            title: '📸 Laporan Foto Situasi Lapangan',
+            message: `${newPost.authorName} (${newPost.authorRole}) mengirim foto di ${newPost.blockTarget}: "${newPost.caption.slice(0, 45)}..."`,
+            targetRole: 'ALL',
+            badgeLabel: 'LIVE FEED',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/live-feed',
+          };
+          return {
+            fieldPosts: [newPost, ...state.fieldPosts],
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
         }),
 
       addPostComment: (postId, commentData) =>
@@ -946,63 +1094,145 @@ export const useSmartFarmStore = create<SmartFarmState>()(
             date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
             status: 'PENDING_FINANCE',
           };
-          return { purchaseOrders: [newPO, ...state.purchaseOrders] };
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PO_CREATED',
+            title: '📢 Pengajuan PO Belanja Baru',
+            message: `${newPO.requester} mengajukan ${newPO.id}: "${newPO.title}" (Rp ${newPO.amount.toLocaleString('id-ID')}). Menunggu Verifikasi Finance (Layer 1).`,
+            targetRole: 'ALL',
+            badgeLabel: 'PO LAYER 1',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/po-transparency',
+          };
+          return {
+            purchaseOrders: [newPO, ...state.purchaseOrders],
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
         }),
 
       verifyPOByFinance: (poId, notes) =>
-        set((state) => ({
-          purchaseOrders: state.purchaseOrders.map((po) =>
+        set((state) => {
+          const updatedPOs = state.purchaseOrders.map((po) =>
             po.id === poId
               ? {
                   ...po,
-                  status: 'PENDING_DIREKTUR',
+                  status: 'PENDING_DIREKTUR' as POStatus,
                   financeVerifiedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
                   notes: notes || po.notes,
                 }
               : po
-          ),
-        })),
+          );
+          const targetPO = state.purchaseOrders.find((p) => p.id === poId);
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PO_VERIFIED',
+            title: '✅ PO Lolos Verifikasi Finance (Layer 1)',
+            message: `PO ${poId} (${targetPO?.title || 'Belanja Kebun'}) telah diverifikasi Finance & kini menunggu Otorisasi Direktur Utama (Layer 2).`,
+            targetRole: 'DIREKTUR',
+            badgeLabel: 'LAYER 2 DIREKTUR',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/po-transparency',
+          };
+          return {
+            purchaseOrders: updatedPOs,
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
+        }),
 
       approvePOByDirektur: (poId, notes) =>
-        set((state) => ({
-          purchaseOrders: state.purchaseOrders.map((po) =>
+        set((state) => {
+          const updatedPOs = state.purchaseOrders.map((po) =>
             po.id === poId
               ? {
                   ...po,
-                  status: 'PENDING_INVESTOR',
+                  status: 'PENDING_INVESTOR' as POStatus,
                   direkturApprovedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
                   notes: notes || po.notes,
                 }
               : po
-          ),
-        })),
+          );
+          const targetPO = state.purchaseOrders.find((p) => p.id === poId);
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PO_APPROVED',
+            title: '⭐ PO Disetujui Direktur Utama (Layer 2)',
+            message: `PO ${poId} (${targetPO?.title || 'Belanja Kebun'}) disahkan Direktur Utama & kini menunggu Persetujuan Investor (Layer 3).`,
+            targetRole: 'INVESTOR',
+            badgeLabel: 'LAYER 3 INVESTOR',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/po-transparency',
+          };
+          return {
+            purchaseOrders: updatedPOs,
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
+        }),
 
       authorizePOByInvestor: (poId, notes) =>
-        set((state) => ({
-          purchaseOrders: state.purchaseOrders.map((po) =>
+        set((state) => {
+          const updatedPOs = state.purchaseOrders.map((po) =>
             po.id === poId
               ? {
                   ...po,
-                  status: 'APPROVED',
+                  status: 'APPROVED' as POStatus,
                   investorAuthorizedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
                   notes: notes || po.notes,
                 }
               : po
-          ),
-        })),
+          );
+          const targetPO = state.purchaseOrders.find((p) => p.id === poId);
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PO_DISBURSED',
+            title: '💰 PO Disetujui Investor (Sah & Cair)',
+            message: `PO ${poId} (${targetPO?.title || 'Belanja Kebun'}) disetujui Investor! Dana Rp ${targetPO?.amount.toLocaleString('id-ID')} siap dicairkan oleh Finance.`,
+            targetRole: 'ALL',
+            badgeLabel: 'DANA CAIR',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/po-transparency',
+          };
+          return {
+            purchaseOrders: updatedPOs,
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
+        }),
 
       rejectPO: (poId, notes) =>
-        set((state) => ({
-          purchaseOrders: state.purchaseOrders.map((po) =>
+        set((state) => {
+          const updatedPOs = state.purchaseOrders.map((po) =>
             po.id === poId
               ? {
                   ...po,
-                  status: 'REJECTED',
+                  status: 'REJECTED' as POStatus,
                   notes: notes || po.notes || 'Pengajuan ditolak oleh pimpinan',
                 }
               : po
-          ),
-        })),
+          );
+          const newNotif: AppNotification = {
+            id: `NOTIF-${Date.now()}`,
+            type: 'PO_CREATED',
+            title: '❌ PO Dikembalikan / Ditolak',
+            message: `PO ${poId} telah ditolak / dikembalikan dengan catatan: "${notes || 'Perlu revisi anggaran'}"`,
+            targetRole: 'ALL',
+            badgeLabel: 'DITOLAK',
+            timestamp: 'Baru saja',
+            read: false,
+            actionUrl: '/po-transparency',
+          };
+          return {
+            purchaseOrders: updatedPOs,
+            notifications: [newNotif, ...state.notifications],
+            activeToast: newNotif,
+          };
+        }),
 
       updatePOPhotos: (poId, photos) =>
         set((state) => ({
