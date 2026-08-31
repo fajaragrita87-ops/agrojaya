@@ -545,7 +545,7 @@ export const DailyTasklistCalendar = () => {
       {/* ==================== MODAL TAMBAH TUGAS (MANAGER / KEPALA KEBUN) ==================== */}
       {isCreateModalOpen && (
         <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }} tabIndex={-1}>
-          <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div className="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
               <div className="modal-header bg-[#0F5545] text-white p-3.5 border-0">
                 <div className="d-flex align-items-center gap-2">

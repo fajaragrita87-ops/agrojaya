@@ -151,14 +151,14 @@ export const JadwalTasklistScreen: React.FC<JadwalTasklistScreenProps> = () => {
 
       {/* ==================== MODAL BUAT TUGAS BARU ==================== */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center p-3.5 backdrop-blur-xs overflow-y-auto">
           <div
             style={{
               maxHeight: '88dvh',
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
             }}
-            className="bg-white w-full max-w-sm rounded-[20px] p-4 shadow-2xl space-y-3 animate-in zoom-in-95 duration-150"
+            className="bg-white w-full max-w-sm rounded-[20px] p-4 shadow-2xl space-y-3 animate-in zoom-in-95 duration-150 my-auto"
           >
             <div className="flex justify-between items-center border-b border-[#E8F0EB] pb-2">
               <div className="flex items-center gap-2">

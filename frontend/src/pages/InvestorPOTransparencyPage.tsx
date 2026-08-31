@@ -147,7 +147,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
           </h2>
         </div>
 
-        {role === 'MANAGER' && (
+        {(role === 'MANAGER' || role === 'DIREKTUR' || role === 'SUPERADMIN' || role === 'FINANCE') && (
           <button
             onClick={() => setShowAddForm(!showAddForm)}
             className="btn btn-success text-white font-weight-bold px-3.5 py-2 rounded-3 shadow-xs d-inline-flex align-items-center gap-1.5"
@@ -159,15 +159,15 @@ export const InvestorPOTransparencyPage: React.FC = () => {
         )}
       </div>
 
-      {/* 1. KHUSUS MANAJER OPERASIONAL: FORM PENGAJUAN PO BARU */}
-      {role === 'MANAGER' && showAddForm && (
+      {/* 1. FORM PENGAJUAN PO BARU (MANAGER / DIREKTUR / FINANCE) */}
+      {(role === 'MANAGER' || role === 'DIREKTUR' || role === 'SUPERADMIN' || role === 'FINANCE') && showAddForm && (
         <div className="card-box p-4 rounded-4 bg-white border shadow-sm space-y-3">
           <div className="pb-2 border-bottom">
             <h4 className="font-weight-bold text-dark m-0 !text-sm">
               <i className="ri-file-add-line text-success me-1.5"></i> Formulir Pengajuan Pembelian Barang (PO Baru)
             </h4>
             <span className="text-muted" style={{ fontSize: 12 }}>
-              Diisi oleh Manajer Operasional untuk diajukan ke Tim Finance
+              Diajukan untuk verifikasi anggaran Tim Finance & Otorisasi Direktur
             </span>
           </div>
 

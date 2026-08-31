@@ -245,9 +245,9 @@ export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = () => {
 
       {/* Add Allocation / PO Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-[20px] w-full max-w-sm p-4 space-y-3.5 shadow-2xl border border-[#E2EAE5] animate-in zoom-in-95 duration-150">
-            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
+        <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-xs flex items-center justify-center p-3.5 overflow-y-auto">
+          <div className="bg-white rounded-[20px] w-full max-w-sm p-4 space-y-3.5 shadow-2xl border border-[#E2EAE5] animate-in zoom-in-95 duration-150 max-h-[88dvh] overflow-y-auto my-auto">
+            <div className="flex justify-between items-center pb-2 border-b border-gray-100 sticky top-0 bg-white z-10">
               <div>
                 <span className="text-[10px] font-black text-[#0F5545] uppercase">Input Pengadaan</span>
                 <h3 className="text-[15px] font-black text-[#11231D] m-0">Tambah Alokasi Belanja PO</h3>
@@ -255,7 +255,7 @@ export const AlokasiModalScreen: React.FC<AlokasiModalScreenProps> = () => {
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold"
+                className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold cursor-pointer"
               >
                 ✕
               </button>

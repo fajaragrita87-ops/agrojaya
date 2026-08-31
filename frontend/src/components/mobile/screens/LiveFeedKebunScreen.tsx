@@ -380,8 +380,8 @@ export const LiveFeedKebunScreen: React.FC<LiveFeedKebunScreenProps> = ({
 
       {/* Modal Buat Laporan Baru */}
       {showModalNewPost && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl p-5 max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3.5 backdrop-blur-xs animate-in fade-in overflow-y-auto">
+          <div className="bg-white w-full max-w-sm sm:max-w-lg rounded-[22px] p-4 max-h-[88dvh] overflow-y-auto space-y-4 shadow-2xl my-auto">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xl">📸</span>
