@@ -3,6 +3,7 @@ import { useRole, type RoleType } from '../../context/RoleContext';
 import { ServiceIconTile, type ServiceIconTileProps } from './ServiceIconTile';
 import { ModuleBottomSheet } from './ModuleBottomSheet';
 import { ApprovalListScreen } from './ApprovalListScreen';
+import { MobileRoleSwitcherModal } from './MobileRoleSwitcherModal';
 
 interface MobileMenuHubViewProps {
   onSelectView: (viewId: string) => void;
@@ -17,6 +18,7 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
   const [searchQuery, setSearchQuery] = useState('');
   const [isPOBottomSheetOpen, setIsPOBottomSheetOpen] = useState(false);
   const [isApprovalScreenOpen, setIsApprovalScreenOpen] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   // 1. FITUR UTAMA & EKSEKUTIF (Deep Forest Emerald Glass)
   const mainFeatures: RoleModuleItem[] = [
@@ -298,6 +300,28 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
         </section>
       )}
 
+      {/* SECTION 5: Akses & Peran Pengguna */}
+      <section className="space-y-2 pt-2 border-t border-[#E8EEEA] pb-2">
+        <button
+          type="button"
+          onClick={() => setShowRoleModal(true)}
+          className="w-full p-3 rounded-[14px] bg-gradient-to-r from-[#064E3B] to-[#047857] text-white flex items-center justify-between shadow-md cursor-pointer hover:brightness-105 transition-all"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[8px] bg-white/20 flex items-center justify-center text-base">
+              🔄
+            </div>
+            <div className="text-left">
+              <strong className="text-[12px] font-bold block leading-tight">Ganti Peran / Role Pengguna</strong>
+              <span className="text-[9.5px] text-[#A7F3D0]">Role saat ini: {role} (Beralih role cepat)</span>
+            </div>
+          </div>
+          <span className="px-2.5 py-1 rounded-[6px] bg-[#C8E86B] text-[#064E3B] text-[10px] font-black uppercase shadow-xs">
+            Pilih Role &gt;
+          </span>
+        </button>
+      </section>
+
       {/* PO Bottom Sheet */}
       <ModuleBottomSheet
         isOpen={isPOBottomSheetOpen}
@@ -309,6 +333,12 @@ export const MobileMenuHubView: React.FC<MobileMenuHubViewProps> = ({ onSelectVi
       {isApprovalScreenOpen && (
         <ApprovalListScreen onBack={() => setIsApprovalScreenOpen(false)} />
       )}
+
+      {/* Role Switcher Modal */}
+      <MobileRoleSwitcherModal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
+      />
     </div>
   );
 };

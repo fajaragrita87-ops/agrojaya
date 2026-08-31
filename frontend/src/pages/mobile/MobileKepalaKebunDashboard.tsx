@@ -14,6 +14,7 @@ import { TimbanganPanenScreen } from '../../components/mobile/screens/TimbanganP
 import { JadwalTasklistScreen } from '../../components/mobile/screens/JadwalTasklistScreen';
 import { PresensiUpahScreen } from '../../components/mobile/screens/PresensiUpahScreen';
 import { LiveFeedKebunScreen } from '../../components/mobile/screens/LiveFeedKebunScreen';
+import { MobileRoleSwitcherModal } from '../../components/mobile/MobileRoleSwitcherModal';
 import { callLiveAI } from '../../services/aiService';
 
 export const MobileKepalaKebunDashboard: React.FC = () => {
@@ -39,6 +40,7 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [showTreeScanner, setShowTreeScanner] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   // AI Chat State
   const [aiInput, setAiInput] = useState('');
@@ -128,11 +130,17 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 relative z-10">
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10.5px] font-extrabold text-[#C8E86B] shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-pulse"></span>
-            <span>Live Sync</span>
-          </span>
+        {/* Live Status Pill & Ganti Role Button */}
+        <div className="flex items-center gap-2 relative z-10">
+          <button
+            type="button"
+            onClick={() => setShowRoleModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/25 text-[11px] font-extrabold text-[#C8E86B] shadow-xs cursor-pointer transition-colors"
+            title="Pilih dan Ganti Peran Pengguna"
+          >
+            <i className="ri-user-shared-line text-xs"></i>
+            <span>Ganti Role</span>
+          </button>
         </div>
       </div>
 
@@ -395,6 +403,12 @@ export const MobileKepalaKebunDashboard: React.FC = () => {
           if (notifType === 'HARVEST' || notifType === 'MAINTENANCE') setShowTreeScanner(true);
           else if (notifType === 'ALERT') setActiveTab('tanah');
         }}
+      />
+
+      {/* Role Switcher Modal */}
+      <MobileRoleSwitcherModal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
       />
     </div>
   );

@@ -15,6 +15,7 @@ import { AlokasiModalScreen } from '../../components/mobile/screens/AlokasiModal
 import { KelolaUserScreen } from '../../components/mobile/screens/KelolaUserScreen';
 import { MobileTreeScannerModal } from '../../components/mobile/MobileTreeScannerModal';
 import { ApprovalListScreen } from '../../components/mobile/ApprovalListScreen';
+import { MobileRoleSwitcherModal } from '../../components/mobile/MobileRoleSwitcherModal';
 import { useSmartFarmStore } from '../../store/smartFarmStore';
 import { callLiveAI } from '../../services/aiService';
 
@@ -40,6 +41,7 @@ type ManagerTab =
 export const MobileManagerDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ManagerTab>('menu_hub');
   const [showTreeScanner, setShowTreeScanner] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   // Store integration
   const { tasks, toggleTask } = useSmartFarmStore();
@@ -128,12 +130,17 @@ export const MobileManagerDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Status Pill */}
-        <div className="flex items-center gap-1.5 relative z-10">
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-[10.5px] font-extrabold text-[#C8E86B] shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-[#C8E86B] animate-pulse"></span>
-            <span>Live Sync</span>
-          </span>
+        {/* Live Status Pill & Ganti Role Button */}
+        <div className="flex items-center gap-2 relative z-10">
+          <button
+            type="button"
+            onClick={() => setShowRoleModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/25 text-[11px] font-extrabold text-[#C8E86B] shadow-xs cursor-pointer transition-colors"
+            title="Pilih dan Ganti Peran Pengguna"
+          >
+            <i className="ri-user-shared-line text-xs"></i>
+            <span>Ganti Role</span>
+          </button>
         </div>
       </div>
 
@@ -411,6 +418,12 @@ export const MobileManagerDashboard: React.FC = () => {
       <MobileTreeScannerModal
         isOpen={showTreeScanner}
         onClose={() => setShowTreeScanner(false)}
+      />
+
+      {/* Role Switcher Modal */}
+      <MobileRoleSwitcherModal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
       />
     </div>
   );
