@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { getDirekturDashboard } from '../services/api';
 import { useRole } from '../context/RoleContext';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
 import { LiveFieldFeedHub } from '../components/LiveFieldFeedHub';
 
 export const DirekturDashboard = () => {
   useRole();
+  const { purchaseOrders, approvePOByDirektur, rejectPO } = useSmartFarmStore();
   const [selectedBlock, setSelectedBlock] = useState<string>('ALL');
 
   useEffect(() => {
@@ -39,11 +41,26 @@ export const DirekturDashboard = () => {
     ? rawHarvestYieldBarData
     : rawHarvestYieldBarData.filter(item => item.id === selectedBlock);
 
-  const pendingApprovals = [
-    { id: 'PO-2026-081', type: 'Purchase Order', title: 'Pengadaan Pupuk NPK Mutiara 5 Ton (Blok A1 & A2)', amount: 'Rp 45.000.000', requester: 'Ahmad Hidayat (Manajer)', priority: 'Tinggi', date: '27 Aug 2026' },
-    { id: 'BAP-2026-042', type: 'Berita Acara', title: 'BAP Penyelesaian Olah Tanah & Bajak Traktor Blok B1 (0.5 Ha)', amount: 'Rp 12.500.000', requester: 'Budi Santoso (Kepala Kebun)', priority: 'Normal', date: '26 Aug 2026' },
-    { id: 'PO-2026-084', type: 'Purchase Order', title: 'Bibit Porang Katak Super Jumbo 1.200 Kg', amount: 'Rp 27.500.000', requester: 'Ahmad Hidayat (Manajer)', priority: 'Tinggi', date: '25 Aug 2026' },
+  // Dynamic live POs waiting for Direktur & Finance approval
+  const dynamicPOs = purchaseOrders
+    .filter((p) => p.status === 'PENDING_DIREKTUR' || p.status === 'PENDING_FINANCE')
+    .map((p) => ({
+      rawId: p.id,
+      id: p.id,
+      type: 'Purchase Order',
+      title: `${p.title} (${p.category})`,
+      amount: `Rp ${p.amount.toLocaleString('id-ID')}`,
+      requester: p.requester,
+      priority: 'Tinggi',
+      date: p.date,
+      status: p.status,
+    }));
+
+  const fallbackPendingApprovals = [
+    { rawId: 'BAP-042', id: 'BAP-2026-042', type: 'Berita Acara', title: 'BAP Penyelesaian Olah Tanah & Bajak Traktor Blok B1 (0.5 Ha)', amount: 'Rp 12.500.000', requester: 'Budi Santoso (Kepala Kebun)', priority: 'Normal', date: '26 Aug 2026', status: 'PENDING_DIREKTUR' },
   ];
+
+  const pendingApprovals = dynamicPOs.length > 0 ? dynamicPOs : fallbackPendingApprovals;
 
   return (
     <div className="w-100 space-y-4">
@@ -241,15 +258,19 @@ export const DirekturDashboard = () => {
                   <td className="text-end">
                     <div className="d-inline-flex gap-1.5">
                       <button
-                        onClick={() => alert(`Dokumen ${doc.id} Berhasil Disetujui oleh Direktur Utama!`)}
-                        className="btn btn-sm btn-success font-weight-bold px-2.5 py-1 rounded-2 shadow-xs"
+                        onClick={() => {
+                          approvePOByDirektur(doc.rawId, 'Disetujui Direktur Utama.');
+                        }}
+                        className="btn btn-sm btn-success font-weight-bold px-2.5 py-1 rounded-2 shadow-xs cursor-pointer"
                         style={{ fontSize: 11 }}
                       >
                         <i className="ri-check-line me-1"></i> Setujui
                       </button>
                       <button
-                        onClick={() => alert(`Dokumen ${doc.id} Dikembalikan untuk Revisi.`)}
-                        className="btn btn-sm btn-outline-danger font-weight-bold px-2.5 py-1 rounded-2"
+                        onClick={() => {
+                          rejectPO(doc.rawId, 'Dikembalikan oleh Direktur Utama untuk revisi.');
+                        }}
+                        className="btn btn-sm btn-outline-danger font-weight-bold px-2.5 py-1 rounded-2 cursor-pointer"
                         style={{ fontSize: 11 }}
                       >
                         Tolak

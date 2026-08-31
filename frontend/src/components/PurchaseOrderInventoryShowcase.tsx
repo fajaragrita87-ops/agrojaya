@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRole } from '../context/RoleContext';
-import { getPurchases, createPurchase, updatePurchaseStatus } from '../services/api';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 
 export type POStatus = 
   | 'PENDING_FINANCE'                
@@ -31,6 +31,12 @@ export interface PurchaseItem {
   rejectionNote?: string;
   voucherNo?: string;
   createdBy?: { name: string };
+  requester?: string;
+  invoiceNumber?: string;
+  proformaPhoto?: string;
+  paymentProofPhoto?: string;
+  goodsReceivedPhoto?: string;
+  fieldApplicationPhoto?: string;
 }
 
 export interface InventoryItem {
@@ -42,11 +48,18 @@ export interface InventoryItem {
   status: 'CUKUP' | 'REORDER_NOW' | 'HAMPIR_HABIS';
 }
 
-// Kept for backward compatibility if needed by other components momentarily, but better to remove later
 export const INITIAL_MOCK_PO_LIST: PurchaseItem[] = [];
 
 export const PurchaseOrderInventoryShowcase: React.FC = () => {
   const { role, canCreatePO } = useRole();
+  const {
+    purchaseOrders,
+    createPO,
+    verifyPOByFinance,
+    approvePOByDirektur,
+    authorizePOByInvestor,
+    rejectPO,
+  } = useSmartFarmStore();
 
   const [inventoryList] = useState<InventoryItem[]>([
     { id: '1', name: 'Pupuk NPK Granul 16-16-16', category: 'PUPUK', stockQty: '12.5 Ton', minStock: '15.0 Ton', status: 'REORDER_NOW' },
@@ -56,27 +69,41 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
     { id: '5', name: 'Traktor & Cultivator Kubota', category: 'PERALATAN', stockQty: '3 Unit', minStock: '2 Unit', status: 'CUKUP' },
   ]);
 
-  const [poList, setPoList] = useState<PurchaseItem[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchPOs = async () => {
-    try {
-      setLoading(true);
-      const res = await getPurchases();
-      setPoList(res.data);
-    } catch (error) {
-      console.error('Failed to load POs', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPOs();
-    const handleSync = () => fetchPOs();
-    window.addEventListener('agrojaya-po-updated', handleSync);
-    return () => window.removeEventListener('agrojaya-po-updated', handleSync);
-  }, []);
+  const poList: PurchaseItem[] = purchaseOrders.map((p) => ({
+    id: p.id,
+    poNumber: p.id,
+    itemName: p.title,
+    category: p.category,
+    targetLand: p.targetLand || 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)',
+    quantity: '1 Paket',
+    unitPriceRp: p.amount,
+    totalPrice: p.amount,
+    usageTargetDate: 'Segera (Musim Tanam)',
+    usageDetails: p.notes || 'Pengadaan operasional rutin budidaya',
+    status:
+      p.status === 'APPROVED'
+        ? 'DISBURSED'
+        : p.status === 'PENDING_FINANCE'
+        ? 'PENDING_FINANCE'
+        : p.status === 'PENDING_DIREKTUR'
+        ? 'PENDING_DIREKTUR'
+        : p.status === 'PENDING_INVESTOR'
+        ? 'PENDING_INVESTOR'
+        : p.status === 'REJECTED'
+        ? 'REJECTED'
+        : (p.status as any),
+    requester: p.requester,
+    createdAt: p.date,
+    financeVerifiedAt: p.financeVerifiedAt,
+    direkturApprovedAt: p.direkturApprovedAt,
+    investorApprovedAt: p.investorAuthorizedAt,
+    invoiceNumber: p.invoiceNumber,
+    proformaPhoto: p.proformaPhoto,
+    paymentProofPhoto: p.paymentProofPhoto,
+    goodsReceivedPhoto: p.goodsReceivedPhoto,
+    fieldApplicationPhoto: p.fieldApplicationPhoto,
+    rejectionNote: (p as any).rejectionNote || '',
+  }));
 
   // Form State for Manager Operasional
   const [itemName, setItemName] = useState('');
@@ -89,93 +116,49 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
 
   const calculatedTotal = Number(unitPrice || 0) * (parseFloat(quantity) || 1);
 
-  const handleCreatePO = async (e: React.FormEvent) => {
+  const handleCreatePO = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canCreatePO) return;
+    if (!canCreatePO || !itemName || !unitPrice) return;
 
-    const poNumber = `PO-${new Date().getFullYear()}-${new Date().getMonth()+1}${new Date().getDate()}-${Math.floor(Math.random() * 100)}`;
-    
-    try {
-      await createPurchase({
-        itemName,
-        category,
-        targetLand,
-        quantity: parseFloat(quantity),
-        unitPriceRp: Number(unitPrice),
-        totalPrice: calculatedTotal,
-        usageTargetDate: usageTargetDate || '15 Aug 2026',
-        usageDetails,
-        poNumber,
-        createdById: 'manager-ops-123' // placeholder ID
-      });
-      
-      setItemName('');
-      setQuantity('');
-      setUnitPrice('');
-      setUsageTargetDate('');
-      setUsageDetails('');
-      alert(`Pengajuan PO ${poNumber} Berhasil Dikirimkan ke Finance (Layer 1 Verifikasi)!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal membuat PO');
-      console.error(error);
-    }
+    createPO({
+      title: itemName,
+      category: (category as any) || 'Pupuk',
+      amount: calculatedTotal,
+      vendor: 'Mitra Agro Tani',
+      requester: role === 'MANAGER' ? 'Budi Santoso (Manajer Ops)' : 'Tim Operasional Kebun',
+      notes: `${usageDetails || 'Kebutuhan saprotan kebun'} (${quantity || '1 Paket'})`,
+      targetLand: targetLand,
+      invoiceNumber: `INV-${Date.now().toString().slice(-4)}`,
+    });
+
+    setItemName('');
+    setQuantity('');
+    setUnitPrice('');
+    setUsageTargetDate('');
+    setUsageDetails('');
   };
 
   // Workflow Handlers
-  const handleFinanceVerify = async (id: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'PENDING_DIREKTUR' });
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal verifikasi layer 1');
-    }
+  const handleFinanceVerify = (id: string) => {
+    verifyPOByFinance(id, 'Diverifikasi valid oleh Finance.');
   };
 
-  const handleDirekturApprove = async (id: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'PENDING_INVESTOR' });
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal otorisasi layer 2');
-    }
+  const handleDirekturApprove = (id: string) => {
+    approvePOByDirektur(id, 'Disetujui Direktur Utama.');
   };
 
-  const handleInvestorApprove = async (id: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'APPROVED_WAITING_DISBURSEMENT' });
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal persetujuan layer 3');
-    }
+  const handleInvestorApprove = (id: string) => {
+    authorizePOByInvestor(id, 'Disetujui Investor Utama.');
   };
 
-  const handleFinanceDisburse = async (id: string) => {
-    const voucherNo = `VCH-${Math.floor(1000 + Math.random() * 9000)}`;
-    try {
-      await updatePurchaseStatus(id, { status: 'DISBURSED', voucherNo });
-      alert(`Dana PO Berhasil Dicairkan oleh Finance! Voucher Kas Terbit: ${voucherNo}`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal pencairan');
-    }
+  const handleFinanceDisburse = (id: string) => {
+    authorizePOByInvestor(id, 'Dana dicairkan oleh Finance.');
   };
 
-  const handleRejectPO = async (id: string, layerName: string) => {
+  const handleRejectPO = (id: string, layerName: string) => {
     const reason = prompt(`Masukkan alasan penolakan PO (${layerName}):`);
     if (!reason) return;
-    try {
-      await updatePurchaseStatus(id, { status: 'REJECTED', rejectionNote: `Ditolak pada ${layerName}: ${reason}` });
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal menolak PO');
-    }
+    rejectPO(id, reason);
   };
 
   const formatDate = (dateString?: string) => {
@@ -406,9 +389,9 @@ export const PurchaseOrderInventoryShowcase: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {loading && poList.length === 0 ? (
+              {poList.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-4 text-muted">Memuat data PO dari server...</td>
+                  <td colSpan={7} className="text-center py-4 text-muted">Belum ada pengajuan PO tersimpan.</td>
                 </tr>
               ) : poList.map((po) => (
                 <tr key={po.id}>

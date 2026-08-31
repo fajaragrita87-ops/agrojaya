@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRole } from '../context/RoleContext';
-import { getPurchases, createPurchase, updatePurchaseStatus } from '../services/api';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 import type { PurchaseItem } from '../components/PurchaseOrderInventoryShowcase';
 
 export const InvestorPOTransparencyPage: React.FC = () => {
   const { role } = useRole();
-  const [poList, setPoList] = useState<PurchaseItem[]>([]);
+  const {
+    purchaseOrders,
+    createPO,
+    verifyPOByFinance,
+    approvePOByDirektur,
+    authorizePOByInvestor,
+  } = useSmartFarmStore();
 
-  // Form State for Manager Operasional
+  // Form State for Manager / Direktur / Finance
   const [itemName, setItemName] = useState('');
   const [category, setCategory] = useState('PUPUK & KAPUR');
   const [targetLand, setTargetLand] = useState('Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)');
@@ -18,115 +24,106 @@ export const InvestorPOTransparencyPage: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedPOForProof, setSelectedPOForProof] = useState<any | null>(null);
 
-  const fetchPOs = async () => {
-    try {
-      const res = await getPurchases();
-      setPoList(res.data);
-    } catch (error) {
-      console.error('Failed to load POs', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPOs();
-    const handleSync = () => fetchPOs();
-    window.addEventListener('agrojaya-po-updated', handleSync);
-    return () => window.removeEventListener('agrojaya-po-updated', handleSync);
-  }, []);
+  // Map store purchaseOrders to page view models
+  const poList: PurchaseItem[] = purchaseOrders.map((p) => ({
+    id: p.id,
+    poNumber: p.id,
+    itemName: p.title,
+    category: p.category,
+    targetLand: p.targetLand || 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)',
+    quantity: '1 Paket',
+    unitPriceRp: p.amount,
+    totalPrice: p.amount,
+    usageTargetDate: 'Segera (Musim Tanam)',
+    usageDetails: p.notes || 'Pengadaan operasional rutin budidaya',
+    status:
+      p.status === 'APPROVED'
+        ? 'DISBURSED'
+        : p.status === 'PENDING_FINANCE'
+        ? 'PENDING_FINANCE'
+        : p.status === 'PENDING_DIREKTUR'
+        ? 'PENDING_DIREKTUR'
+        : p.status === 'PENDING_INVESTOR'
+        ? 'PENDING_INVESTOR'
+        : (p.status as any),
+    requester: p.requester,
+    createdAt: p.date,
+    financeVerifiedAt: p.financeVerifiedAt,
+    direkturApprovedAt: p.direkturApprovedAt,
+    investorApprovedAt: p.investorAuthorizedAt,
+    invoiceNumber: p.invoiceNumber,
+    proformaPhoto: p.proformaPhoto,
+    paymentProofPhoto: p.paymentProofPhoto,
+    goodsReceivedPhoto: p.goodsReceivedPhoto,
+    fieldApplicationPhoto: p.fieldApplicationPhoto,
+  }));
 
   const calculatedTotal = Number(unitPrice || 0) * (parseFloat(quantity) || 1);
 
-  // 1. Manager Action: Create PO
-  const handleCreatePO = async (e: React.FormEvent) => {
+  // 1. Manager / Direktur / Finance Action: Create PO
+  const handleCreatePO = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!itemName || !quantity || !unitPrice) return;
+    if (!itemName || !unitPrice) return;
 
-    const poNumber = `PO-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(10 + Math.random() * 90)}`;
+    createPO({
+      title: itemName,
+      category: (category as any) || 'Pupuk',
+      amount: calculatedTotal,
+      vendor: 'CV Agro Sentosa Mandiri',
+      requester:
+        role === 'MANAGER'
+          ? 'Budi Santoso, S.P. (Manajer Ops)'
+          : role === 'DIREKTUR'
+          ? 'Ir. H. Ahmad Wijaya (Direktur Utama)'
+          : role === 'FINANCE'
+          ? 'Ratna Dewi, S.E. (Keuangan)'
+          : 'Tim Operasional Kebun',
+      notes: `${usageDetails || 'Pengadaan operasional kebun'} (${quantity || '1 Paket'})`,
+      targetLand: targetLand,
+      invoiceNumber: `INV-${Date.now().toString().slice(-4)}`,
+      proformaPhoto: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
+      paymentProofPhoto: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80',
+      goodsReceivedPhoto: 'https://images.unsplash.com/photo-1592417817098-8f3d69106093?auto=format&fit=crop&w=800&q=80',
+      fieldApplicationPhoto: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=800&q=80',
+    });
 
-    try {
-      await createPurchase({
-        itemName,
-        category,
-        targetLand,
-        quantity,
-        unitPriceRp: Number(unitPrice),
-        totalPrice: calculatedTotal,
-        usageTargetDate: usageTargetDate || 'Segera (Minggu Ini)',
-        usageDetails: usageDetails || 'Pengadaan operasional rutin budidaya',
-        poNumber,
-      });
-
-      setItemName('');
-      setQuantity('');
-      setUnitPrice('');
-      setUsageDetails('');
-      setShowAddForm(false);
-      alert(`Pengajuan ${poNumber} (${itemName}) berhasil dikirim ke Tim Finance (Layer 1)!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal membuat pengajuan PO');
-    }
+    setItemName('');
+    setQuantity('');
+    setUnitPrice('');
+    setUsageDetails('');
+    setShowAddForm(false);
   };
 
   // 2. Finance Action: Verify Layer 1
-  const handleFinanceVerify = async (id: string, poNum: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'PENDING_DIREKTUR' });
-      alert(`PO ${poNum} berhasil diverifikasi Finance (Layer 1) & diteruskan ke Direktur!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch {
-      alert('Gagal memverifikasi PO');
-    }
+  const handleFinanceVerify = (id: string) => {
+    verifyPOByFinance(id, 'Faktur & anggaran telah diverifikasi valid oleh Tim Finance.');
   };
 
   // 3. Direktur Action: Authorize Layer 2
-  const handleDirekturApprove = async (id: string, poNum: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'PENDING_INVESTOR' });
-      alert(`PO ${poNum} berhasil diotorisasi Direktur (Layer 2) & diteruskan ke Investor!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch {
-      alert('Gagal mengotorisasi PO');
-    }
+  const handleDirekturApprove = (id: string) => {
+    approvePOByDirektur(id, 'Disetujui Direktur Utama untuk persetujuan alokasi modal.');
   };
 
   // 4. Investor Action: Approve Layer 3
-  const handleInvestorApprove = async (id: string, poNum: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'APPROVED_WAITING_DISBURSEMENT' });
-      alert(`PO ${poNum} berhasil disetujui Investor (Layer 3) & siap dicairkan Finance!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch {
-      alert('Gagal menyetujui PO');
-    }
+  const handleInvestorApprove = (id: string) => {
+    authorizePOByInvestor(id, 'Disahkan dan diotorisasi Investor Utama.');
   };
 
   // 5. Finance Action: Disburse Funds
-  const handleDisburseFunds = async (id: string, poNum: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'DISBURSED' });
-      alert(`Dana kas untuk PO ${poNum} berhasil dicairkan!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch {
-      alert('Gagal mencairkan dana');
-    }
+  const handleDisburseFunds = (id: string) => {
+    authorizePOByInvestor(id, 'Dana PO telah dicairkan oleh Finance.');
   };
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    return dateString;
   };
 
   // Filtered lists per role
   const pendingFinancePOs = poList.filter((p) => p.status === 'PENDING_FINANCE');
   const pendingDirekturPOs = poList.filter((p) => p.status === 'PENDING_DIREKTUR');
   const pendingInvestorPOs = poList.filter((p) => p.status === 'PENDING_INVESTOR');
-  const readyToDisbursePOs = poList.filter((p) => p.status === 'APPROVED_WAITING_DISBURSEMENT');
+  const readyToDisbursePOs = poList.filter((p) => p.status === 'APPROVED_WAITING_DISBURSEMENT' || p.status === 'DISBURSED');
 
   return (
     <div className="w-100 space-y-4">
@@ -349,7 +346,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                     <div className="text-end d-flex flex-column align-items-md-end gap-1.5">
                       <strong className="text-dark font-weight-bold" style={{ fontSize: 16 }}>Rp {po.totalPrice?.toLocaleString('id-ID')}</strong>
                       <button
-                        onClick={() => handleFinanceVerify(po.id, po.poNumber)}
+                        onClick={() => handleFinanceVerify(po.id)}
                         className="btn btn-sm btn-primary text-white font-weight-bold px-3 py-1.5 rounded-2 d-flex align-items-center gap-1 shadow-xs"
                         style={{ fontSize: 11.5 }}
                       >
@@ -397,7 +394,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                     <div className="text-end d-flex flex-column align-items-md-end gap-1.5">
                       <strong className="text-success font-weight-extrabold" style={{ fontSize: 16 }}>Rp {po.totalPrice?.toLocaleString('id-ID')}</strong>
                       <button
-                        onClick={() => handleDisburseFunds(po.id, po.poNumber)}
+                        onClick={() => handleDisburseFunds(po.id)}
                         className="btn btn-sm btn-success text-white font-weight-bold px-3 py-1.5 rounded-2 d-flex align-items-center gap-1 shadow-xs"
                         style={{ fontSize: 11.5 }}
                       >
@@ -449,7 +446,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                   <div className="text-end d-flex flex-column align-items-md-end gap-1.5">
                     <strong className="text-dark font-weight-bold" style={{ fontSize: 16 }}>Rp {po.totalPrice?.toLocaleString('id-ID')}</strong>
                     <button
-                      onClick={() => handleDirekturApprove(po.id, po.poNumber)}
+                      onClick={() => handleDirekturApprove(po.id)}
                       className="btn btn-sm btn-warning text-dark font-weight-bold px-3 py-1.5 rounded-2 d-flex align-items-center gap-1 shadow-xs"
                       style={{ fontSize: 11.5 }}
                     >
@@ -501,7 +498,7 @@ export const InvestorPOTransparencyPage: React.FC = () => {
                   <div className="text-end d-flex flex-column align-items-md-end gap-1.5">
                     <strong className="text-success font-weight-extrabold" style={{ fontSize: 16 }}>Rp {po.totalPrice?.toLocaleString('id-ID')}</strong>
                     <button
-                      onClick={() => handleInvestorApprove(po.id, po.poNumber)}
+                      onClick={() => handleInvestorApprove(po.id)}
                       className="btn btn-sm btn-success text-white font-weight-bold px-3.5 py-1.5 rounded-2 d-flex align-items-center gap-1 shadow-xs"
                       style={{ fontSize: 12 }}
                     >

@@ -240,9 +240,13 @@ export const MobileDirekturDashboard: React.FC = () => {
                 <div>
                   <span className="text-[10px] font-medium text-[#64746D] block">Otorisasi Belanja</span>
                   <strong className="text-[16px] font-black text-[#0B251E] tracking-tight block mt-0.5 leading-tight">
-                    2 Pengajuan
+                    {purchaseOrders.filter((p) => p.status === 'PENDING_DIREKTUR' || p.status === 'PENDING_FINANCE').length} Pengajuan
                   </strong>
-                  <span className="text-[8.5px] text-[#D97706] font-bold block mt-0.5">PO-026 & PO-027 &gt;</span>
+                  <span className="text-[8.5px] text-[#D97706] font-bold block mt-0.5">
+                    {purchaseOrders.filter((p) => p.status === 'PENDING_DIREKTUR').length > 0
+                      ? 'Perlu Persetujuan Direktur >'
+                      : 'Semua Berkas Terkelola >'}
+                  </span>
                 </div>
               </div>
 

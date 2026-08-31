@@ -1,47 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { getPurchases, updatePurchaseStatus } from '../services/api';
+import React from 'react';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 import type { PurchaseItem } from './PurchaseOrderInventoryShowcase';
 
 export const InvestorPOApprovalSummary: React.FC = () => {
-  const [poList, setPoList] = useState<PurchaseItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { purchaseOrders, authorizePOByInvestor } = useSmartFarmStore();
 
-  const fetchPOs = async () => {
-    try {
-      setLoading(true);
-      const res = await getPurchases();
-      setPoList(res.data);
-    } catch (error) {
-      console.error('Failed to load POs', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPOs();
-    const handleSync = () => fetchPOs();
-    window.addEventListener('agrojaya-po-updated', handleSync);
-    return () => window.removeEventListener('agrojaya-po-updated', handleSync);
-  }, []);
+  const poList: PurchaseItem[] = purchaseOrders.map((p) => ({
+    id: p.id,
+    poNumber: p.id,
+    itemName: p.title,
+    category: p.category,
+    targetLand: p.targetLand || 'Blok A2 - Tanam Hibrida Utama (2.0 Ha Jonggol)',
+    quantity: '1 Paket',
+    unitPriceRp: p.amount,
+    totalPrice: p.amount,
+    usageTargetDate: 'Segera (Musim Tanam)',
+    usageDetails: p.notes || 'Pengadaan operasional rutin budidaya',
+    status:
+      p.status === 'APPROVED'
+        ? 'DISBURSED'
+        : p.status === 'PENDING_FINANCE'
+        ? 'PENDING_FINANCE'
+        : p.status === 'PENDING_DIREKTUR'
+        ? 'PENDING_DIREKTUR'
+        : p.status === 'PENDING_INVESTOR'
+        ? 'PENDING_INVESTOR'
+        : (p.status as any),
+    requester: p.requester,
+    createdAt: p.date,
+  }));
 
   const pendingInvestorPOs = poList.filter((po) => po.status === 'PENDING_INVESTOR');
   const approvedPOs = poList.filter((po) => po.status === 'APPROVED_WAITING_DISBURSEMENT' || po.status === 'DISBURSED');
 
-  const handleApprovePO = async (id: string, poNumber: string) => {
-    try {
-      await updatePurchaseStatus(id, { status: 'APPROVED_WAITING_DISBURSEMENT' });
-      alert(`Pengadaan ${poNumber} berhasil disetujui untuk pencairan dana!`);
-      fetchPOs();
-      window.dispatchEvent(new Event('agrojaya-po-updated'));
-    } catch (error) {
-      alert('Gagal menyetujui pengadaan.');
-    }
+  const handleApprovePO = (id: string) => {
+    authorizePOByInvestor(id, 'Disetujui Investor Utama.');
   };
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    return dateString;
   };
 
   return (
@@ -62,9 +60,7 @@ export const InvestorPOApprovalSummary: React.FC = () => {
           </span>
         </div>
 
-        {loading && pendingInvestorPOs.length === 0 ? (
-          <div className="p-3 text-center text-muted" style={{ fontSize: 13 }}>Memuat data pengadaan...</div>
-        ) : pendingInvestorPOs.length > 0 ? (
+        {pendingInvestorPOs.length > 0 ? (
           <div className="space-y-3 pt-1">
             {pendingInvestorPOs.map((po) => (
               <div key={po.id} className="p-3.5 rounded-3 border bg-light d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
@@ -85,8 +81,8 @@ export const InvestorPOApprovalSummary: React.FC = () => {
                     Rp {po.totalPrice?.toLocaleString('id-ID')}
                   </strong>
                   <button
-                    onClick={() => handleApprovePO(po.id, po.poNumber)}
-                    className="btn btn-success text-white font-weight-bold px-3 py-1.5 rounded-2 shadow-xs d-inline-flex align-items-center gap-1.5"
+                    onClick={() => handleApprovePO(po.id)}
+                    className="btn btn-success text-white font-weight-bold px-3 py-1.5 rounded-2 shadow-xs d-inline-flex align-items-center gap-1.5 cursor-pointer"
                     style={{ fontSize: 12 }}
                   >
                     <i className="ri-checkbox-circle-line"></i>

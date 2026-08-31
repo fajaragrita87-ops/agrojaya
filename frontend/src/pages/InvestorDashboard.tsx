@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { getInvestorDashboard } from '../services/api';
+import { useSmartFarmStore } from '../store/smartFarmStore';
 import { TurbineLineChart, TurbineDonutChart, TurbineBarChart } from '../components/TurbineChart';
 import { LiveFieldFeedHub } from '../components/LiveFieldFeedHub';
 
 export const InvestorDashboard = () => {
+  const { purchaseOrders, authorizePOByInvestor } = useSmartFarmStore();
   const [auditFilter, setAuditFilter] = useState<string>('ALL');
 
   useEffect(() => {
@@ -31,7 +33,21 @@ export const InvestorDashboard = () => {
     { label: 'Perawatan Traktor & Irigasi Satelit', value: 15000000, color: '#f59e0b' },
   ];
 
+  // Live POs waiting for Investor Approval (Layer 3)
+  const pendingInvestorPOs = purchaseOrders.filter((p) => p.status === 'PENDING_INVESTOR');
+
   const rawOpexAuditDetails = [
+    ...purchaseOrders
+      .filter((p) => p.status === 'APPROVED' || p.status === 'PENDING_INVESTOR' || p.status === 'PENDING_DIREKTUR')
+      .map((p) => ({
+        category: `${p.title} (${p.category})`,
+        tag: p.category.toUpperCase().includes('PUPUK') ? 'PUPUK' : p.category.toUpperCase().includes('BIBIT') ? 'SDM' : 'ALAT',
+        nominal: p.amount,
+        personInCharge: p.requester,
+        status: p.status === 'APPROVED' ? 'TERBAYAR (SLA 100%)' : p.status === 'PENDING_INVESTOR' ? 'MENUNGGU INVESTOR (LAYER 3)' : 'VERIFIKASI DIREKSI',
+        bapLink: `BAP-${p.id}`,
+        date: p.date,
+      })),
     {
       category: 'Upah Harian Petani Lapangan',
       tag: 'SDM',
@@ -50,15 +66,6 @@ export const InvestorDashboard = () => {
       bapLink: 'BAP-PUPUK-2026-07',
       date: '01 Aug 2026'
     },
-    {
-      category: 'Perawatan Traktor & Irigasi Satelit',
-      tag: 'ALAT',
-      nominal: 15000000,
-      personInCharge: 'Rahmat Hidayat',
-      status: 'REVISI SELESAI',
-      bapLink: 'BAP-ALAT-2026-06',
-      date: '28 Jul 2026'
-    }
   ];
 
   const opexAuditDetails = auditFilter === 'ALL'
@@ -193,6 +200,54 @@ export const InvestorDashboard = () => {
           />
         </div>
       </div>
+
+      {/* 4.5. PENDING INVESTOR PO AUTHORIZATION (LAYER 3) */}
+      {pendingInvestorPOs.length > 0 && (
+        <div className="card-box p-4 border border-warning bg-warning-subtle rounded-4 shadow-sm space-y-3">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <span className="badge bg-warning text-dark font-weight-bold px-2.5 py-1 rounded-pill mb-1 d-inline-block">
+                ⚠️ PERLU OTORISASI INVESTOR (LAYER 3)
+              </span>
+              <h3 className="h6 font-weight-bold text-dark mb-0">
+                Pengajuan Belanja Telah Disetujui Direktur - Menunggu Persetujuan Modal Investor
+              </h3>
+            </div>
+            <span className="badge bg-dark text-white font-weight-bold px-3 py-1.5 rounded-pill">
+              {pendingInvestorPOs.length} Dokumen
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {pendingInvestorPOs.map((po) => (
+              <div key={po.id} className="p-3 bg-white rounded-3 border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <span className="badge bg-dark text-white font-mono">{po.id}</span>
+                    <span className="badge bg-success-subtle text-success border border-success">{po.category}</span>
+                    <span className="text-muted" style={{ fontSize: 11 }}>Oleh: {po.requester}</span>
+                  </div>
+                  <strong className="text-dark d-block" style={{ fontSize: 13.5 }}>{po.title}</strong>
+                  <span className="text-secondary" style={{ fontSize: 11.5 }}>{po.notes}</span>
+                </div>
+                <div className="d-flex align-items-center gap-3">
+                  <strong className="text-success font-weight-extrabold" style={{ fontSize: 16 }}>
+                    Rp {po.amount.toLocaleString('id-ID')}
+                  </strong>
+                  <button
+                    onClick={() => authorizePOByInvestor(po.id, 'Disetujui Investor Utama')}
+                    className="btn btn-sm btn-success font-weight-bold px-3 py-1.5 rounded-2 shadow-xs cursor-pointer d-flex align-items-center gap-1"
+                    style={{ fontSize: 12 }}
+                  >
+                    <i className="ri-checkbox-circle-fill"></i>
+                    <span>Sahkan & Setujui</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 5D AUDIT TABLE WITH CATEGORY FILTER */}
       <div className="card-box p-4 border bg-white rounded-4 shadow-sm">
